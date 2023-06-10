@@ -3,7 +3,7 @@
 |        Title | `StakedSui` improvements                                                                                                                                         |
 |  Description | Improvements to the `StakedSui` object, including giving it the `store` ability and secondary functions into the staking flow that return the `StakedSui` object |
 |       Author | Kevin <github@aftermath.finance, @admin-aftermath>, Aftermath Finance <[aftermath.finance](aftermath.finance)>                                                   |
-|       Editor | <Leave this blank; it will be assigned by a SIP Editor>                                                                                                          |
+|       Editor | Will Riches <will@sui.io, @wriches>                                                                                                                              |
 |         Type | Standard                                                                                                                                                         |
 |     Category | Framework                                                                                                                                                        |
 |      Created | 2023-06-07                                                                                                                                                       |
@@ -339,7 +339,7 @@ When adding the `store` ability to any Sui Move object, users and developers mus
 
 dApps that will compose off of native Sui staking and utilize the `store` ability should be thoroughly audited and tested before being published on mainnet. Users that aim to use these protocols should understand both the risks of transferring their `StakedSui` to a module and the implications of mutable packages on the safety of their `StakedSui`.<sup>[8](https://github.com/MystenLabs/sui/issues/2045)</sup> Before interacting with any protocol that extends upon Sui staking, a user should perform their own checks on the presence and number of audits, the level of testing thoroughness and the mutability of the relevant packages. As such, protocols should make this info readily available to the average user.
 
-Third party apps that want to simply provide an interface to native Sui staking (e.g. wallets, explorers) should continue to use the `request_stake_sui`, `reques_stake_sui_mul_coins`, and `request_withdraw_sui` `entry` functions. For a user strictly interacting with these applications, there are no extra security considerations.
+Third party apps that want to simply provide an interface to native Sui staking (e.g. wallets, explorers) should continue to use the `request_stake_sui`, `request_stake_sui_mul_coins`, and `request_withdraw_sui` `entry` functions. For a user strictly interacting with these applications, there are no extra security considerations.
 
 ## References
 
