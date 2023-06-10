@@ -1,4 +1,4 @@
-|   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor>                                                                                                          |
+|   SIP-Number | 6                                                                                                                                                                |
 | -----------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |        Title | `StakedSui` Improvements                                                                                                                                         |
 |  Description | Improvements to the `StakedSui` object, including giving it the `store` ability and secondary functions into the staking flow that return the `StakedSui` object |
@@ -7,8 +7,8 @@
 |         Type | Standard                                                                                                                                                         |
 |     Category | Framework                                                                                                                                                        |
 |      Created | 2023-06-07                                                                                                                                                       |
-| Comments-URI | <Leave this blank; it will be assigned by a SIP Editor>                                                                                                          |
-|       Status | <Leave this blank; it will be assigned by a SIP Editor>                                                                                                          |
+| Comments-URI | https://sips.sui.io/comments-6                                                                                                                                   |
+|       Status | Fast Track                                                                                                                                                       |
 |     Requires | N/A                                                                                                                                                              |
 
 ## Abstract
