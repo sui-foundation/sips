@@ -21,9 +21,9 @@ This SIP tries not to stick to one domain when considering these changes, but ra
 
 ## Background
 
-**Proof-of-Stake.** The Sui network utilizes a Delegated Proof-of-Stake (POS) consensus mechanism to determine the active validator set.<sup>[2](https://docs.sui.io/learn/tokenomics/proof-of-stake),[3](https://blog.sui.io/stake-delegation-faq/)</sup> Users can delegate SUI to the validator of their choice to increase the validator's voting power. Every epoch, transaction gas fees and stake subsidies are redistributed back to the validators and their delegators.
+**Proof-of-Stake.** The Sui network utilizes a Delegated Proof-of-Stake (POS) consensus mechanism to determine the active validator set. Users can delegate SUI to the validator of their choice to increase the validator's voting power. Every epoch, transaction gas fees and stake subsidies are redistributed back to the validators and their delegators.
 
-**Staked Sui.** By delegating to a validator, a user receives a `StakedSui` object that acts as a receipt to their position. This `StakedSui` object accrues rewards when the epoch advances and can be redeemed at will by its owner. Currently, the `StakedSui` struct is implemented as follows<sup>[4](https://github.com/MystenLabs/sui/blob/mainnet-v1.2.1/crates/sui-framework/packages/sui-system/sources/staking_pool.move#L80-L89)</sup>:
+**Staked Sui.** By delegating to a validator, a user receives a `StakedSui` object that acts as a receipt to their position. This `StakedSui` object accrues rewards when the epoch advances and can be redeemed at will by its owner. Currently, the `StakedSui` struct is implemented as follows<sup>[2](https://github.com/MystenLabs/sui/blob/mainnet-v1.2.1/crates/sui-framework/packages/sui-system/sources/staking_pool.move#L80-L89)</sup>:
 
 ```Rust
 /// A self-custodial object holding the staked SUI tokens.
@@ -54,7 +54,7 @@ The corresponding functions that deal with staking `Coin<SUI>` are `entry` funct
 
 ## Prerequisites
 
-In order to upgrade a package, your changes must satisfy a list of requirements.<sup>[5](https://docs.sui.io/build/package-upgrades#requirements)</sup> Adding new abilities to existing structs is strictly prohibited and thus, as it stands, **adding `store` to `StakedSui` will not pass the upgrade verification check**. To get around this, upgrades for _only_ the `sui_system` package should have a relaxed set of requirements.
+In order to upgrade a package, your changes must satisfy a list of requirements. Adding new abilities to existing structs is strictly prohibited and thus, as it stands, **adding `store` to `StakedSui` will not pass the upgrade verification check**. To get around this, upgrades for _only_ the `sui_system` package should have a relaxed set of requirements.
 
 ## Specification
 
@@ -76,7 +76,7 @@ This SIP presents no issues with backwards compatibility.
 
 ## Reference Implementation
 
-We have created a fork of the Sui repo<sup>[6](https://github.com/AftermathFinance/sui-with-store)</sup> to implement these specifications; the relevant changes are detailed below:
+We have created a fork of the Sui repo to implement these specifications; the relevant changes are detailed below:
 
 ### i. Changes to `StakedSui`
 
@@ -223,7 +223,7 @@ public(friend) fun request_add_stake(
 }
 ```
 
-The above example follows the notation set by an implementation of the `request_withdraw_stake` flow that returns `Balance<SUI>` which, at the time of writing, has just been included into Sui version `testnet-v1.3.0`.<sup>[7](https://github.com/MystenLabs/sui/pull/12092)</sup>
+The above example follows the notation set by an implementation of the `request_withdraw_stake` flow that returns `Balance<SUI>` which, at the time of writing, has just been included into Sui version `testnet-v1.3.0`.<sup>[3](https://github.com/MystenLabs/sui/pull/12092)</sup>
 
 ### iii. `sui_system` getters
 
@@ -337,20 +337,16 @@ public fun pool_token_amount(exchange_rate: &PoolTokenExchangeRate): u64 {
 
 When adding the `store` ability to any Sui Move object, users and developers must consider the negative possibilities of modules now being able to store the object. In the case of `StakedSui`, the owner of the `StakedSui` object is the only one able to withdraw its principal and rewards; for this reason, giving `StakedSui` the `store` ability now forces a heightened level of trust between a user and a module that will be persistently storing `StakedSui`.
 
-dApps that will compose off of native Sui staking and utilize the `store` ability should be thoroughly audited and tested before being published on mainnet. Users that aim to use these protocols should understand both the risks of transferring their `StakedSui` to a module and the implications of mutable packages on the safety of their `StakedSui`.<sup>[8](https://github.com/MystenLabs/sui/issues/2045)</sup> Before interacting with any protocol that extends upon Sui staking, a user should perform their own checks on the presence and number of audits, the level of testing thoroughness and the mutability of the relevant packages. As such, protocols should make this info readily available to the average user.
+dApps that will compose off of native Sui staking and utilize the `store` ability should be thoroughly audited and tested before being published on mainnet. Users that aim to use these protocols should understand both the risks of transferring their `StakedSui` to a module and the implications of mutable packages on the safety of their `StakedSui`.<sup>[4](https://github.com/MystenLabs/sui/issues/2045)</sup> Before interacting with any protocol that extends upon Sui staking, a user should perform their own checks on the presence and number of audits, the level of testing thoroughness and the mutability of the relevant packages. As such, protocols should make this info readily available to the average user.
 
 Third party apps that want to simply provide an interface to native Sui staking (e.g. wallets, explorers) should continue to use the `request_stake_sui`, `request_stake_sui_mul_coins`, and `request_withdraw_sui` `entry` functions. For a user strictly interacting with these applications, there are no extra security considerations.
 
 ## References
 
 1. [[Sui Repo] mainnet-v1.2.1](https://github.com/MystenLabs/sui/tree/mainnet-v1.2.1)
-2. [[Sui Docs] Sui's Delegated Proof-of-Stake System](https://docs.sui.io/learn/tokenomics/proof-of-stake)
-3. [[Sui Blog] Testnet Wave 2 Stake Delegation](https://blog.sui.io/stake-delegation-faq/)
-4. [[Sui Repo] `StakedSui`](https://github.com/MystenLabs/sui/blob/mainnet-v1.2.1/crates/sui-framework/packages/sui-system/sources/staking_pool.move#L80-L89)
-5. [[Sui Docs] Package Upgrades > Requirements](https://docs.sui.io/build/package-upgrades#requirements)
-6. [[Aftermath Repo] sui-with-store](https://github.com/AftermathFinance/sui-with-store)
-7. [[Sui Repo] `request_withdraw_stake_non_entry`](https://github.com/MystenLabs/sui/pull/12092)
-8. [[Move] Third-Party Package upgrades](https://github.com/MystenLabs/sui/issues/2045)
+2. [[Sui Repo] `StakedSui`](https://github.com/MystenLabs/sui/blob/mainnet-v1.2.1/crates/sui-framework/packages/sui-system/sources/staking_pool.move#L80-L89)
+3. [[Sui Repo] `request_withdraw_stake_non_entry`](https://github.com/MystenLabs/sui/pull/12092)
+4. [[Move] Third-Party Package upgrades](https://github.com/MystenLabs/sui/issues/2045)
 
 ## Copyright
 
