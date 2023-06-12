@@ -62,7 +62,7 @@ The upgrade requirements for the `sui_system` package (`0x3`) will be relaxed an
 
 Secondary functions will be added for `request_add_stake` and `request_add_stake_mul_coins` that return their resulting `StakedSui` instead of automatically being transferred back to the sender.
 
-A `#[test_only]` function, `calculate_rewards`, will be modified to be accessible onchain. Accordingly, a `sui_system.move` -> `staking_pool.move` flow will be added to support the calling of `calculate_rewards`. Also, `PoolTokenExchangeRate` getters will be added to allow historic and future exchange rate calculations.
+A `#[test_only]` function, `calculate_rewards`, will be modified to be accessible onchain. Accordingly, a `sui_system.move` -> `staking_pool.move` flow will be added to support the calling of `calculate_rewards`. Also, `PoolTokenExchangeRate` getters will be added to allow historic and future exchange rate calculations and one function will be added to expose querying of the active validator set.
 
 ## Rationale
 
@@ -317,9 +317,50 @@ public(friend) fun calculate_rewards(
 
 #### iiib. `PoolTokenExchangeRate` getters
 
+**sui_system.** A top level getter will be added that enables querying of the historic exchange rates associated with a `StakedSui`'s `StakingPool`.
+
+```Rust
+public fun pool_exchange_rates(
+    wrapper: &mut SuiSystemState,
+    staked_sui: &StakedSui
+): &Table<u64, PoolTokenExchangeRate>  {
+    let self = load_system_state(wrapper);
+
+    sui_system_state_inner::pool_exchange_rates(self, staked_sui)
+}
+```
+
+**sui_system_inner.** The corresponding function `sui_system_inner` will be added.
+
+```Rust
+public(friend) fun pool_exchange_rates(
+    self: &SuiSystemStateInnerV2,
+    staked_sui: &StakedSui
+): &Table<u64, PoolTokenExchangeRate>  {
+    let validators = &self.validators;
+
+    validator_set::pool_exchange_rates(validators, staked_sui)
+}
+```
+
 **staking_pool.** The following functions will be added to enable third-party interaction with `staking_pool::pool_token_exchange_rate_at_epoch` and the `PoolTokenExchangeRate` struct.
 
 ```Rust
+public(friend) fun pool_exchange_rates(
+    self: &ValidatorSet,
+    staked_sui: &StakedSui
+): &Table<u64, PoolTokenExchangeRate>  {
+    let staking_pool_id = pool_id(staked_sui);
+
+    let mapping = &self.staking_pool_mappings;
+    let validator_address = *table::borrow(mapping, staking_pool_id);
+
+    let validator = get_active_validator_ref(self, validator_address);
+
+    let staking_pool = validator::get_staking_pool_ref(validator);
+    staking_pool::exchange_rates(staking_pool)
+}
+
 public fun exchange_rates(pool: &StakingPool): &Table<u64, PoolTokenExchangeRate> {
     &pool.exchange_rates
 }
@@ -330,6 +371,18 @@ public fun sui_amount(exchange_rate: &PoolTokenExchangeRate): u64 {
 
 public fun pool_token_amount(exchange_rate: &PoolTokenExchangeRate): u64 {
     exchange_rate.pool_token_amount
+}
+```
+
+#### iiic. Active validator getters
+
+**sui_system.** The following function will be added to allow onchain querying of the active validator set. 
+
+``` Rust
+public fun active_validators_addresses(wrapper: &mut SuiSystemState): vector<address> {
+    let self = load_system_state(wrapper);
+
+    sui_system_state_inner::active_validators_addresses(self)
 }
 ```
 
