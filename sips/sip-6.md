@@ -330,7 +330,7 @@ public fun pool_exchange_rates(
 }
 ```
 
-**sui_system_inner.** The corresponding function `sui_system_inner` will be added.
+**sui_system_inner.** The underlying function will also be added.
 
 ```Rust
 public(friend) fun pool_exchange_rates(
