@@ -62,7 +62,7 @@ The upgrade requirements for the `sui_system` package (`0x3`) will be relaxed an
 
 Secondary functions will be added for `request_add_stake` and `request_add_stake_mul_coins` that return their resulting `StakedSui` instead of automatically being transferred back to the sender.
 
-A `#[test_only]` function, `calculate_rewards`, will be modified to be accessible onchain. Accordingly, a `sui_system.move` -> `staking_pool.move` flow will be added to support the calling of `calculate_rewards`. Also, `PoolTokenExchangeRate` getters will be added to allow historic and future exchange rate calculations and one function will be added to expose querying of the active validator set.
+A `#[test_only]` function, `calculate_rewards`, will be modified to be accessible onchain. Accordingly, a `sui_system.move` -> `staking_pool.move` flow will be added to support the calling of `calculate_rewards`. Also, `PoolTokenExchangeRate` getters will be added to allow historic and future exchange rate calculations and functions will be added to expose querying of the active validator set.
 
 ## Rationale
 
@@ -379,10 +379,39 @@ public fun pool_token_amount(exchange_rate: &PoolTokenExchangeRate): u64 {
 **sui_system.** The following function will be added to allow onchain querying of the active validator set. 
 
 ``` Rust
-public fun active_validators_addresses(wrapper: &mut SuiSystemState): vector<address> {
+public fun active_validator_addresses(wrapper: &mut SuiSystemState): vector<address> {
     let self = load_system_state(wrapper);
 
-    sui_system_state_inner::active_validators_addresses(self)
+    sui_system_state_inner::active_validator_addresses(self)
+}
+```
+
+**sui_system_inner.** The equivalent function will be added to `sui_system_inner.move`.
+
+```Rust
+public(friend) fun active_validator_addresses(self: &SuiSystemStateInnerV2): vector<address> {
+    let validators = &self.validators;
+
+    validator_set::active_validator_addresses(validators)
+}
+```
+
+**validator_set.** The following function will become `public(friend)` and `#[test_only]` will be removed.
+
+```Rust
+public(friend) fun active_validator_addresses(self: &ValidatorSet): vector<address> {
+    let vs = &self.active_validators;
+    let res = vector[];
+    let i = 0;
+    let length = vector::length(vs);
+    
+    while (i < length) {
+        let validator_address = validator::sui_address(vector::borrow(vs, i));
+        
+        vector::push_back(&mut res, validator_address);
+        i = i + 1;
+    };
+    res
 }
 ```
 
