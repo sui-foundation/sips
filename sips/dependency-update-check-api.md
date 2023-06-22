@@ -73,4 +73,4 @@ There are no issues with backwards compatability.
 None
 
 ## Copyright
-DSRV labs.
+[CC0 1.0](../LICENSE.md).
