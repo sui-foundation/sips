@@ -11,28 +11,11 @@
 | Status              | <Leave this blank; it will be assigned by a SIP Editor> |
 | Requires            | <Optional; SIP number(s), comma separated> |
 
-
-```
-REMOVE THIS BLOCK BEFORE SUBMITTING SIP
-
-Please read SIP-1 before using this template.
-
-For new SIPs, this template can be copied and filled in.
-
-Note that some headers will be assigned by the SIP Editor; you should leave these fields blank.
-
-Headers that are not required should be removed from the document.
-
-Before submitting, please delete all comments from the template, including this one.
-```
-
 ## Abstract
 
-```
-REMOVE THIS BLOCK
+This SIP presents improvements to the Deepbook package to enable better composability of `Pool`s, which would enable their use in a wide range of applications.
 
-This section is mandatory, but is usually expanded as the SIP progresses.
-```
+We describe some changes to the Pool creation process to allow for `ownable` Pools, instead of the current paradigm which always creates a shared Pool object. We also describe some modifications to the return values of some of the methods in `clob_v2` and `custodian_v2` modules for easier deepbook integration. 
 
 ## Motivation
 
