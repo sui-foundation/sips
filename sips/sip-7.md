@@ -19,9 +19,9 @@ We propose a change to the Pool struct to have the `store` abilty, and return th
 
 ## Background
 
-Deepbook is a permissionless platform on Sui that allows building orderbooks for swapping any Pair of (`Coin`) assets. In its current implementation, when a performs a swap using the `place_market_order` (and related) functions, the remaining coins are returned; specifically, `base_asset_left` and `quote_asset_left`, while all metadata about the order matching (taker address, settlement price, number of orders filled partially or fully) are emitted as events - `OrderFilledEvent`.
+Deepbook is a permissionless platform on Sui that allows building pools for swapping any pair of (`Coin<T>`) assets. Pools can be created permionlessly with the `key` ability, which provides them a unique object ID & makes it independently indexable by the nodes.
 
-While this is enough for building spot exchanges for swapping, it falls short of being sufficient for more complex financial products, like perpetual exchanges, whose functioning requires this metadata to be available on-chain. Having access to on-chain data for multiple pools in the same transaction is paramount for enabling composability of financial products.
+While this is enough for building a simple spot exchange, it falls short of providing flexibility to build more complex financial products, like cross-margined perpetual DEX, whose functioning requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object to obtain a collection of pools & store application specific metadata on top of deepbook pools. Having access to on-chain data for multiple pools in the same transaction is paramount for enabling composability & more complex use cases where deepbook can be used as a matching engine in general.
 
 ## Motivation
 
