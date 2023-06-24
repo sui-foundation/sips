@@ -2,7 +2,7 @@
 | ---:                | :--- |
 | Title               | Deepbook Composability Improvements |
 | Description         | Improvements to the Deepbook package to enable better composability and modularity |
-| Author              | <A list of the authors' real names or aliases, plus either their GitHub usernames (in parentheses) or email addresses (in angle brackets)> |
+| Author              | Kinshuk ([kinshukk](https://github.com/kinshukk)), Sarthak ([Rajwanshi1](https://github.com/Rajwanshi1)), Aditya ([adityadw1998](https://github.com/adityadw1998)), Ananya ([avantgardenar](https://github.com/avantgardenar)) |
 | Editor              |  |
 | Type                | Standard |
 | Category            | Framework |
@@ -25,13 +25,7 @@ While this is enough for building spot exchanges for swapping, it falls short of
 
 ## Motivation
 
-```
-REMOVE THIS BLOCK
-
-This section is mandatory.
-
-At the early stages of the SIP, this section is important in order to describe the current problem and how the SIP aims to overcome it.
-```
+TODO
 
 ## Specification
 
@@ -112,51 +106,19 @@ At the early stages of the SIP, this section is important in order to describe t
 
 ## Rationale
 
-```
-REMOVE THIS BLOCK
-
-This section is mandatory.
-
+TODO:
 It should be used to explain how the SIP's design was arrived at, and what the pros and cons of this approach are.
-```
 
 ## Backwards Compatibility
-
-```
-REMOVE THIS BLOCK
-
+TODO: 
 This section is mandatory, but it may simply state that there are no issues with backwards compatability.
 
 If there are backwards incompatabilities, it should be detailed how these will addressed.
-```
-
-## Test Cases
-
-```
-REMOVE THIS BLOCK
-
-This section is optional.
-
-It is usually recommended to not include test cases when first submitting the SIP, and instead focus on the design and problem statement.
-```
-
-## Reference Implementation
-
-```
-REMOVE THIS BLOCK
-
-This section is optional.
-
-It is usually recommended to not include a reference implementation when first submitting the SIP, and instead focus on the design and problem statement.
-```
 
 ## Security Considerations
 
-```
-REMOVE THIS BLOCK
-
+TODO:
 This section is mandatory, but it may simply state "None" if there are no relevant considerations.
-```
 
 ## Copyright
 
