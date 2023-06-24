@@ -13,9 +13,9 @@
 
 ## Abstract
 
-This SIP presents improvements to the Deepbook package to enable better composability of Deepbook Pools, which would enable their use in a wide range of applications.
+This SIP presents improvements to the Deepbook package to enable better composability of Deepbook Pools, which would open up multiple usecases which will enable Deepbook to be used as a matching engine.
 
-We describe some changes to the Pool creation process to allow for `ownable` Pools, instead of the current paradigm which always creates a shared Pool object.
+We propose a change to the Pool struct to have the `store` abilty, and return the object instance from public `create_pool` function instead of the current paradigm which always creates a shared Pool object.
 
 ## Background
 
