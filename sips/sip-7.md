@@ -21,7 +21,7 @@ We propose a change to the Pool struct to have the `store` abilty, and return th
 
 Deepbook is a permissionless platform on Sui that allows building pools for swapping any pair of (`Coin<T>`) assets. Pools can be created permionlessly with the `key` ability, which provides them a unique object ID & makes it independently indexable by the nodes.
 
-While this is enough for building a simple spot exchange, it falls short of providing flexibility to build more complex financial products, like cross-margined perpetual DEX, whose functioning requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object to obtain a collection of pools & store application specific metadata on top of deepbook pools. Having access to on-chain data for multiple pools in the same transaction is paramount for enabling composability & more complex use cases where deepbook can be used as a matching engine in general.
+While this is enough for building a simple spot exchange, it falls short of providing flexibility to build more complex financial products, like cross-margined perpetual DEX, whose functioning requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object(as dynamic fields) to obtain a collection of pools & store application specific metadata on top of deepbook pools. Having access to on-chain data for multiple pools in the same transaction is paramount for enabling composability & more complex use cases where deepbook can be used as a matching engine in general.
 
 ## Motivation
 
@@ -29,7 +29,7 @@ TODO
 
 ## Specification
 
-- Addition of the `store` ability to the `Pool` type, so that it can be owned by objects or embedded inside dynamic fields
+- Addition of the `store` ability to the `Pool` type, so that it can be wrapped under other objects or be stored as dynamic fields.
   - `struct Pool<phantom BaseAsset, phantom QuoteAsset> has key, store { ... }`
 - Allow the flexibility to create owned pools as well as shared pools
     - change the function `create_pool_` so that it returns the Pool object instead of sharing it directly
@@ -64,7 +64,7 @@ TODO
             pool
         }
     ```
-    - add a `public` function to create and return the Pool object that was created:
+    - change `public` function to create and return the Pool object that was created, instead of transfering it as a shared object:
     ```move
     public fun create_pool<BaseAsset, QuoteAsset>(
         tick_size: u64,
@@ -83,7 +83,7 @@ TODO
         )
     }
     ```
-    - add a `public entry` function `create_shared_pool` that shares the Pool after creation - this will be the current flow for pool creation
+    - add a `public entry` function `create_shared_pool` that shares the Pool after creation - this will enable clients to safely create pools & ensure the pool is publicy shared without relying on the PTB to share it publicly.
     ```move
     public entry fun create_shared_pool<BaseAsset, QuoteAsset>(
         tick_size: u64,
@@ -121,15 +121,12 @@ This is because we cannot pass `vector<Pool>` into a function from a PTB.
 With the suggested upgrades, one can create a higher-level object `PoolInfo` which would have a `TableVec<Pool>` as one of its fields. This would allow the dApp to implement a single function `process_pools` that can process any number of pools by passing this `PoolInfo` object as an argument.
 
 ## Backwards Compatibility
-TODO: 
-This section is mandatory, but it may simply state that there are no issues with backwards compatability.
 
-If there are backwards incompatabilities, it should be detailed how these will addressed.
+Once the deepbookV2 goes live with `Pool<Coin<X>, Coin<Y>>`, with just the `key` ability, it would not be back-compatible for adding a store ability to the same pools.
 
 ## Security Considerations
 
-TODO:
-This section is mandatory, but it may simply state "None" if there are no relevant considerations.
+Returning the pool from the public create pool function would lead to a risk of undesired ownership assignment since it will return the pool, & PTB would be responsible to assign the correct ownership. For this reason, we should introduce a `public entry function create_shared_pool()` which will ensure all of it's clients that the Pool is created with the shared object ownership. 
 
 ## Copyright
 
