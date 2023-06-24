@@ -9,7 +9,7 @@
 | Created             | 2023-06-23 |
 | Comments-URI        |  |
 | Status              |  |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Requires            |  |
 
 ## Abstract
 
@@ -106,8 +106,19 @@ TODO
 
 ## Rationale
 
-TODO:
-It should be used to explain how the SIP's design was arrived at, and what the pros and cons of this approach are.
+This flexibility to create owned pools with the `store` ability would allow a `Pool` object to be embedded inside dynamic fields. This would enable efficient computation over a variable number of pools. 
+
+For example, if a dApp needs to implement logic that requires getting and modifying the state of multiple pools in a single `function`, it can wrap `Pool1`, `Pool2`, ... inside a Dynamic Table and then iterate over the table to perform the required computation. 
+
+Contrasting this with the current situation, the same dApp would need to implement different functions to process variable number of Pools. If there are 2 Pools, the relevant function would look as follows:
+`public fun process_pools_2(pool1: Pool, pool2: Pool, ...) { ... }`
+
+Now, if the same dApp adds another Pool, it would need to implement a new function:
+`public fun process_pools_3(pool1: Pool, pool2: Pool, pool3: Pool, ...) { ... }`
+
+This is because we cannot pass `vector<Pool>` into a function from a PTB.
+
+With the suggested upgrades, one can create a higher-level object `PoolInfo` which would have a `TableVec<Pool>` as one of its fields. This would allow the dApp to implement a single function `process_pools` that can process any number of pools by passing this `PoolInfo` object as an argument.
 
 ## Backwards Compatibility
 TODO: 
