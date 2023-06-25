@@ -1,7 +1,7 @@
 | SIP-Number          |  |
 | ---:                | :--- |
-| Title               | Deepbook Composability Improvements |
-| Description         | Improvements to the Deepbook package to enable better composability and modularity |
+| Title               | Improving Deepbook Composability |
+| Description         | A change to the Pool struct to have the `store` abilty, and some related function changes to improve re-usability of Deepbook as use-case specific matching engine for protocols |
 | Author              | Kinshuk ([kinshukk](https://github.com/kinshukk)), Sarthak ([Rajwanshi1](https://github.com/Rajwanshi1)), Aditya ([adityadw1998](https://github.com/adityadw1998)), Ananya ([avantgardenar](https://github.com/avantgardenar)) |
 | Editor              |  |
 | Type                | Standard |
@@ -13,19 +13,20 @@
 
 ## Abstract
 
-This SIP presents improvements to the Deepbook package to enable better composability of Deepbook Pools, which would open up multiple usecases which will enable Deepbook to be used as a matching engine.
-
-We propose a change to the Pool struct to have the `store` abilty, and return the object instance from public `create_pool` function instead of the current paradigm which always creates a shared Pool object.
+This SIP presents improvements to the Deepbook package on Sui. We propose a change to the Pool struct to have the `store` abilty, and return the object instance from public `create_pool` function instead of the current paradigm which always creates a shared Pool object. 
+This would enable easier creation of private pools helping protocols use deepbook as a whitelabeled matching engine in their stack. The current way of creating all pools public (ie shared objects) by default prevents fragmentation, but we believe liquidity for major pairs will naturally aggregate via market behaviour. At the same time, allowing private pools opens up many new use-cases of Deepbook as a public good. Saves lots of development and audit time for the protocols building on top, they get to focus on their core strengths like margining / liquidiations etc. while not worrying about order intent matching and trade settlement.
 
 ## Background
 
-Deepbook is a permissionless platform on Sui that allows building pools for swapping any pair of (`Coin<T>`) assets. Pools can be created permionlessly with the `key` ability, which provides them a unique object ID & makes it independently indexable by the nodes.
+Deepbook is a shared decentralized central limit order book (CLOB) built for the Sui ecosystem. A pool on deepbook is an orderbook instance of a particular trading pair. Anyone can deploy pools for swapping any pair of (`Coin<T>`) assets. Pools can be created permionlessly with the `key` ability, which provides them a unique object ID & makes it independently indexable by the nodes.
 
-While this is enough for building a simple spot exchange, it falls short of providing flexibility to build more complex financial products, like cross-margined perpetual DEX, whose functioning requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object(as dynamic fields) to obtain a collection of pools & store application specific metadata on top of deepbook pools. Having access to on-chain data for multiple pools in the same transaction is paramount for enabling composability & more complex use cases where deepbook can be used as a matching engine in general.
+While this is enough for building a simple spot exchange, it falls short of providing flexibility to build more complex financial products. It limits the re-usability of the order-matching module because protocols that have something to do with leverage or lending usually want to keep isolated infrastructures so they can manage the total leverage of their system better as well enforce liquidations, but deepbook pools are all public shared by default. It could be better to have it as a configuration set by the pool creator, enabling both use-case specific private orderbooks and public shared orderbooks for common asset pairs.
 
 ## Motivation
 
-TODO
+We're building a cross-margined perpetuals trading DEX on top of Deepbook, functioning of which requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object (as dynamic fields) to obtain a collection of pools & store application specific metadata on top of Deepbook pools. Having access to on-chain data for multiple pools in the same transaction is key here, since cross margining enables users to use profits in one market to fund losses in another market. 
+
+At a broader sense, via account caps there is a way for protocols to get cusotdy of user orders and build on top of the matching engine, however, adding these changes are neccessary to make the matching engine customisable as per relevant use cases. We believe many similar protocols dealing with undercollateralized assets might need this level of control. Any smart contract that has logic needing data from multiple pools dynamically cannot be implemented right now. For us, the need for owned pools originated from the need to dyanmically query pool data in the margin related smart contract, for some protocol, it might be to enforce cross-market liquidations. 
 
 ## Specification
 
@@ -122,7 +123,7 @@ With the suggested upgrades, one can create a higher-level object `PoolInfo` whi
 
 ## Backwards Compatibility
 
-Once the deepbookV2 goes live with `Pool<Coin<X>, Coin<Y>>`, with just the `key` ability, it would not be back-compatible for adding a store ability to the same pools.
+Once the deepbookV2 package goes live with `Pool<Coin<X>, Coin<Y>>` with just the `key` ability, it would not be back-compatible for adding a store ability to the same pools, a migration would be neccessary. We think making this change before the release might be better, or we can think of separate package specifically meant to create custom orderbooks and the current one specifically for creating shared public pools.
 
 ## Security Considerations
 
