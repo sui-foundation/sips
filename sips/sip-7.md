@@ -26,7 +26,7 @@ While this is enough for building a simple spot exchange, it falls short of prov
 
 We're building a cross-margined perpetuals trading DEX on top of Deepbook, functioning of which requires wrapping the `Pool<Coin<X>, Coin<Y>>` under another shared object (as dynamic fields) to obtain a collection of pools & store application specific metadata on top of Deepbook pools. Having access to on-chain data for multiple pools in the same transaction is key here, since cross margining enables users to use profits in one market to fund losses in another market. 
 
-At a broader sense, via account caps there is a way for protocols to get cusotdy of user orders and build on top of the matching engine, however, adding these changes are neccessary to make the matching engine customisable as per relevant use cases. We believe many similar protocols dealing with undercollateralized assets might need this level of control. Any smart contract that has logic needing data from multiple pools dynamically cannot be implemented right now. For us, the need for owned pools originated from the need to dyanmically query pool data in the margin related smart contract, for some protocol, it might be to enforce cross-market liquidations. 
+At a broader sense, via account caps there is a way for protocols to get cusotdy of user orders and build on top of the matching engine, however, adding these changes are neccessary to make the matching engine customisable as per relevant use cases. We believe many similar protocols dealing with undercollateralized assets might need this level of control. Any smart contract that has logic needing data from multiple pools dynamically(in a single transaction) cannot be implemented right now. For us, the need for owned pools originated from the need to dyanmically query pool data in the margin related smart contract, for some protocol, it might be to enforce cross-market liquidations. 
 
 ## Specification
 
@@ -34,7 +34,7 @@ At a broader sense, via account caps there is a way for protocols to get cusotdy
   - `struct Pool<phantom BaseAsset, phantom QuoteAsset> has key, store { ... }`
 - Allow the flexibility to create owned pools as well as shared pools
     - change the function `create_pool_` so that it returns the Pool object instead of sharing it directly
-    ```move
+    ```Rust
         fun create_pool_<BaseAsset, QuoteAsset>(
             taker_fee_rate: u64,
             maker_rebate_rate: u64,
@@ -66,7 +66,7 @@ At a broader sense, via account caps there is a way for protocols to get cusotdy
         }
     ```
     - change `public` function to create and return the Pool object that was created, instead of transfering it as a shared object:
-    ```move
+    ```Rust
     public fun create_pool<BaseAsset, QuoteAsset>(
         tick_size: u64,
         lot_size: u64,
@@ -85,7 +85,7 @@ At a broader sense, via account caps there is a way for protocols to get cusotdy
     }
     ```
     - add a `public entry` function `create_shared_pool` that shares the Pool after creation - this will enable clients to safely create pools & ensure the pool is publicy shared without relying on the PTB to share it publicly.
-    ```move
+    ```Rust
     public entry fun create_shared_pool<BaseAsset, QuoteAsset>(
         tick_size: u64,
         lot_size: u64,
@@ -107,7 +107,7 @@ At a broader sense, via account caps there is a way for protocols to get cusotdy
 
 ## Rationale
 
-This flexibility to create owned pools with the `store` ability would allow a `Pool` object to be embedded inside dynamic fields. This would enable efficient computation over a variable number of pools. 
+This flexibility to create owned pools with the `store` ability would allow a `Pool` object to be embedded inside dynamic fields. This would enable efficient computation over a variable number of pools in a single transaction. 
 
 For example, if a dApp needs to implement logic that requires getting and modifying the state of multiple pools in a single `function`, it can wrap `Pool1`, `Pool2`, ... inside a Dynamic Table and then iterate over the table to perform the required computation. 
 
