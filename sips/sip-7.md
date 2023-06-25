@@ -1,7 +1,7 @@
 | SIP-Number          |  |
 | ---:                | :--- |
 | Title               | Improving Deepbook Composability |
-| Description         | A change to the Pool struct to have the `store` abilty, and some related function changes to improve re-usability of Deepbook as a use-case specific matching engine for protocols |
+| Description         | A change to the Pool struct to have the `store` ability, and some related function changes to improve re-usability of Deepbook as a use-case specific matching engine for protocols |
 | Author              | Kinshuk ([kinshukk](https://github.com/kinshukk)), Sarthak ([Rajwanshi1](https://github.com/Rajwanshi1)), Aditya ([adityadw1998](https://github.com/adityadw1998)), Ananya ([avantgardenar](https://github.com/avantgardenar)) |
 | Editor              |  |
 | Type                | Standard |
