@@ -1,7 +1,7 @@
 |   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor>                   |
 |-------------:|:--------------------------------------------------------------------------|
 |        Title | Code Verification API                                                     |
-|  Description | a standard protocol for the verification of SUI Move smart contract code. |
+|  Description | A standard protocol for the verification of SUI Move smart contract code. |
 |       Author | kairoski03                                                                |
 |       Editor |                                                                           |
 |         Type | Informational                                                             |
