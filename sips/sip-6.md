@@ -8,7 +8,7 @@
 |     Category | Framework                                                                                                                                                        |
 |      Created | 2023-06-07                                                                                                                                                       |
 | Comments-URI | https://sips.sui.io/comments-6                                                                                                                                   |
-|       Status | Fast Track                                                                                                                                                       |
+|       Status | Last Call                                                                                                                                                       |
 |     Requires | N/A                                                                                                                                                              |
 
 ## Abstract
