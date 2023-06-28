@@ -1,14 +1,14 @@
-|   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor>                        |
+|   SIP-Number | 4                                                                              |
 |-------------:|:-------------------------------------------------------------------------------|
 |        Title | Dependency Update Check API                                                    |
 |  Description | A standard protocol for the API that checks the latest version of a dependency |
 |       Author | kairoski03                                                                     |
-|       Editor |                                                                                |
+|       Editor | Henry Duong <henry@sui.io, @hyd628>                                            |
 |         Type | Informational                                                                  |
 |     Category |                                                                                |
 |      Created | 2023-06-01                                                                     |
-| Comments-URI |                                                                                |
-|       Status |                                                                                |
+| Comments-URI | https://sips.sui.io/comments-4                                                 |
+|       Status | Draft                                                                          |
 |     Requires |                                                                                |
 
 ## Abstract
