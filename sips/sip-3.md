@@ -1,14 +1,14 @@
-|   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor>                   |
+|   SIP-Number | 3                                                                         |
 |-------------:|:--------------------------------------------------------------------------|
 |        Title | Code Verification API                                                     |
 |  Description | A standard protocol for the verification of SUI Move smart contract code. |
 |       Author | kairoski03                                                                |
-|       Editor |                                                                           |
+|       Editor | Henry Duong <henry@sui.io, @hyd628>                                       |
 |         Type | Informational                                                             |
 |     Category |                                                                           |
 |      Created | 2023-05-26                                                                |
-| Comments-URI |                                                                           |
-|       Status |                                                                           |
+| Comments-URI | https://sips.sui.io/comments-3                                            |
+|       Status | Draft                                                                     |
 |     Requires |                                                                           |
 
 ## Abstract
