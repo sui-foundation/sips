@@ -31,11 +31,12 @@ Batch Server
 1. Batch Server reads a bulk of requests in queue.
 2. Batch Server downloads source code from cloud storage.
 3. Batch Server builds source code and compare with on-chain bytecode.
+
 After that, it saves the result.
 
 - #### 1. Verification Request API
   - #### **Headers**
-    - "Content-Type": "multipart/form-data"
+    - `"Content-Type": "multipart/form-data"`
   
   - #### **Request Body**
     For uploading of the package source code, you should send a **`POST`** request to the API endpoint. The required parameters are below.
@@ -66,7 +67,7 @@ After that, it saves the result.
     - **`packageId`**: The package ID where the smart contract is deployed.
     - **`suiCliVersion`**: The version of SUI CLI.
     - **`isVerified`**: Whether it is verified.
-    - **`srcUrl`**: If verified, the download url for a zip compressed file of source code or null.
+    - **`srcUrl`**: If verified, the download URL for a zip compressed file of source code or null.
 
 
 ### WEBSOCKET
@@ -85,16 +86,16 @@ After that, it saves the result.
         - **`packageId`**: The package ID where the smart contract is deployed.
         - **`suiCliVersion`**: The version of SUI CLI.
         - **`status`**: Whether it is verified.
-          - VERIFIED_ALREADY: The package has already been verified.
-          - VERIFIED_SAME: Received source code is verified.
-          - VERIFIED_DIFFERENT: Received source code is different with on-chain bytecode.
-          - INTERNAL_ERROR: API Server has internal error.
-          - INVALID_FILE: The file is not invalid. (ex. Move.toml non included)
-        - **`srcUrl`**: If the status is VERIFIED_ALREADY or VERIFIED_SAME, the download url for a zip compressed file of source code or null.
+          - `VERIFIED_ALREADY`: The package has already been verified.
+          - `VERIFIED_SAME`: Received source code is verified.
+          - `VERIFIED_DIFFERENT`: Received source code is different with on-chain bytecode.
+          - `INTERNAL_ERROR`: API Server has internal error.
+          - `INVALID_FILE`: The file is not invalid. (ex. Move.toml non included)
+        - **`srcUrl`**: If the status is `VERIFIED_ALREADY` or `VERIFIED_SAME`, the download URL for a zip compressed file of source code or null.
 
 ## Rationale
 - REST API
-  1. API does not return source code string but source download url because of API response time.
+  1. API does not return source code string but source download URL because of API response time.
   2. Verification server does not use SUI CLI verify-source command. Instead, it builds with SUI CLI version which is included in the API request. It compares on-chain bytecode and build artifacts. The reason is that this way covers the case that the package address is 0x or published-at is none in Move.toml.
   3. It requires source code storage like AWS S3 because SUI does not store source code in on-chain.
   4. It requires API servers which collect verification requests and query if the package has already been verified. 
