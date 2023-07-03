@@ -322,36 +322,31 @@ public(friend) fun calculate_rewards(
 ```Rust
 public fun pool_exchange_rates(
     wrapper: &mut SuiSystemState,
-    staked_sui: &StakedSui
+    staking_pool_id: ID
 ): &Table<u64, PoolTokenExchangeRate>  {
     let self = load_system_state(wrapper);
-
-    sui_system_state_inner::pool_exchange_rates(self, staked_sui)
+    sui_system_state_inner::pool_exchange_rates(self, staking_pool_id)
 }
 ```
 
 **sui_system_inner.** The underlying function will also be added.
 
 ```Rust
-public(friend) fun pool_exchange_rates(
+public fun pool_exchange_rates(
     self: &SuiSystemStateInnerV2,
-    staked_sui: &StakedSui
+    staking_pool_id: ID 
 ): &Table<u64, PoolTokenExchangeRate>  {
     let validators = &self.validators;
-
-    validator_set::pool_exchange_rates(validators, staked_sui)
+    validator_set::pool_exchange_rates(validators, staking_pool_id)
 }
 ```
 
-**staking_pool.** The following functions will be added to enable third-party interaction with `staking_pool::pool_token_exchange_rate_at_epoch` and the `PoolTokenExchangeRate` struct.
 
 ```Rust
 public(friend) fun pool_exchange_rates(
     self: &ValidatorSet,
-    staked_sui: &StakedSui
+    staking_pool_id: ID,
 ): &Table<u64, PoolTokenExchangeRate>  {
-    let staking_pool_id = pool_id(staked_sui);
-
     let mapping = &self.staking_pool_mappings;
     let validator_address = *table::borrow(mapping, staking_pool_id);
 
@@ -360,7 +355,11 @@ public(friend) fun pool_exchange_rates(
     let staking_pool = validator::get_staking_pool_ref(validator);
     staking_pool::exchange_rates(staking_pool)
 }
+```
 
+**staking_pool.** The following functions will be added to enable third-party interaction with `staking_pool::pool_token_exchange_rate_at_epoch` and the `PoolTokenExchangeRate` struct.
+
+```Rust
 public fun exchange_rates(pool: &StakingPool): &Table<u64, PoolTokenExchangeRate> {
     &pool.exchange_rates
 }
