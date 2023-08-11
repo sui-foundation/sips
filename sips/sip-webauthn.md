@@ -43,6 +43,34 @@ In this case, the seamless user experience is preserved as the transactions can 
 
 In conclusion, the motivation for integrating WebAuthn into Sui is multifold. It offers an opportunity to address key pain points in the current user experience, namely the complexities associated with key management. By simplifying these processes, WebAuthn can drastically enhance the user experience and, ultimately, help drive the mainstream adoption of Sui. This ultimately demonstrates how the integration of WebAuthn can make Sui not just more secure, but more accessible.
 
+### Example flows
+
+This section describes a few relevant (out of multitudes possible) transaction signing flows enabled by WebAuthn. Since WebAuthn is widely supported by all of the major platforms (including Windows, Android, iOS, and macOS), the user is *not* required to install any additional software, apps, browser extensions, or middleware for the flows described here.
+
+#### Flow (A) - desktop browser + phone cross-platform authentication
+
+This flow describes how a user can use a passkey stored on their phone to sign a transaction initiated on a desktop browser. The passkey is protected by a PIN or biometrics and is securely stored on the phone. Additionally, the passkey is securely backed up on the cloud and can be synchronized between the user's devices.
+
+The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. A.1), the browser creates a pop-up window with a QR code (fig. A.2). The user then scans the QR code with their phone (fig. A.3). The phone will then require the user to authenticate using a pin or biometrics (fig. A.4). When the user authenticates, the transaction will be signed by the passkey and the signature passed over to the desktop browser (A.5). The wallet app running in the browser will then broadcast the transaction to the blockchain.
+
+![Flow A](../assets/sip-webauthn/flow-a.png)
+
+#### Flow (B) - desktop browser + security key cross-platform authentication
+
+This flow describes how a user can use a security key (e.g., Yubikey) to sign a transaction initiated on a desktop browser. The passkey is stored on the security key and is protected by a PIN or biometrics. Once the passkey is generated on the security key, it can never leave the device and it's not possible to back it up. It's advised to only use this method in a multisig setup where the security key is only one of the possible signers because if the security key is lost the account can't be recovered.
+
+The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. B.1), the browser creates a pop-up prompting the user to authenticate using their security key (fig. B.2). In case the security key doesn't support biometrics, the user will be required to enter their PIN (fig. B.3). The user then authenticates by touching the security key (fig. B.4), and in case the security key supports biometrics, user's fingerprint is scanned. The transaction will then be signed by the passkey stored on the security key and the signature passed over to the desktop browser. The wallet app running in the browser will then broadcast the transaction to the blockchain.
+
+![Flow B](../assets/sip-webauthn/flow-b.png)
+
+#### Flow (C) - platform authentication
+
+This flow describes how a user can use a passkey to sign a transaction initiated on the same device. This flow is similar to flow (A) but without the intermediate step of scanning the QR code. It is possible on platforms that natively support passkey management (e.g., Android, iOS, macOS, Windows).
+
+The figure below describes how a user would use their phone to sign a transaction initiated in a browser on the same phone. A transaction is initiated by a mobile app or web app which opens a pop-up window of a wallet web app. When the user reviews and approves the transaction (fig. C.1), the phone creates a pop-up window requiring the user to authenticate using a pin or biometrics (fig. C.2). When the user authenticates, the transaction will be signed by the passkey and the signature passed over back to the wallet web app (C.3). The wallet app will then broadcast the transaction to the blockchain.
+
+![Flow C](../assets/sip-webauthn/flow-c.png)
+
 ## Specification
 
 A new `webauthn` signature scheme is introduced that allows clients to construct transaction signatures using WebAuthn authenticators. Although the WebAuthn supports multiple signature algorithms, only the `secp256r1` algorithm is supported by Sui.
