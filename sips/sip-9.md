@@ -151,6 +151,10 @@ Luckily though, with the `ECDSA` signature scheme it is possible to recover the 
 
 There are no issues with backwards compatibility.
 
+## Reference Implementation
+
+There is a proof of concept implementation in TypeScript that demonstrates transaction [signing](https://github.com/kunalabs-io/sui-webauthn-poc/blob/master/src/index.ts#L158-L181), [encoding](https://github.com/kunalabs-io/sui-webauthn-poc/blob/master/src/index.ts#L183), [decoding](https://github.com/kunalabs-io/sui-webauthn-poc/blob/master/src/index.ts#L184), [verification](https://github.com/kunalabs-io/sui-webauthn-poc/blob/master/src/index.ts#L189), and public key [recovery](https://github.com/kunalabs-io/sui-webauthn-poc/blob/master/src/index.ts#L204-L252) with WebAuthn as described in this SIP. It can be found here https://github.com/kunalabs-io/sui-webauthn-poc.
+
 ## Security Considerations
 
 None.
