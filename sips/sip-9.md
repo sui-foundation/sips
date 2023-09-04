@@ -1,14 +1,14 @@
-| SIP-Number          | |
+| SIP-Number          | 9 |
 | ---:                | :--- |
 | Title               | WebAuthn signature scheme support |
 | Description         | This SIP proposes the addition of WebAuthn signature scheme to enable transaction signing using WebAuthn authenticators (passkeys). |
 | Author              | Krešimir Klas <kklas@kunalabs.io, @kklas>, Kostas Chalkias <kostas@mystenlabs.com, @kchalkias> |
-| Editor              | |
+| Editor              | Will Riches <will@sui.io, @wriches> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2023-08-01 |
-| Comments-URI        | |
-| Status              | |
+| Comments-URI        | https://sips.sui.io/comments-9 |
+| Status              | Draft |
 | Requires            | |
 
 ## Abstract
