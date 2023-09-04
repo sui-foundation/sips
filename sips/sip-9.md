@@ -138,7 +138,7 @@ Therefore, we can roughly expect the total size of the encoded signature to be a
 
 Arguably, since the `clientDataJSON` encoding algorithm is more strictly defined ([reference](https://www.w3.org/TR/webauthn-2/#clientdatajson-serialization)), it would be possible to only send the `origin` and `crossOrigin` fields (and any extra fields) and reconstruct the `clientDataJSON` on the backend. However, since JSON encodings are not canonical, and even though the `clientDataJSON` encoding algorithm is more strictly defined, it is still possible for the client to send in a different encoding. Furthermore, the WebAuthn specification [notes](https://www.w3.org/TR/webauthn-2/#dictionary-client-data) that "it’s critical when parsing to be tolerant of unknown keys and of any reordering of the keys". So in order to avoid any potential compatibility issues in the future, it is better to send the `clientDataJSON` as is.
 
-Due to these reasons, the `clientDatJSON` and `authenticatorData` fields are defined as variable length in the `WebAuthnSignature` BCS encoding. Additionally, in order to avoid any abuse, the encoded signature is capped to max length of `MAX_LEN` bytes.
+Due to these reasons, the `clientDataJSON` and `authenticatorData` fields are defined as variable length in the `WebAuthnSignature` BCS encoding. Additionally, in order to avoid any abuse, the encoded signature is capped to max length of `MAX_LEN` bytes.
 
 ### Public key recovery
 
