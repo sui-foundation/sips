@@ -53,7 +53,7 @@ This flow describes how a user can use a passkey stored on their phone to sign a
 
 The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. A.1), the browser creates a pop-up window with a QR code (fig. A.2). The user then scans the QR code with their phone (fig. A.3). The phone will then require the user to authenticate using a pin or biometrics (fig. A.4). When the user authenticates, the transaction will be signed by the passkey and the signature passed over to the desktop browser (A.5). The wallet app running in the browser will then broadcast the transaction to the blockchain.
 
-![Flow A](../assets/sip-webauthn/flow-a.png)
+![Flow A](../assets/sip-9/flow-a.png)
 
 #### Flow (B) - desktop browser + security key cross-platform authentication
 
@@ -61,7 +61,7 @@ This flow describes how a user can use a security key (e.g., Yubikey) to sign a 
 
 The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. B.1), the browser creates a pop-up prompting the user to authenticate using their security key (fig. B.2). In case the security key doesn't support biometrics, the user will be required to enter their PIN (fig. B.3). The user then authenticates by touching the security key (fig. B.4), and in case the security key supports biometrics, user's fingerprint is scanned. The transaction will then be signed by the passkey stored on the security key and the signature passed over to the desktop browser. The wallet app running in the browser will then broadcast the transaction to the blockchain.
 
-![Flow B](../assets/sip-webauthn/flow-b.png)
+![Flow B](../assets/sip-9/flow-b.png)
 
 #### Flow (C) - platform authentication
 
@@ -69,7 +69,7 @@ This flow describes how a user can use a passkey to sign a transaction initiated
 
 The figure below describes how a user would use their phone to sign a transaction initiated in a browser on the same phone. A transaction is initiated by a mobile app or web app which opens a pop-up window of a wallet web app. When the user reviews and approves the transaction (fig. C.1), the phone creates a pop-up window requiring the user to authenticate using a pin or biometrics (fig. C.2). When the user authenticates, the transaction will be signed by the passkey and the signature passed over back to the wallet web app (C.3). The wallet app will then broadcast the transaction to the blockchain.
 
-![Flow C](../assets/sip-webauthn/flow-c.png)
+![Flow C](../assets/sip-9/flow-c.png)
 
 ## Specification
 
