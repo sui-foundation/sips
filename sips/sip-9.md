@@ -32,7 +32,6 @@ The wide variety of usage modalities and form factors of WebAuthn authenticators
 
 Wallets and key management are a major usability hurdle and an obstacle for mainstream adoption of crypto. By enabling WebAuthn on Sui key management can be simplified. With WebAuthn, users don't have to manually manage and secure their private keys or seed phrases. Instead, they can use a passkey that is securely stored on their device. If the device is cloud-enabled, the passkey can be synchronized between the user's devices. This makes it possible to use the same address on multiple devices without having to manually import the private key or seed phrase which is prone to phishing attacks and key leaks. It also makes it possible to recover the passkey in case the device is lost.
 
-Furthermore, since the private keys are stored on the device itself, it opens up the possibility of being able to use Sui without having to install a wallet extension or a mobile app first. One could, for example, implement a backend-less wallet web app that uses WebAuthn to sign transactions. This wallet would be served from a website and upon registration it would ask the user to create a passkey on their device. Web3 apps can then be used as usual, and upon requesting a transaction, a browser pop-up window of the wallet app would open and ask the user to review the transaction and sign it with their passkey. The wallet browser app can be fully stateless in that it doesn't have to store any private keys or seed phrases. And if the user's passkey is synced through the cloud on their other devices, they can use the same wallet on multiple devices without having to manually import the private key or seed phrase. Additionally, since the cloud also handles the passkey backups, the user doesn't have to worry about losing access to their wallet if their device is lost. This approach would work well both on mobile and desktop.
 
 In the user doesn't fully trust the cloud with key management, one could, for example, employ a multisig address with 2 of 4 threshold such that:
 - the cloud-synced passkey on a phone has weight 1
@@ -51,7 +50,7 @@ This section describes a few relevant (out of multitudes possible) transaction s
 
 This flow describes how a user can use a passkey stored on their phone to sign a transaction initiated on a desktop browser. The passkey is protected by a PIN or biometrics and is securely stored on the phone. Additionally, the passkey is securely backed up on the cloud and can be synchronized between the user's devices.
 
-The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. A.1), the browser creates a pop-up window with a QR code (fig. A.2). The user then scans the QR code with their phone (fig. A.3). The phone will then require the user to authenticate using a pin or biometrics (fig. A.4). When the user authenticates, the transaction will be signed by the passkey and the signature passed over to the desktop browser (A.5). The wallet app running in the browser will then broadcast the transaction to the blockchain.
+The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet browser extension. When the user reviews and approves the transaction (fig. A.1), the browser creates a pop-up window with a QR code (fig. A.2). The user then scans the QR code with their phone (fig. A.3). The phone will then require the user to authenticate using a pin or biometrics (fig. A.4). When the user authenticates, the transaction will be signed by the passkey and the signature passed over to the desktop browser (A.5). The wallet app running in the browser will then broadcast the transaction to the blockchain.
 
 ![Flow A](../assets/sip-9/flow-a.png)
 
@@ -59,7 +58,7 @@ The figure below describes the flow. A transaction is initiated by a web3 app wh
 
 This flow describes how a user can use a security key (e.g., Yubikey) to sign a transaction initiated on a desktop browser. The passkey is stored on the security key and is protected by a PIN or biometrics. Once the passkey is generated on the security key, it can never leave the device and it's not possible to back it up. It's advised to only use this method in a multisig setup where the security key is only one of the possible signers because if the security key is lost the account can't be recovered.
 
-The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet web app (as described in the previous section) or browser extension. When the user reviews and approves the transaction (fig. B.1), the browser creates a pop-up prompting the user to authenticate using their security key (fig. B.2). In case the security key doesn't support biometrics, the user will be required to enter their PIN (fig. B.3). The user then authenticates by touching the security key (fig. B.4), and in case the security key supports biometrics, user's fingerprint is scanned. The transaction will then be signed by the passkey stored on the security key and the signature passed over to the desktop browser. The wallet app running in the browser will then broadcast the transaction to the blockchain.
+The figure below describes the flow. A transaction is initiated by a web3 app which opens a pop-up window of the wallet browser extension. When the user reviews and approves the transaction (fig. B.1), the browser creates a pop-up prompting the user to authenticate using their security key (fig. B.2). In case the security key doesn't support biometrics, the user will be required to enter their PIN (fig. B.3). The user then authenticates by touching the security key (fig. B.4), and in case the security key supports biometrics, user's fingerprint is scanned. The transaction will then be signed by the passkey stored on the security key and the signature passed over to the desktop browser. The wallet app running in the browser will then broadcast the transaction to the blockchain.
 
 ![Flow B](../assets/sip-9/flow-b.png)
 
@@ -67,7 +66,7 @@ The figure below describes the flow. A transaction is initiated by a web3 app wh
 
 This flow describes how a user can use a passkey to sign a transaction initiated on the same device. This flow is similar to flow (A) but without the intermediate step of scanning the QR code. It is possible on platforms that natively support passkey management (e.g., Android, iOS, macOS, Windows).
 
-The figure below describes how a user would use their phone to sign a transaction initiated in a browser on the same phone. A transaction is initiated by a mobile app or web app which opens a pop-up window of a wallet web app. When the user reviews and approves the transaction (fig. C.1), the phone creates a pop-up window requiring the user to authenticate using a pin or biometrics (fig. C.2). When the user authenticates, the transaction will be signed by the passkey and the signature passed over back to the wallet web app (C.3). The wallet app will then broadcast the transaction to the blockchain.
+The figure below describes how a user would use their phone to sign a transaction initiated in an app on the same phone. A transaction is initiated by a mobile app which opens a transaction confirmation dialog. When the user reviews and approves the transaction (fig. C.1), the phone creates a pop-up window requiring the user to authenticate using a pin or biometrics (fig. C.2). When the user authenticates, the transaction will be signed by the passkey and the signature passed over back to the app (C.3). The app will then broadcast the transaction to the blockchain.
 
 ![Flow C](../assets/sip-9/flow-c.png)
 
@@ -157,7 +156,7 @@ There is a proof of concept implementation in TypeScript that demonstrates trans
 
 ## Security Considerations
 
-None.
+The origin which a passkey is attached to needs to be carefully considered. Since any process or extension that has access to the origin can initiate a WebAuthn assertion request, the origin always needs to be in a trusted environment sandbox such as a stand alone application, browser wallet extension, or mobile app. If the passkey is tied to an origin that is not in a trusted environment it can be succeptible to wallet impressionation attacks.
 
 ## Copyright
 
