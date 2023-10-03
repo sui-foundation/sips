@@ -8,7 +8,7 @@
 | Category            | Core |
 | Created             | 2023-08-01 |
 | Comments-URI        | https://sips.sui.io/comments-9 |
-| Status              | Draft |
+| Status              | Review |
 | Requires            | |
 
 ## Abstract
