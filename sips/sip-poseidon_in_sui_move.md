@@ -25,76 +25,57 @@ Poseidon for Circom, Rust, Go, Python and C.
 
 ## Specification
 
-The following function will be added to the SUI Move framework under the `sui::poseidon` module:
-```
-pub fun poseidon(
-	prime_field_modulus: u256, // Modulus of prime field
-	security_level: u16,       // Security level
-	alpha: u8,                 // Power of s-box
-	state_size: u8,            // Size of internal state
-	full_rounds: u8,           // Number of full rounds
-	partial_rounds: u8,        // Number of partial rounds
-	mds: vector<vector<u256>>, // An MDS matrix of size state_size x state_size
-	input: vector<u256>,       // Input to the hash function
-): u256
-```
-This will compute the Poseidon hash function as specified in the [Poseidon paper](https://eprint.iacr.org/2019/458.pdf) 
-and return the hash. If the input is larger than 16, the functions aborts with an error code.
-
-The same module will also have a convenience function for Poseidon with the parameters used in zklogin:
+We will add the following functions to the SUI Move framework:
 ```
 public fun poseidon_bn254(input: vector<u256>): u256
 ```
-Other functions with different parameters may be added in the future as they are needed.
+This function between 1 and 32 inputs and is compatible with the implementation of Poseidon in fastcrypto. If more than 
+32 inputs are given, the function aborts.
+
+To allow interoperability with other proof systems, we will also add the following functions:
+```
+public fun poseidon_bls12381(input: vector<u256>): u256
+```
+This function must be compatible with the official [reference implementation](https://extgit.iaik.tugraz.at/krypto/hadeshash)
+for 128 bit security which allows 2 or 4 inputs. If any other number of inputs are given, the function aborts.
+
+The reference implementation also includes parameters for 80 and 256 bit security and for the Ed25519 scalar field, and
+these may be added later if needed.
 
 ## Rationality
 
 The functionality of the Poseidon hash function is standardized in the [original paper](https://eprint.iacr.org/2019/458.pdf), 
-vut there are many ways to configure the function: What field is used, how many full and partial rounds, choice of the 
-MDS matrix in the linear layer etc., and each configuration yields a new hash function.
+but there are many ways to configure the function: What field is used, how many full and partial rounds, choice of the 
+MDS matrix in the linear layer etc., and each configuration yields a new hash function. In this implementation, we will
+only use parameters used in the reference implementation and the way it is used in zklogin. This ensures that only
+secure choice parameters may be used.
 
 If the only motivation for introducing the Poseidon hash function in SUI move is to support on-chain verification of
 zklogin signatures, implementing Poseidon with the same parameters as used there would be sufficient. However, builders
 have expressed interest in using the Poseidon hash function for other purposes, and probably also using other proof 
-systems, and the function will have to be generic to support this. The above design provides a compromise between 
-convenience and interoperability with any zero-knowledge system, a builder could be interested in using with SUI.
+systems. The above design provides a compromise between convenience and interoperability with any zero-knowledge system, 
+a builder could be interested in using with SUI.
 
-The size of the input must be limited to 16 because the Poseidon hash functions is rather slow: Hashing 16
+The size of the input must be limited because the Poseidon hash functions is rather slow: Hashing 16
 elements takes about 0.6ms on a laptop, and the runtime is quadratic in the number of inputs. This is
-typically solved by hashing longer inputs using a Merkle tree construction.
+typically solved by hashing longer inputs using a Merkle tree construction, but this is not standardized, so for the 
+BLS12-381 implementation, we will leave this to the builders to define.
 
 ## Backwards Compatibility
 
 There are no issues with backwards compatability.
 
 ## Reference Implementation
-The convenience function for Poseidon with the parameters used in zklogin is implemented like this:
-```
-public fun poseidon_bn254(input: vector<u256>): u256 {
-	let input_size = vector::length(input);
-	poseidon(
-		16798108731015832284940804142231733909889187121439069848933715426072753864723u256,
-		128,
-		5,
-		input_size + 1,
-		8,
-		vec![
-            56, 57, 56, 60, 60, 63, 64, 63, 60, 66, 60, 65, 70, 60, 64, 68,
-        ][input_size],
-        input
-	)
-}
-```
+
 
 ## Security Considerations
 
-While the Poseidon hash function is relatively new (introduced 2019) and is less tried-and-tested compared to other hash
-functions, it is already used in production by StarkWare, Polygon Dusk Network, Sovrin and Filecoin and has been
-. 
+The Poseidon hash function is relatively new (introduced 2019) and is less tried-and-tested compared to other hash
+functions, so there is a risk that it will be broken. However, it is already used in production by StarkWare, Polygon, 
+Dusk Network, Sovrin and Filecoin and has been reviewed by researchers. 
 
-The choice of parameters is important for the security of the Poseidon hash function. The functions in this SIP allow
-any parameters, but the documentation should clearly state how to choose secure parameters and recommend using one of 
-the convenience functions with already chosen secure parameters.
+The choice of parameters is important for the security of the Poseidon hash function, but since we only allow the parameters
+chosen in the reference implementation, this is not an issue here.
 
 ## Copyright
 
