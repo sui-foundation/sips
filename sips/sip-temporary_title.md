@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 10 |
 | ---:                | :--- |
 | Title               | MultiSig Cache Storage |
 | Description         | Store cache and combinePartialSignatures in validator nodes for MultiSig.  |
-| Author              | Pika (RandyPen), <orz@f2cafe.com> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Author              | Pika <orz@f2cafe.com, @RandyPen> |
+| Editor              | Will Riches <will@sui.io, @wriches> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2023-08-03 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-10 |
+| Status              | Draft |
+| Requires            | |
 
 
 
