@@ -6,7 +6,7 @@
 |       Editor |                                                                                             |
 |         Type | Standard                                                                                    |
 |     Category | Framework                                                                                   |
-|      Created | 2023-11-08                                                                                  |
+|      Created | 2023-11-09                                                                                  |
 | Comments-URI |                                                                                             |
 |       Status |                                                                                             |
 |     Requires | N/A                                                                                         |
@@ -38,7 +38,7 @@ BigVector data structure stores and chains vectors(slices) with dynamic_fields. 
 
 BigVector provides similar functions as traditional vector, which contains `borrow`, `borrow_mut`, `length`, `is_empty`, `push_back`, `pop_back`, `swap_remove`, `remove`, `destroy_empty`.
 
-Since gas fees for dynamic_field accesses are charged by the number of function calls, BigVector provides `borrow_slice` and `borrow_slice_mut` functions to access a single slice instead of accessing massive elements directly from `borrow` or `borrow_mut` functions. Please reference the `test_big_vector_iteration` test function inside `big_vector.move` for explicit usage.
+Since gas fees for dynamic_field accesses are charged by the number of function calls, BigVector provides `borrow_slice` and `borrow_slice_mut` functions to access a single slice instead of accessing massive elements directly from `borrow` or `borrow_mut` functions.
 
 ## Rationale
 
@@ -57,6 +57,49 @@ This SIP presents no issues with backwards compatibility.
 ## Test Cases
 
 ## Reference Implementation
+
+### BigVector iteration
+Since gas fees for dynamic_field accesses are charged by the number of function calls, iteration with borrow/borrow_mut is also costly. The most efficient way is using `borrow_slice` or `borrow_slice_mut` function to get slices and iterate the vectors. If there are n slices and the slice_size is m, you may need n * m times of dynamic_field accesses with the traditional `borrow` or `borrow_mut`, but only n times with the `borrow_slice` or `borrow_slice_mut` function.
+
+```Rust
+fun test_big_vector_iteration() {
+    let scenario = test_scenario::begin(@0xAAAA);
+
+    let tmp = 5;
+    let big_vector = big_vector::new<u64>(3, test_scenario::ctx(&mut scenario));
+    let count = 1;
+    while (count <= tmp) {
+        big_vector::push_back(&mut big_vector, count);
+        count = count + 1;
+    };
+
+    let result = vector::empty();
+    // get BigVector settings
+    let length = big_vector::length(&big_vector);
+    let slice_size = big_vector::slice_size(&big_vector);
+    let slice = big_vector::borrow_slice(&big_vector, 1);
+    let i = 0;
+    while (i < length) {
+        // get element from slice
+        let value = vector::borrow(slice, i % slice_size);
+        vector::push_back(&mut result, *value);
+        // jump to next slice
+        if (i + 1 < length && (i + 1) % slice_size == 0) {
+            let slice_id = big_vector::slice_id(&big_vector, i + 1);
+            slice = big_vector::borrow_slice(
+                &big_vector,
+                slice_id,
+            );
+        };
+        i = i + 1;
+    };
+
+    assert!(vector[1, 2, 3, 4, 5] == result, 0);
+
+    big_vector::drop(big_vector);
+    test_scenario::end(scenario);
+}
+```
 
 ## Security Considerations
 
