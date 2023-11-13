@@ -8,23 +8,30 @@ module typus_framework::big_vector {
     use sui::tx_context::TxContext;
     use sui::dynamic_field;
 
+    // ======== Constants ========
+
+    const CMaxSliceSize: u32 = 262144;
+
     // ======== Errors ========
 
     const ENotEmpty: u64 = 0;
+    const EMaxSliceSize: u64 = 1;
 
     // ======== Structs ========
 
     struct BigVector<phantom Element> has key, store {
         id: UID,
         slice_count: u64,
-        slice_size: u64,
+        slice_size: u32,
         length: u64,
     }
 
     // ======== Functions ========
 
     /// create BigVector
-    public fun new<Element: store>(slice_size: u64, ctx: &mut TxContext): BigVector<Element> {
+    public fun new<Element: store>(slice_size: u32, ctx: &mut TxContext): BigVector<Element> {
+        assert!(slice_size <= CMaxSliceSize, EMaxSliceSize);
+
         let id = object::new(ctx);
         let slice_count = 1;
         dynamic_field::add(&mut id, slice_count, vector::empty<Element>());
@@ -42,7 +49,7 @@ module typus_framework::big_vector {
     }
 
     /// return the max size of a slice in the BigVector
-    public fun slice_size<Element: store>(bv: &BigVector<Element>): u64 {
+    public fun slice_size<Element: store>(bv: &BigVector<Element>): u32 {
         bv.slice_size
     }
 
@@ -53,7 +60,7 @@ module typus_framework::big_vector {
 
     /// return the slice_id related to the index i
     public fun slice_id<Element: store>(bv: &BigVector<Element>, i: u64): u64 {
-        (i / bv.slice_size) + 1
+        (i / (bv.slice_size as u64)) + 1
     }
 
     /// return true if the BigVector is empty
@@ -63,7 +70,7 @@ module typus_framework::big_vector {
 
     /// push a new element at the end of the BigVector
     public fun push_back<Element: store>(bv: &mut BigVector<Element>, element: Element) {
-        if (length(bv) / bv.slice_size == bv.slice_count) {
+        if (length(bv) / (bv.slice_size as u64) == bv.slice_count) {
             bv.slice_count = bv.slice_count + 1;
             let new_slice = vector::singleton(element);
             dynamic_field::add(&mut bv.id, bv.slice_count, new_slice);
@@ -87,16 +94,16 @@ module typus_framework::big_vector {
 
     /// borrow an element at index i from the BigVector
     public fun borrow<Element: store>(bv: &BigVector<Element>, i: u64): &Element {
-        let slice_count = (i / bv.slice_size) + 1;
+        let slice_count = (i / (bv.slice_size as u64)) + 1;
         let slice = dynamic_field::borrow(&bv.id, slice_count);
-        vector::borrow(slice, i % bv.slice_size)
+        vector::borrow(slice, i % (bv.slice_size as u64))
     }
 
     /// borrow a mutable element at index i from the BigVector
     public fun borrow_mut<Element: store>(bv: &mut BigVector<Element>, i: u64): &mut Element {
-        let slice_count = (i / bv.slice_size) + 1;
+        let slice_count = (i / (bv.slice_size as u64)) + 1;
         let slice = dynamic_field::borrow_mut(&mut bv.id, slice_count);
-        vector::borrow_mut(slice, i % bv.slice_size)
+        vector::borrow_mut(slice, i % (bv.slice_size as u64))
     }
 
     /// borrow a slice from the BigVector
@@ -115,10 +122,10 @@ module typus_framework::big_vector {
         if (i == length(bv)) {
             result
         } else {
-            let slice_count = (i / bv.slice_size) + 1;
+            let slice_count = (i / (bv.slice_size as u64)) + 1;
             let slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, slice_count);
             vector::push_back(slice, result);
-            vector::swap_remove(slice, i % bv.slice_size)
+            vector::swap_remove(slice, i % (bv.slice_size as u64))
         }
     }
 
@@ -126,10 +133,10 @@ module typus_framework::big_vector {
     /// abort when reference more thant 1000 slices
     /// costly function, use wisely
     public fun remove<Element: store>(bv: &mut BigVector<Element>, i: u64): Element {
-        let slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, (i / bv.slice_size) + 1);
-        let result = vector::remove(slice, i % bv.slice_size);
+        let slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, (i / (bv.slice_size as u64)) + 1);
+        let result = vector::remove(slice, i % (bv.slice_size as u64));
         let slice_count = bv.slice_count;
-        while (slice_count > (i / bv.slice_size) + 1 && slice_count > 1) {
+        while (slice_count > (i / (bv.slice_size as u64)) + 1 && slice_count > 1) {
             let slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, slice_count);
             let tmp = vector::remove(slice, 0);
             let prev_slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, slice_count - 1);
@@ -313,7 +320,7 @@ module typus_framework::test_big_vector {
         let result = vector::empty();
         // get BigVector settings
         let length = big_vector::length(&big_vector);
-        let slice_size = big_vector::slice_size(&big_vector);
+        let slice_size = (big_vector::slice_size(&big_vector) as u64);
         let slice = big_vector::borrow_slice(&big_vector, 1);
         let i = 0;
         while (i < length) {
