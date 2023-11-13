@@ -10,7 +10,7 @@ module typus_framework::big_vector {
 
     // ======== Errors ========
 
-    const E_NOT_EMPTY: u64 = 0;
+    const ENotEmpty: u64 = 0;
 
     // ======== Structs ========
 
@@ -150,7 +150,7 @@ module typus_framework::big_vector {
             slice_size: _,
             length,
         } = bv;
-        assert!(length == 0, E_NOT_EMPTY);
+        assert!(length == 0, ENotEmpty);
         let empty_slice = dynamic_field::remove(&mut id, 1);
         vector::destroy_empty<Element>(empty_slice);
         object::delete(id);
