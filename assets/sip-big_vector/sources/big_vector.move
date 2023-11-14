@@ -174,10 +174,12 @@ module typus_framework::big_vector {
     /// remove empty slice after element removal
     fun trim_slice<Element: store>(bv: &mut BigVector<Element>) {
         let slice = dynamic_field::borrow_mut<u64, vector<Element>>(&mut bv.id, bv.slice_idx);
-        if (bv.slice_idx > 0 && vector::is_empty(slice)) {
+        if (vector::is_empty(slice)) {
             let empty_slice = dynamic_field::remove(&mut bv.id, bv.slice_idx);
             vector::destroy_empty<Element>(empty_slice);
-            bv.slice_idx = bv.slice_idx - 1;
+            if (bv.slice_idx > 0) {
+                bv.slice_idx = bv.slice_idx - 1;
+            };
         };
     }
 }
@@ -195,12 +197,12 @@ module typus_framework::test_big_vector {
         let scenario = test_scenario::begin(@0xAAAA);
         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
+        // [1, 2], [3, 4], [5]
         let count = 0;
         while (count < 5) {
             big_vector::push_back(&mut big_vector, count + 1);
             count = count + 1;
         };
-        // [1, 2], [3, 4], [5]
         assert_result(
             &big_vector,
             vector[
@@ -211,17 +213,60 @@ module typus_framework::test_big_vector {
                 vector[2, 5],
             ],
         );
+
+        // []
         let count = 0;
-        while (count < 2) {
+        while (count < 5) {
             big_vector::pop_back(&mut big_vector);
             count = count + 1;
         };
-        // [1, 2], [3]
+        assert_result(
+            &big_vector,
+            vector[],
+        );
+
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
         assert_result(
             &big_vector,
             vector[
                 vector[0, 1],
                 vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
+
+        // [1]
+        let count = 0;
+        while (count < 4) {
+            big_vector::pop_back(&mut big_vector);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+            ],
+        );
+
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 3) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 1],
+                vector[1, 2],
                 vector[1, 3],
             ],
         );
@@ -235,12 +280,12 @@ module typus_framework::test_big_vector {
         let scenario = test_scenario::begin(@0xAAAA);
         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
+        // [1, 2], [3, 4], [5]
         let count = 0;
         while (count < 5) {
             big_vector::push_back(&mut big_vector, count + 1);
             count = count + 1;
         };
-        // [1, 2], [3, 4], [5]
         assert_result(
             &big_vector,
             vector[
@@ -251,8 +296,9 @@ module typus_framework::test_big_vector {
                 vector[2, 5],
             ],
         );
-        big_vector::swap_remove(&mut big_vector, 2);
+
         // [1, 2], [5, 4]
+        big_vector::swap_remove(&mut big_vector, 2);
         assert_result(
             &big_vector,
             vector[
@@ -260,6 +306,17 @@ module typus_framework::test_big_vector {
                 vector[0, 2],
                 vector[1, 5],
                 vector[1, 4],
+            ],
+        );
+
+        // [4, 2], [5]
+        big_vector::swap_remove(&mut big_vector, 0);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 4],
+                vector[0, 2],
+                vector[1, 5],
             ],
         );
 
@@ -270,14 +327,14 @@ module typus_framework::test_big_vector {
     #[test]
     fun test_big_vector_remove() {
         let scenario = test_scenario::begin(@0xAAAA);
-
         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+
+        // [1, 2], [3, 4], [5]
         let count = 0;
         while (count < 5) {
             big_vector::push_back(&mut big_vector, count + 1);
             count = count + 1;
         };
-        // [1, 2], [3, 4], [5]
         assert_result(
             &big_vector,
             vector[
@@ -288,8 +345,9 @@ module typus_framework::test_big_vector {
                 vector[2, 5],
             ],
         );
-        big_vector::remove(&mut big_vector, 2);
+
         // [1, 2], [4, 5]
+        big_vector::remove(&mut big_vector, 2);
         assert_result(
             &big_vector,
             vector[
@@ -299,8 +357,9 @@ module typus_framework::test_big_vector {
                 vector[1, 5],
             ],
         );
-        big_vector::remove(&mut big_vector, 0);
+
         // [2, 4], [5]
+        big_vector::remove(&mut big_vector, 0);
         assert_result(
             &big_vector,
             vector[
@@ -309,8 +368,9 @@ module typus_framework::test_big_vector {
                 vector[1, 5],
             ],
         );
-        big_vector::remove(&mut big_vector, 1);
+
         // [2, 5]
+        big_vector::remove(&mut big_vector, 1);
         assert_result(
             &big_vector,
             vector[
@@ -328,15 +388,14 @@ module typus_framework::test_big_vector {
     /// borrow each slice once and iterate the vector reduces the massive dynamic_field::borrow function
     fun test_big_vector_iteration() {
         let scenario = test_scenario::begin(@0xAAAA);
-
         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+
+        // [1, 2], [3, 4], [5]
         let count = 0;
         while (count < 5) {
             big_vector::push_back(&mut big_vector, count + 1);
             count = count + 1;
         };
-
-        // [1, 2], [3, 4], [5]
         assert_result(
             &big_vector,
             vector[
@@ -364,25 +423,27 @@ module typus_framework::test_big_vector {
         // };
         let result = vector::empty();
         let length = big_vector::length(big_vector);
-        let slice_size = (big_vector::slice_size(big_vector) as u64);
-        let slice_idx = 0;
-        let slice = big_vector::borrow_slice(big_vector, slice_idx);
-        let i = 0;
-        while (i < length) {
-            vector::push_back(
-                &mut result,
-                vector[slice_idx, *vector::borrow(slice, i % slice_size)],
-            );
-            // std::debug::print(value);
-            // jump to next slice
-            if (i + 1 < length && (i + 1) % slice_size == 0) {
-                slice_idx = (i + 1) / (slice_size as u64);
-                slice = big_vector::borrow_slice(
-                    big_vector,
-                    slice_idx,
+        if (length > 0) {
+            let slice_size = (big_vector::slice_size(big_vector) as u64);
+            let slice_idx = 0;
+            let slice = big_vector::borrow_slice(big_vector, slice_idx);
+            let i = 0;
+            while (i < length) {
+                vector::push_back(
+                    &mut result,
+                    vector[slice_idx, *vector::borrow(slice, i % slice_size)],
                 );
+                // std::debug::print(value);
+                // jump to next slice
+                if (i + 1 < length && (i + 1) % slice_size == 0) {
+                    slice_idx = (i + 1) / (slice_size as u64);
+                    slice = big_vector::borrow_slice(
+                        big_vector,
+                        slice_idx,
+                    );
+                };
+                i = i + 1;
             };
-            i = i + 1;
         };
         assert!(expected_result == result, 0);
     }
