@@ -15,7 +15,7 @@ module typus_framework::big_vector {
     // ======== Errors ========
 
     const ENotEmpty: u64 = 0;
-    const EMaxSliceSize: u64 = 1;
+    const EInvalidSliceSize: u64 = 1;
 
     // ======== Structs ========
 
@@ -30,7 +30,7 @@ module typus_framework::big_vector {
 
     /// create BigVector
     public fun new<Element: store>(slice_size: u32, ctx: &mut TxContext): BigVector<Element> {
-        assert!(slice_size <= CMaxSliceSize, EMaxSliceSize);
+        assert!(slice_size > 0 && slice_size <= CMaxSliceSize, EInvalidSliceSize);
 
         let id = object::new(ctx);
         BigVector<Element> {
