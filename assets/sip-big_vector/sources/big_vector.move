@@ -252,267 +252,268 @@ module typus_framework::big_vector {
     }
 }
 
-// #[test_only]
-// module typus_framework::test_big_vector {
-//     use std::vector;
+#[test_only]
+module typus_framework::test_big_vector {
+    use std::vector;
 
-//     use sui::test_scenario;
+    use sui::test_scenario;
 
-//     use typus_framework::big_vector::{Self, BigVector};
+    use typus_framework::big_vector::{Self, BigVector};
 
-//     #[test]
-//     fun test_big_vector_push_pop() {
-//         let scenario = test_scenario::begin(@0xAAAA);
-//         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+    #[test]
+    fun test_big_vector_push_pop() {
+        let scenario = test_scenario::begin(@0xAAAA);
+        let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 3],
-//                 vector[1, 4],
-//                 vector[2, 5],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
 
-//         // []
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::pop_back<u64>(&mut big_vector);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[],
-//         );
+        // []
+        let count = 0;
+        while (count < 5) {
+            big_vector::pop_back<u64>(&mut big_vector);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[],
+        );
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 3],
-//                 vector[1, 4],
-//                 vector[2, 5],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
 
-//         // [1]
-//         let count = 0;
-//         while (count < 4) {
-//             big_vector::pop_back<u64>(&mut big_vector);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//             ],
-//         );
+        // [1]
+        let count = 0;
+        while (count < 4) {
+            big_vector::pop_back<u64>(&mut big_vector);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+            ],
+        );
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 3) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 1],
-//                 vector[1, 2],
-//                 vector[1, 3],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 3) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 1],
+                vector[1, 2],
+                vector[1, 3],
+            ],
+        );
 
-//         big_vector::drop<u64>(big_vector);
-//         test_scenario::end(scenario);
-//     }
+        big_vector::drop<u64>(big_vector);
+        test_scenario::end(scenario);
+    }
 
-//     #[test]
-//     fun test_big_vector_swap_remove() {
-//         let scenario = test_scenario::begin(@0xAAAA);
-//         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+    #[test]
+    fun test_big_vector_swap_remove() {
+        let scenario = test_scenario::begin(@0xAAAA);
+        let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 3],
-//                 vector[1, 4],
-//                 vector[2, 5],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
 
-//         // [1, 2], [5, 4]
-//         big_vector::swap_remove<u64>(&mut big_vector, 2);
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 5],
-//                 vector[1, 4],
-//             ],
-//         );
+        // [1, 2], [5, 4]
+        big_vector::swap_remove<u64>(&mut big_vector, 2);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 5],
+                vector[1, 4],
+            ],
+        );
 
-//         // [4, 2], [5]
-//         big_vector::swap_remove<u64>(&mut big_vector, 0);
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 4],
-//                 vector[0, 2],
-//                 vector[1, 5],
-//             ],
-//         );
+        // [4, 2], [5]
+        big_vector::swap_remove<u64>(&mut big_vector, 0);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 4],
+                vector[0, 2],
+                vector[1, 5],
+            ],
+        );
 
-//         big_vector::drop<u64>(big_vector);
-//         test_scenario::end(scenario);
-//     }
+        big_vector::drop<u64>(big_vector);
+        test_scenario::end(scenario);
+    }
 
-//     #[test]
-//     fun test_big_vector_remove() {
-//         let scenario = test_scenario::begin(@0xAAAA);
-//         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+    #[test]
+    fun test_big_vector_remove() {
+        let scenario = test_scenario::begin(@0xAAAA);
+        let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 3],
-//                 vector[1, 4],
-//                 vector[2, 5],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
 
-//         // [1, 2], [4, 5]
-//         big_vector::remove<u64>(&mut big_vector, 2);
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 4],
-//                 vector[1, 5],
-//             ],
-//         );
+        // [1, 2], [4, 5]
+        big_vector::remove<u64>(&mut big_vector, 2);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 4],
+                vector[1, 5],
+            ],
+        );
 
-//         // [2, 4], [5]
-//         big_vector::remove<u64>(&mut big_vector, 0);
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 2],
-//                 vector[0, 4],
-//                 vector[1, 5],
-//             ],
-//         );
+        // [2, 4], [5]
+        big_vector::remove<u64>(&mut big_vector, 0);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 2],
+                vector[0, 4],
+                vector[1, 5],
+            ],
+        );
 
-//         // [2, 5]
-//         big_vector::remove<u64>(&mut big_vector, 1);
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 2],
-//                 vector[0, 5],
-//             ],
-//         );
+        // [2, 5]
+        big_vector::remove<u64>(&mut big_vector, 1);
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 2],
+                vector[0, 5],
+            ],
+        );
 
-//         big_vector::drop<u64>(big_vector);
-//         test_scenario::end(scenario);
-//     }
+        big_vector::drop<u64>(big_vector);
+        test_scenario::end(scenario);
+    }
 
-//     #[test]
-//     /// since dynamic_field::borrow is costly, iteration with borrow/borrow_mut is also costly
-//     /// borrow each slice once and iterate the vector reduces the massive dynamic_field::borrow function
-//     fun test_big_vector_iteration() {
-//         let scenario = test_scenario::begin(@0xAAAA);
-//         let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
+    #[test]
+    /// since dynamic_field::borrow is costly, iteration with borrow/borrow_mut is also costly
+    /// borrow each slice once and iterate the vector reduces the massive dynamic_field::borrow function
+    fun test_big_vector_iteration() {
+        let scenario = test_scenario::begin(@0xAAAA);
+        let big_vector = big_vector::new<u64>(2, test_scenario::ctx(&mut scenario));
 
-//         // [1, 2], [3, 4], [5]
-//         let count = 0;
-//         while (count < 5) {
-//             big_vector::push_back(&mut big_vector, count + 1);
-//             count = count + 1;
-//         };
-//         assert_result(
-//             &big_vector,
-//             vector[
-//                 vector[0, 1],
-//                 vector[0, 2],
-//                 vector[1, 3],
-//                 vector[1, 4],
-//                 vector[2, 5],
-//             ],
-//         );
+        // [1, 2], [3, 4], [5]
+        let count = 0;
+        while (count < 5) {
+            big_vector::push_back(&mut big_vector, count + 1);
+            count = count + 1;
+        };
+        assert_result(
+            &big_vector,
+            vector[
+                vector[0, 1],
+                vector[0, 2],
+                vector[1, 3],
+                vector[1, 4],
+                vector[2, 5],
+            ],
+        );
 
-//         big_vector::drop<u64>(big_vector);
-//         test_scenario::end(scenario);
-//     }
+        big_vector::drop<u64>(big_vector);
+        test_scenario::end(scenario);
+    }
 
-//     fun assert_result(
-//         big_vector: &BigVector,
-//         expected_result: vector<vector<u64>>,
-//     ) {
-//         // let current_slice_idx = big_vector::slice_idx(big_vector);
-//         // let slice_idx = 0;
-//         // while (slice_idx <= current_slice_idx) {
-//         //     std::debug::print(big_vector::borrow_slice(big_vector, slice_idx));
-//         //     slice_idx = slice_idx + 1;
-//         // };
-//         let result = vector::empty();
-//         let length = big_vector::length(big_vector);
-//         if (length > 0) {
-//             let slice_size = (big_vector::slice_size(big_vector) as u64);
-//             let slice_idx = 0;
-//             let slice = big_vector::borrow_slice(big_vector, slice_idx);
-//             let i = 0;
-//             while (i < length) {
-//                 vector::push_back(
-//                     &mut result,
-//                     vector[slice_idx, *vector::borrow(slice, i % slice_size)],
-//                 );
-//                 // std::debug::print(value);
-//                 // jump to next slice
-//                 if (i + 1 < length && (i + 1) % slice_size == 0) {
-//                     slice_idx = (i + 1) / (slice_size as u64);
-//                     slice = big_vector::borrow_slice(
-//                         big_vector,
-//                         slice_idx,
-//                     );
-//                 };
-//                 i = i + 1;
-//             };
-//         };
-//         assert!(expected_result == result, 0);
-//     }
-// }
+    fun assert_result(
+        big_vector: &BigVector,
+        expected_result: vector<vector<u64>>,
+    ) {
+        // let current_slice_idx = big_vector::slice_idx(big_vector);
+        // let slice_idx = 0;
+        // while (slice_idx <= current_slice_idx) {
+        //     std::debug::print(big_vector::borrow_slice<u64>(big_vector, slice_idx));
+        //     slice_idx = slice_idx + 1;
+        // };
+        let result = vector::empty();
+        let length = big_vector::length(big_vector);
+        if (length > 0) {
+            let slice_size = (big_vector::slice_size(big_vector) as u64);
+            let slice_idx = 0;
+            let slice = big_vector::borrow_slice(big_vector, slice_idx);
+            let slice_length = big_vector::get_slice_length(slice);
+            let i = 0;
+            while (i < length) {
+                vector::push_back(
+                    &mut result,
+                    vector[slice_idx, *big_vector::borrow_from_slice(slice, i % slice_size)],
+                );
+                // jump to next slice
+                if (i + 1 < length && i + 1 == slice_idx * slice_size + slice_length) {
+                    slice_idx = big_vector::get_slice_idx(slice) + 1;
+                    slice = big_vector::borrow_slice(
+                        big_vector,
+                        slice_idx,
+                    );
+                    slice_length = big_vector::get_slice_length(slice);
+                };
+                i = i + 1;
+            };
+        };
+        assert!(expected_result == result, 0);
+    }
+}
