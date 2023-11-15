@@ -1,14 +1,14 @@
-|   SIP-Number |                                                                                             |
+|   SIP-Number |  13                                                                                         |
 | -----------: | :------------------------------------------------------------------------------------------ |
 |        Title | BigVector Implementation                                                                    |
 |  Description | Implementing BigVector to the Sui framework, using dynamic_fields to store multiple vectors |
 |       Author | Jeric <@jericlong>, Wayne <@WayneAl>, Alvin <@alvin7878>                                    |
-|       Editor |                                                                                             |
+|       Editor | Shayan Sanjideh <shayan@sui.io, @shayansanjideh>                                            |  
 |         Type | Standard                                                                                    |
 |     Category | Framework                                                                                   |
 |      Created | 2023-11-09                                                                                  |
-| Comments-URI |                                                                                             |
-|       Status |                                                                                             |
+| Comments-URI | https://sips.sui.io/comments-13                                                             |
+|       Status | Draft                                                                                       |
 |     Requires | N/A                                                                                         |
 
 ## Abstract
