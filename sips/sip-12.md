@@ -1,15 +1,15 @@
-| SIP-Number          |                                                                                                                                            |
+| SIP-Number          |12                                                                                                                                          |
 | ---:                |:-------------------------------------------------------------------------------------------------------------------------------------------|
 | Title               | Poseidon in SUI move                                                                                                                       |
 | Description         | Add the Poseidon hash function to the SUI Move framework.                                                                                  |
-| Author              | Jonas Lindstrøm (jonas-lj)                                                                                                                 |
-| Editor              |                                                                                                                                            |
+| Author              | Jonas Lindstrøm <@jonas-lj>                                                                                                                |
+| Editor              | Henry Duong <henry@sui.io, @hyd628>                                                                                                        |
 | Type                | Standard                                                                                                                                   |
 | Category            | Framework                                                                                                                                  |
 | Created             | 2023-10-09                                                                                                                                 |
-| Comments-URI        |                                                                                                                                            |
-| Status              |                                                                                                                                            |
-| Requires            |                                                                                                                                            |
+| Comments-URI        | https://sips.sui.io/comments-12                                                                                                            |
+| Status              | Draft                                                                                                                                      |
+| Requires            | N/A                                                                                                                                        |
 
 ## Abstract
 
