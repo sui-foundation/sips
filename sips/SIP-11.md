@@ -1,14 +1,14 @@
-|   SIP-Number |                                                                                                                        |
+|   SIP-Number | 11                                                                                                                     |
 |-------------:|:-----------------------------------------------------------------------------------------------------------------------|
 |        Title | Action Primitive                                                                                                       |
 |  Description | Introduction of object types Action and Action Attestation to enable interoperability around users' on-chain behaviors |
-|       Author | Patrick\<patrick@cubicgames.xyz\>, Stone\<stone@cubicgames.xyz\>, Panda\<panda@cubicgames.xyz\>                        |
-|       Editor |                                                                                                                        |
+|       Author | Patrick <patrick@cubicgames.xyz, @stone@cubicgames.xyz, @panda@cubicgames.xyz>                                         |
+|       Editor | Will Riches <will@sui.io, @wriches>                                                                                    |
 |         Type | Standard                                                                                                               |
 |     Category | Application                                                                                                            |
 |      Created | 2023-09-19                                                                                                             |
-| Comments-URI |                                                                                                                        |
-|       Status |                                                                                                                        |
+| Comments-URI | https://github.com/sui-foundation/sips/pull/11                                                                         |
+|       Status | Draft                                                                                                                  |
 |     Requires |                                                                                                                        |
 
 ## Abstract
