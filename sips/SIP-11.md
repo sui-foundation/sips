@@ -2,7 +2,7 @@
 |-------------:|:-----------------------------------------------------------------------------------------------------------------------|
 |        Title | Action Primitive                                                                                                       |
 |  Description | Introduction of object types Action and Action Attestation to enable interoperability around users' on-chain behaviors |
-|       Author | Patrick <patrick@cubicgames.xyz, @stone@cubicgames.xyz, @panda@cubicgames.xyz>                                         |
+|       Author | Patrick <patrick@cubicgames.xyz, stone@cubicgames.xyz, panda@cubicgames.xyz>                                           |
 |       Editor | Will Riches <will@sui.io, @wriches>                                                                                    |
 |         Type | Standard                                                                                                               |
 |     Category | Application                                                                                                            |
