@@ -27,7 +27,7 @@ Here are a few generic use cases which can be simplifield.
 2. Leverage trading(perps): All protocols building leverage trading protocols on deepbook would essentialy need some additional checks on the price at which orders are matched on deepbook to safely deal with leverage & not incur losses due to price manipulation(more details in security section).
 3. Third party protocols, using deepbook as liquidity layer, can add custom asserts & policies on matched orders in same txn(revert if matched orders doesn't fullfill custom policies & checks). This approach provides a generic hook for protocols to add custom asserts over matched orders in their respective packages with no changes in deepbook.
 
-##Security 
+## Security 
 
 Proper checks on order matching is crucial for all protocols to ensure no exploits using price manipulation of deepbook.
 
