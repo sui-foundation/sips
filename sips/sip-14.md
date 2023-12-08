@@ -1,15 +1,15 @@
 |   SIP-Number | 14                                                                                                                                                   |
 | -----------: | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-|        Title | New struct MatchedOrderMetadata in deepbook.                                                                                                         |
-|  Description | Implementing new struct MatchedOrderMetadata to the sui-framework package deepbook, to return matched order metadata from new place order functions. |
+|        Title | New struct MatchedOrderMetadata in deepbook                                                                                                          |
+|  Description | Implementing new struct MatchedOrderMetadata to the sui-framework package deepbook, to return matched order metadata from new place order functions  |
 |       Author | Sarthak <@Rajwanshi1>                                                                                                                                |
-|       Editor |                                                                                                                                                      |
+|       Editor | Shayan Sanjideh <shayan@sui.io, @shayansanjideh>                                                                                                     |
 |         Type | Standard                                                                                                                                             |
 |     Category | Framework                                                                                                                                            |
 |      Created | 2023-12-02                                                                                                                                           |
-| Comments-URI |                                                                                                                                                      |
+| Comments-URI | https://sips.sui.io/comments-14                                                                                                                      |
 |       Status | Draft                                                                                                                                                |
-|     Requires | N/A                                                                                                                                                  |
+|     Requires |                                                                                                                                                      |
 
 ## Abstract
 
