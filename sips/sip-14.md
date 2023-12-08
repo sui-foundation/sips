@@ -47,7 +47,10 @@ Third party margin protocols can enforce checks on the matched orders price. If 
 
 ## Specification
 
-PR: (https://github.com/MystenLabs/sui/pull/15119)
+PRs: 
+Code refactor: (https://github.com/MystenLabs/sui/pull/15249)
+Metada struct: (https://github.com/MystenLabs/sui/pull/15273)
+Metadata compute optimization: (https://github.com/MystenLabs/sui/pull/15275)
 
 New struct in clob_v2.move:
 
