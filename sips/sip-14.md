@@ -25,7 +25,7 @@ Here are a few generic use cases which can be simplifield.
 
 1. Spot-trading: Currently deepbook doesn't support slippage/min_buy_amount checks natively. Protocols like KriyaDEX(pro-trading) which offers spot trading UI on deepbook, can easily put slippage checks which is essential for users to to not incur un-neccasary losses due to high slippage in low liquidity & high spreads environments.
 2. Leverage trading: All protocols building leverage trading protocols on deepbook would essentialy need some additional checks on the price at which orders are matched on deepbook to safely deal with leverage & not incur losses due to price manipulation(more details in security section). Instant p2p settlement is also essential for margin protocols to ensure every leveraged profit equals someone's leveraged loss.
-3. Third party integratopions: using deepbook as liquidity layer, can add additional asserts & policies on matched orders in same txn(revert if matched orders doesn't fullfill custom policies & checks). This approach provides a generic hook for protocols to add additional asserts over matched orders & counter parties involved in their respective packages with no changes in deepbook.
+3. Third party integrations: using deepbook as liquidity layer, can add additional asserts & policies on matched orders in same txn(revert if matched orders doesn't fullfill custom policies & checks). This approach provides a generic hook for protocols to add additional asserts over matched orders & counter parties involved in their respective packages with no changes in deepbook.
 
 ## Security 
 
