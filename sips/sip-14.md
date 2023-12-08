@@ -66,7 +66,7 @@ New struct in clob_v2.move:
         maker_address: address,
         /// qty of base asset filled.
         base_asset_quantity_filled: u64,
-        /// price at which basset asset filled.
+        /// price at which base asset filled.
         price: u64,
         taker_commission: u64,
         maker_rebates: u64
