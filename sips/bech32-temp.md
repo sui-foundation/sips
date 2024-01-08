@@ -13,13 +13,13 @@
 
 ## Abstract
 
-Currently, both Sui Wallet and Sui Keystore support import and export for private key in 32-byte Hex encoding. This SIP proposes to change the import and export interface only accept 33-bytes `flag || private_key` Bech32 encoded string with human readable part (HRP) as `suiprivkey` for both Sui Wallet and Sui Keystore.
+Currently, both Sui Wallet and Sui Keystore support import and export for private keys in 32-byte Hex encoding. This SIP proposes to change the import and export interface only accept 33-bytes `flag || private_key` Bech32 encoded string with human readable part (HRP) as `suiprivkey` for both Sui Wallet and Sui Keystore.
 
 ## Motivation
 
-This SIP is proposed to visually distinguish a 32-byte private key representation from a 32-bytes Sui address that is currently also Hex encoded. This prevents human errors to accidentally import Sui address as private key to a wallet, or enter a private key as a Sui address when creating a transaction.
+This SIP is proposed to visually distinguish a 32-byte private key representation from a 32-bytes Sui address that is currently also Hex encoded. This prevents human errors from accidentally importing a Sui address as a private key to a wallet, or entering a private key as a Sui address when creating a transaction.
 
-This also always includes the 1-byte flag before 32-byte private key to keep the Sui wallet and the Sui Keystore representation consistent. No appending flag byte is required when importing and exporting from Sui Wallet to Sui Keystore or vice versa.
+This also always includes the 1-byte flag before the 32-byte private key to keep the Sui wallet and the Sui Keystore representation consistent. No appending flag byte is required when importing and exporting from Sui Wallet to Sui Keystore or vice versa.
 
 ## Specification
 
@@ -38,11 +38,29 @@ Sui Keytool CLI
 
 Sui Wallet and SDK
 
-1. 
+The SDK offers the following new interfaces. 
+
+```typescript
+/**
+ * This returns a Keypair object based by validating the 33-byte Bech32 encoded string 
+ * starting with `suiprivkey`, and construct the keypair based on the signature scheme 
+ * and the private key bytes.
+ */
+export function decodeSuiPrivateKey(value: string): Keypair;
+
+/**
+ * This returns a Bech32 encoded string starting with `suiprivkey`, 
+ * encoding 33-byte `flag || bytes` for the given the 32-byte private 
+ * key and its signature scheme. 
+ */
+export function encodeSuiPrivateKey(bytes: Uint8Array, scheme: SignatureScheme): string;
+```
+
+Sui Wallet UI uses these interfaces when importing private key and exporting private key. 
 
 ## Rationale
 
-The proposed encoding change from Hex to Bech32 for private key is to clearly distinguish a Sui address (32-byte Hex) from a Sui private key. 
+The proposed encoding change from Hex to Bech32 for private keys is to clearly distinguish a Sui address (32-byte Hex) from a Sui private key.
 
 Why Bech32? It is the most modern encoding standardized by Bitcoin. It supports checksum and eliminates error-prone characters. In addition, It contains a human readable part (HRP) indicating it is a private key very noticeably (i.e. "suiprivkey"). 
 
@@ -54,13 +72,18 @@ With the new encoding, a private key will not be validated by Sui Wallet as a Su
 
 This change is **NOT** backward compatible. The legacy Hex encoded private keys can no longer be imported and exported for Sui Wallet and Sui CLI keystore after this change.
 
-To use the latest Sui Wallet and CLI keystore, a user must first make sure the Hex encoding 32-byte is indeed a private key (instead of a Sui address or anything else), then use the CLI tool to convert to Bech32 encoding. 
+To use the latest Sui Wallet and CLI keystore, a user must first make sure the Hex encoding 32-byte is indeed a private key (instead of a Sui address or anything else), then use the CLI tool to convert to Bech32 encoding. Alternatively, export the private key with the latest Sui binary (version >= x.x.x TODO) or with the Sui Wallet (version >= x.x.x TODO) starting with "suiprivkey".  
 
-Example
+To convert a private key with CLI:
 
 ```bash
 sui keytool convert 0x1b87a727f58830d9ba2bfe6ecdc8fb49aa96fa2a2bbe175e128bfee13f6895ff
 ```
+
+To export a private key with CLI: 
+
+```bash
+sui keytool export ```
 
 ## Test Cases
 | Bech32 format (33-byte with flag) | Hex format (32-byte, assumes Ed25519 flag) | Base64 format (33-byte with flag) | Sui address | 
