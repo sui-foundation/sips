@@ -32,6 +32,7 @@ See [BIP-173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki) fo
 ### What Changed
 
 Sui Keytool CLI
+
 1. `sui keytool convert`: Add a new keytool command to convert a legacy format to the new Bech32 format. 
 2. `sui keytool export`: Add a new keytool command to export a Bech32 format private key from Sui Keystore.  
 3. `sui keytool import`: Modify the behavior of the existing import private key command to disallow Hex encoded 32-byte private key and only allow the new Bech32 format. 
@@ -41,19 +42,43 @@ Sui Wallet and SDK
 The SDK offers the following new interfaces. 
 
 ```typescript
-/**
- * This returns a Keypair object based by validating the 33-byte Bech32 encoded string 
- * starting with `suiprivkey`, and construct the keypair based on the signature scheme 
- * and the private key bytes.
- */
-export function decodeSuiPrivateKey(value: string): Keypair;
+import { bech32 } from 'bech32';
 
 /**
- * This returns a Bech32 encoded string starting with `suiprivkey`, 
- * encoding 33-byte `flag || bytes` for the given the 32-byte private 
- * key and its signature scheme. 
+ * This returns an ParsedKeypair object based by validating the
+ * 33-byte Bech32 encoded string starting with `suiprivkey`, and
+ * parse out the signature scheme and the private key in bytes.
  */
-export function encodeSuiPrivateKey(bytes: Uint8Array, scheme: SignatureScheme): string;
+export function decodeSuiPrivateKey(value: string): ParsedKeypair {
+	const { prefix, words } = bech32.decode(value);
+	if (prefix !== SUI_PRIVATE_KEY_PREFIX) {
+		throw new Error('invalid private key prefix');
+	}
+	const extendedSecretKey = new Uint8Array(bech32.fromWords(words));
+	const secretKey = extendedSecretKey.slice(1);
+	const signatureScheme =
+		SIGNATURE_FLAG_TO_SCHEME[extendedSecretKey[0] as keyof typeof SIGNATURE_FLAG_TO_SCHEME];
+	return {
+		schema: signatureScheme,
+		secretKey: secretKey,
+	};
+}
+
+/**
+ * This returns a Bech32 encoded string starting with `suiprivkey`,
+ * encoding 33-byte `flag || bytes` for the given the 32-byte private
+ * key and its signature scheme.
+ */
+export function encodeSuiPrivateKey(bytes: Uint8Array, scheme: SignatureScheme): string {
+	if (bytes.length !== PRIVATE_KEY_SIZE) {
+		throw new Error('Invalid bytes length');
+	}
+	const flag = SIGNATURE_SCHEME_TO_FLAG[scheme];
+	const privKeyBytes = new Uint8Array(bytes.length + 1);
+	privKeyBytes.set([flag]);
+	privKeyBytes.set(bytes, 1);
+	return bech32.encode(SUI_PRIVATE_KEY_PREFIX, bech32.toWords(privKeyBytes));
+}
 ```
 
 Sui Wallet UI uses these interfaces when importing private key and exporting private key. 
@@ -70,11 +95,13 @@ With the new encoding, a private key will not be validated by Sui Wallet as a Su
 
 ## Backwards Compatibility
 
-This change is **NOT** backward compatible. The legacy Hex encoded private keys can no longer be imported and exported for Sui Wallet and Sui CLI keystore after this change.
+This change is currently backward compatible for importing private key. Users can still import Hex encoded private keys as well as Bech32 encoded private keys. Sui Wallet currently only supports export Bech32 encoded private keys.
 
-To use the latest Sui Wallet and CLI keystore, a user must first make sure the Hex encoding 32-byte is indeed a private key (instead of a Sui address or anything else), then use the CLI tool to convert to Bech32 encoding. Alternatively, export the private key with the latest Sui binary (version >= x.x.x TODO) or with the Sui Wallet (version >= x.x.x TODO) starting with "suiprivkey".  
+Starting March 1, 2024, newer versions of Sui Wallet will stop supporting Hex encoding private key import and only allow Bech32 encoding to be imported. We advise all wallets in Sui ecosystem to adopt similar migration plan to deprecate Hex encoding export immediately, and deprecate Hex encoding import gradually.
 
-To convert a private key with CLI:
+## Utilities
+
+To convert a private key from Hex to Bech32 with CLI:
 
 ```bash
 sui keytool convert 0x1b87a727f58830d9ba2bfe6ecdc8fb49aa96fa2a2bbe175e128bfee13f6895ff
@@ -83,9 +110,11 @@ sui keytool convert 0x1b87a727f58830d9ba2bfe6ecdc8fb49aa96fa2a2bbe175e128bfee13f
 To export a private key with CLI: 
 
 ```bash
-sui keytool export ```
+sui keytool export
+```
 
 ## Test Cases
+
 | Bech32 format (33-byte with flag) | Hex format (32-byte, assumes Ed25519 flag) | Base64 format (33-byte with flag) | Sui address | 
 |---|---|---|---|
 | suiprivkey1qzwant3kaegmjy4qxex93s0jzvemekkjmyv3r2sjwgnv2y479pgsywhveae | 0x9dd9ae36ee51b912a0364c58c1f21333bcdad2d91911aa127226c512be285102 | AJ3ZrjbuUbkSoDZMWMHyEzO82tLZGRGqEnImxRK+KFEC | 0x90f3e6d73b5730f16974f4df1d3441394ebae62186baf83608599f226455afa7 |
