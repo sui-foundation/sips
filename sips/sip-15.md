@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | <15> |
 | ---:                | :--- |
 | Title               | Use Bech32 encoding for private key in wallets import and exports |
 | Description         | Change the encoding for private key from 32-bytes Hex encoding to 33-byte flag and private key in Bech32 encoding for wallets and Sui Keystore import and export interfaces. |
-| Author              | Joy Wang (joy@mystenlabs.com) |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Author              | Joy Wang <joy@mystenlabs.com> |
+| Editor              | Will Riches <will@sui.io, @wriches>  |
 | Type                | Standard |
 | Category            | Wallet interface |
 | Created             | 2024-01-04 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-15  |
+| Status              | Fast Track |
+| Requires            | |
 
 ## Abstract
 
