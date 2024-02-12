@@ -3,7 +3,7 @@
 | Title               | Poseidon in SUI move                                                                                                                       |
 | Description         | Add the Poseidon hash function to the SUI Move framework.                                                                                  |
 | Author              | Jonas Lindstrøm <@jonas-lj>                                                                                                                |
-| Editor              | Henry Duong <henry@sui.io, @hyd628>                                                                                                        |
+| Editor              | Will Riches <will@sui.io, @wriches>                                                                                                        |
 | Type                | Standard                                                                                                                                   |
 | Category            | Framework                                                                                                                                  |
 | Created             | 2023-10-09                                                                                                                                 |
