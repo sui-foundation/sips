@@ -8,7 +8,7 @@
 | Category            | Wallet interface |
 | Created             | 2024-01-04 |
 | Comments-URI        | https://sips.sui.io/comments-15  |
-| Status              | Fast Track |
+| Status              | Last Call |
 | Requires            | |
 
 ## Abstract
