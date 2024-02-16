@@ -1,19 +1,19 @@
-| SIP-Number          |12                                                                                                                                          |
+| SIP-Number          | 12                                                                                                                                         |
 | ---:                |:-------------------------------------------------------------------------------------------------------------------------------------------|
-| Title               | Poseidon in SUI move                                                                                                                       |
-| Description         | Add the Poseidon hash function to the SUI Move framework.                                                                                  |
+| Title               | Poseidon in Sui Move                                                                                                                       |
+| Description         | Add the Poseidon hash function to the Sui Move framework.                                                                                  |
 | Author              | Jonas Lindstrøm <@jonas-lj>                                                                                                                |
 | Editor              | Will Riches <will@sui.io, @wriches>                                                                                                        |
 | Type                | Standard                                                                                                                                   |
 | Category            | Framework                                                                                                                                  |
 | Created             | 2023-10-09                                                                                                                                 |
 | Comments-URI        | https://sips.sui.io/comments-12                                                                                                            |
-| Status              | Review                                                                                                                                      |
+| Status              | Review                                                                                                                                     |
 | Requires            | N/A                                                                                                                                        |
 
 ## Abstract
 
-This SIP introduces a SUI Move framework function which computes the [Poseidon hash function](https://www.poseidon-hash.info/). 
+This SIP introduces a Sui Move framework function which computes the [Poseidon hash function](https://www.poseidon-hash.info/). 
 
 
 ## Motivation
@@ -25,7 +25,7 @@ Poseidon for Circom, Rust, Go, Python and C.
 
 ## Specification
 
-We will add the following functions to the SUI Move framework:
+We will add the following functions to the Sui Move framework:
 ```
 public fun poseidon_bn254(input: vector<u256>): u256
 ```
@@ -50,11 +50,11 @@ MDS matrix in the linear layer etc., and each configuration yields a new hash fu
 only use parameters used in the reference implementation and the way it is used in zklogin. This ensures that only
 secure choice parameters may be used.
 
-If the only motivation for introducing the Poseidon hash function in SUI move is to support on-chain verification of
+If the only motivation for introducing the Poseidon hash function in Sui Move is to support on-chain verification of
 zklogin signatures, implementing Poseidon with the same parameters as used there would be sufficient. However, builders
 have expressed interest in using the Poseidon hash function for other purposes, and probably also using other proof 
 systems. The above design provides a compromise between convenience and interoperability with any zero-knowledge system, 
-a builder could be interested in using with SUI.
+a builder could be interested in using with Sui.
 
 The size of the input must be limited because the Poseidon hash functions is rather slow: Hashing 16
 elements takes about 0.6ms on a laptop, and the runtime is quadratic in the number of inputs. This is
