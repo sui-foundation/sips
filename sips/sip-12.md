@@ -1,15 +1,15 @@
-| SIP-Number          | 12                                                                                                                                         |
-| ---:                |:-------------------------------------------------------------------------------------------------------------------------------------------|
-| Title               | Poseidon in Sui Move                                                                                                                       |
-| Description         | Add the Poseidon hash function to the Sui Move framework.                                                                                  |
-| Author              | Jonas Lindstrøm <@jonas-lj>                                                                                                                |
-| Editor              | Will Riches <will@sui.io, @wriches>                                                                                                        |
-| Type                | Standard                                                                                                                                   |
-| Category            | Framework                                                                                                                                  |
-| Created             | 2023-10-09                                                                                                                                 |
-| Comments-URI        | https://sips.sui.io/comments-12                                                                                                            |
-| Status              | Last Call                                                                                                                                  |
-| Requires            | N/A                                                                                                                                        |
+| SIP-Number          | 12                                                        |
+| ------------------: | :-------------------------------------------------------- |
+| Title               | Poseidon in Sui Move                                      |
+| Description         | Add the Poseidon hash function to the Sui Move framework. |
+| Author              | Jonas Lindstrøm <@jonas-lj>                               |
+| Editor              | Will Riches <will@sui.io, @wriches>                       |
+| Type                | Standard                                                  |
+| Category            | Framework                                                 |
+| Created             | 2023-10-09                                                |
+| Comments-URI        | https://sips.sui.io/comments-12                           |
+| Status              | Last Call                                                 |
+| Requires            | N/A                                                       |
 
 ## Abstract
 
