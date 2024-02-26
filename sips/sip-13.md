@@ -3,12 +3,12 @@
 |        Title | BigVector Implementation                                                                    |
 |  Description | Implementing BigVector to the Sui framework, using dynamic_fields to store multiple vectors |
 |       Author | Jeric <@jericlong>, Wayne <@WayneAl>, Alvin <@alvin7878>                                    |
-|       Editor | Shayan Sanjideh <shayan@sui.io, @shayansanjideh>                                            |  
+|       Editor | Amogh Gupta <amogh@sui.io, @amogh-sui>                                            |  
 |         Type | Standard                                                                                    |
 |     Category | Framework                                                                                   |
 |      Created | 2023-11-09                                                                                  |
 | Comments-URI | https://sips.sui.io/comments-13                                                             |
-|       Status | Draft                                                                                       |
+|       Status | Stagnant                                                                                       |
 |     Requires | N/A                                                                                         |
 
 ## Abstract
