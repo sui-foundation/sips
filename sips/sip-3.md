@@ -8,7 +8,7 @@
 |     Category |                                                                           |
 |      Created | 2023-05-26                                                                |
 | Comments-URI | https://sips.sui.io/comments-3                                            |
-|       Status | Draft                                                                     |
+|       Status | Withdrawn                                                                 |
 |     Requires |                                                                           |
 
 ## Abstract
