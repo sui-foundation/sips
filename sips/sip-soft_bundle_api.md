@@ -3,7 +3,7 @@
 |        Title | Soft Bundle API                                      |
 |  Description | Add the soft bundle API to the Sui Authority Server. |
 |       Author | Shio Coder <shio.coder@gmail.com>                    |
-|       Editor | Shio Coder <shio.coder@gmail.com>                    |
+|       Editor | Will Riches <will@sui.io, @wriches>                  |
 |         Type | Standard                                             |
 |     Category | Core                                                 |
 |      Created | 2024-04-05                                           |
