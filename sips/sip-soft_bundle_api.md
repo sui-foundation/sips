@@ -67,9 +67,7 @@ There are no issues with backwards compatability.
 
 ## Reference Implementation
 
-[Commit](https://github.com/shio-coder/sui/commit/b12ae55852709084263e23e33f3446c6bf62550e)
-
-TODO: Add unit tests
+[PR](https://github.com/MystenLabs/sui/pull/17066/files)
 
 ## Security Considerations
 
