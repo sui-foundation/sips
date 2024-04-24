@@ -131,8 +131,7 @@ The current register of SIP Editors is as follows:
 | :---            | :---            | :---          | :---           |
 | Will Riches     | wriches         | will@sui.io   | Sui Foundation |
 | Henry Duong     | hyd628          | henry@sui.io  | Sui Foundation |
-| Shayan Sanjideh | shayansanjideh  | shayan@sui.io | Sui Foundation |
-| Akasha Thorne   | AkashaCoin      | akasha@sui.io | Sui Foundation |
+| Amogh Gupta     | amogh-sui       | amogh@sui.io  | Sui Foundation |
 
 ## SIP comments
 
