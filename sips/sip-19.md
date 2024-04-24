@@ -1,4 +1,4 @@
-|   SIP-Number | 100                                                  |
+|   SIP-Number | 19                                                   |
 | -----------: | :--------------------------------------------------- |
 |        Title | Soft Bundle API                                      |
 |  Description | Add the soft bundle API to the Sui Authority Server. |
@@ -7,8 +7,8 @@
 |         Type | Standard                                             |
 |     Category | Core                                                 |
 |      Created | 2024-04-05                                           |
-| Comments-URI | https://sips.sui.io/comments-100                     |
-|       Status | Draft                                                |
+| Comments-URI | https://sips.sui.io/comments-19                      |
+|       Status | Fast Track                                           |
 |     Requires | N/A                                                  |
 
 ## Abstract
