@@ -26,7 +26,7 @@ Implement a new Grpc method `HandleSoftBundleCertificatesV2` in AuthorityServer,
 
 - If at least one certificate cannot be executed, the whole request is denied.
 - If at least one certificate has already been executed, the whole request is denied.
-- If at least one certificate contains only owned object, the whole request is denied.
+- If at least one certificate does not access a shared object, the whole request is denied.
 - If at least one certificate has a different gas price than others, the whole request is denied.
 - If the number of certificates exceeds `N` , the whole request is denied.
   N should be small enough, say `N = 4`.
@@ -39,7 +39,7 @@ This requires modification to consensus client (ConsensusAdapter) as well as Nar
 After including the bundle in the same Batch, we can be certain that if this Batch is getting included in a Header in consensus, its internal ordering will be respected.
 Meanwhile:
 
-- Since all certificates may not contain only owned objects, their relative order is determined by consensus.
+- Since all certificates access at least one shared object, their relative order is determined by consensus.
 - PostConsensusTxReorder does not affect this because all transaction blocks in the same bundle have identical gas prices.
 
 The response type of the method will be:
@@ -51,7 +51,7 @@ pub struct HandleSoftBundleCertificatesResponseV2 {
 }
 ```
 
-## Rationality
+## Rationale
 
 In the current implementation of Sui, transaction blocks are validated, signed, and then submitted for consensus ordering (since their input contains one or more contains one or more shared objects), most likely by different validators. The ordering of transaction blocks, given the same gas price, depends on many factors that cannot be easily controlled.
 
