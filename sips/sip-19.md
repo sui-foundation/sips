@@ -8,7 +8,7 @@
 |     Category | Core                                                 |
 |      Created | 2024-04-05                                           |
 | Comments-URI | https://sips.sui.io/comments-19                      |
-|       Status | Fast Track                                           |
+|       Status | Last Call                                            |
 |     Requires | N/A                                                  |
 
 ## Abstract
