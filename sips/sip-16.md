@@ -8,7 +8,7 @@
 | Category            | Framework                                                                  |
 | Created             | 2024-01-20                                                                 |
 | Comments-URI        | https://sips.sui.io/comments-16                                            |
-| Status              | Review                                                                     |
+| Status              | Last Call                                                                  |
 | Requires            | N/A                                                                        |
 
 
