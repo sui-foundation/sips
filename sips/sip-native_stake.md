@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 20 |
 | ---:                | :--- |
 | Title               | Native Stake |
 | Description         | Adding the native stake function enhances user security |
 | Author              | Pika <pika042@hotmail.com> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Type                | <Standard, Process, Informational> |
-| Category            | Standard; Interface |
+| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui>  |
+| Type                | Standard|
+| Category            | Interface |
 | Created             | 2024-04-24 |
 | Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Status              | Draft |
+| Requires            | NA |
 
 
 ## Abstract
