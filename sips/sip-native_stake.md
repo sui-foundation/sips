@@ -7,7 +7,7 @@
 | Type                | Standard|
 | Category            | Interface |
 | Created             | 2024-04-24 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
+| Comments-URI        | https://forums.sui.io/t/sip-20-native-stake/45543 |
 | Status              | Draft |
 | Requires            | NA |
 
