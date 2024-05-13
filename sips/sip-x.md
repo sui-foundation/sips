@@ -35,16 +35,6 @@ Currently, there are several well-known issues related to `Coin` in general and 
 
 The three issues outlined above are the main reasons for proposing a new standard for storing and managing the metadata. While this proposal could have been submitted before, the most recent and the upcoming improvements in Sui make it possible to implement it in a more efficient way.
 
-<!--
-This makes it difficult to implement certain scenarios, such as freezing the `TreasuryCap` to prevent new tokens from being minted or burned, while maintaining the ability to update the `CoinMetadata`.
-
-1. `TreasuryCap` serves too many purposes: it manages both minting and burning, and the `CoinMetadata` authorization. This centralization of authority makes it difficult to implement certain scenarios, such as freezing the `TreasuryCap` to prevent new tokens from being minted or burned, while maintaining the ability to update the `CoinMetadata`.
-2. The `CoinMetadata` only works for currencies created via the `coin::create_currency` function. This limitation reduces flexibility of custom currencies created via a lower-level `Balance` and `Supply` API, they simply cannot have `CoinMetadata` associated with them.
-3. Today, there is no standard way of handling and storing the `CoinMetadata`. Some guides suggest _freezing_ it right after creation, some suggest sending it to `0x0`, and some suggest keeping it _shared_. The lack of consistency in handling the `CoinMetadata` can lead to potential issues in the future as well as complicating the discovery.
-
-The three issues outlined above are the main reasons for proposing a new standard for storing and managing the metadata. While this proposal could have been submitted before, the most recent and the upcoming improvements in Sui make it possible to implement it in a more efficient way.
--->
-
 ## Specification
 
 For clarity, we have split this section into multiple parts: the core addition, the migration and potential issues that may arise.
