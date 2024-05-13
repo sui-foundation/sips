@@ -34,7 +34,7 @@ Implement a new gRPC method `HandleSoftBundleCertificatesV2` in `AuthorityServer
 
 The method submits certificates from the same bundle to consensus altogether, without delay.
 Submission will be through the same Narwhal worker, in the same Batch that is broadcasted to all other workers on the network.
-This requires modification to consensus client (ConsensusAdapter) as well as Narwhal’s BatchMaker, so that they accept a vector of certificates as input.
+This requires modification to consensus client (`ConsensusAdapter`) as well as Narwhal’s `BatchMaker`, so that they accept a vector of certificates as input.
 
 After including the bundle in the same Batch, we can be certain that if this Batch is getting included in a Header in consensus, its internal ordering will be respected.
 Meanwhile:
@@ -57,7 +57,7 @@ In the current implementation of Sui, transaction blocks are validated, signed, 
 
 Although `SenderSignedData` is a vector, its usage pattern today does not allow the extension to support bundling primitives without significant refactoring effort. Since one of the design principles is to avoid major system changes, we propose the Soft Bundle API, an approach that makes minimal changes while ensuring strong enough bundling semantics in most cases.
 
-Note that the Soft Bundle API does not provide a strict ordering guarantee. However, it does provide an extremely high probability of being ordered correctly. The effort and maintenance costs of a strict guarantee are very high, and may conflict with core Consensus design principles and development schedules. We believe that the Soft Bundle API is good enough for most use cases.
+Note that the Soft Bundle API does not provide a strict ordering guarantee. However, it does provide an extremely high probability of being ordered correctly. The effort and maintenance costs of a strict guarantee are very high, and may conflict with core consensus design principles and development schedules. We believe that the Soft Bundle API is good enough for most use cases.
 
 The post-consensus reordering mechanism would not affect the Soft Bundle API at this time, but we acknowledge that it may be a potential issue in the future. We will need to monitor the situation and make changes if necessary.
 
