@@ -19,15 +19,15 @@ The integration of encryption keys into wallets will expedite the adoption of nu
 
 ## Motivation
 
-The standard is motivated by few potential applications such as encrypted NFT that requires the user to manage an encryption key in client side wallets. There are already many designs for applications that require encryption and decryption of on-chain data. 
+The standard is motivated by few potential applications such as confidential transactions, encrypted NFTs, encrypted file storage, and so on, that requires the user to manage an encryption key in client side wallets. There are already many designs for applications that require encryption and decryption of on-chain data. 
 
 ## Specification
 
-We here describes two primary ways that an encryption key can be managed: 
+We describe here two primary ways that an encryption key can be managed: 
 
 1. We leverage the master private key already stored in the wallet (either in Chrome Extension or mobile device) by defining a new derivation path. 
 
-2. In the case that we do not wish the user to manage any cryptographic material, we propose a key server that manages a master encryption key and serve each user an unique and persistent encryption key upon request. 
+2. In the case that we do not wish the user to manage any cryptographic material, we propose a key server that manages a master encryption key and serve each user a unique and persistent encryption key upon request. 
 
 ### Manage Encryption Key from Non-Custodial Private Key Wallet
 
@@ -61,9 +61,9 @@ curl -X POST http://0.0.0.0:3000/get_key -H 'Content-Type: application/json' -d 
 
 ## Rationale
 
-We decide to leverage the existing key management in wallet for the encryption key to minimize the overhead for user to keep track of a proliferation of keys for different purpose. This standard aims to optimize for portability and easy to use. The user can import and export the same master private key or mnemonics, and arrive at the same encryption key across different wallets. 
+We decide to leverage the existing key management in wallet for the encryption key to minimize the overhead for user to keep track of a proliferation of keys for different purposes. This standard aims to optimize for portability and ease of use. The user can import and export the same master private key or mnemonics, and arrive at the same encryption key across different wallets. 
 
-In the case of where a non-custodial private key is not available, we design the standard to minimize user overhead with key management. For the applications that requires encryption, a centralized server ran by the application can store the master private key securely and hand out encryption keys per user. 
+In case a non-custodial private key is not available, we design the standard to minimize user overhead with key management. For the applications that require encryption, a centralized server ran by the application can store the master private key securely and hand out encryption keys per user. 
 
 ## Backwards Compatibility
 
