@@ -192,7 +192,7 @@ if (signatureScheme === 'ZkLogin') {
     const userSignatureScheme =
       SIGNATURE_FLAG_TO_SCHEME[userSignature[0] as keyof typeof SIGNATURE_FLAG_TO_SCHEME];
     const isValidSig =
-      userSignatureScheme === 'Secp256r1' && secp256r1.verify(userSignature, sha256(signedData), publicKey);
+      userSignatureScheme === 'Secp256r1' && secp256r1.verify(userSignature.slice(1), sha256(signedData), publicKey);
   
     if (isValidSig && isValidTx) {
       console.log("Verification success.");
