@@ -186,12 +186,16 @@ export const verify = async (
       if (publicKey && signature) {
         console.log(
           'challange',
-          Buffer.from(clientData.challenge, 'base64').equals(Buffer.from(txHash)),
-        );  
+          Buffer.from(clientData.challenge, 'base64').equals(
+            Buffer.from(txHash),
+          ),
+        );
         console.log(
           'signature',
           secp256r1.verify(signature, sha256(signedData), publicKey),
         );
+        const pubKey = new Secp256r1PublicKey(publicKey);
+        console.log('signature', await pubKey.verify(signedData, signature));
       } else {
         console.log('fail');
       }
