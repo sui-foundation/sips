@@ -51,6 +51,8 @@ This rationale outlines the reasons behind the design choices, emphasizing the b
 
 ```typescript
 // https://github.com/MystenLabs/sui/blob/main/sdk/typescript/src/zklogin/bcs.ts
+// https://github.com/zktx-io/zklogin-webauthn-poc/blob/main/src/component/zkLogin/webAuthn/bcs.ts
+
 const zkLoginSignature = bcs.struct('ZkLoginSignature', {
   inputs: bcs.struct('ZkLoginSignatureInputs', {
     proofPoints: bcs.struct('ZkLoginSignatureInputsProofPoints', {
@@ -76,7 +78,6 @@ const zkLoginSignature = bcs.struct('ZkLoginSignature', {
     }),
   ),
   // option for webAuthn
-
 });
 ```
 
@@ -84,6 +85,8 @@ const zkLoginSignature = bcs.struct('ZkLoginSignature', {
 
 ```typescript
 // https://github.com/MystenLabs/sui/blob/main/sdk/typescript/src/zklogin/signature.ts
+// https://github.com/zktx-io/zklogin-webauthn-poc/blob/main/src/component/zkLogin/webAuthn/signature.ts
+
 type ZkLoginSignature = InferBcsInput<typeof zkLoginSignature>;
 interface ZkLoginSignatureExtended
   extends Pick<ZkLoginSignature, 'inputs' | 'maxEpoch'> {
@@ -95,7 +98,6 @@ interface ZkLoginSignatureExtended
     authenticatorData: string | Uint8Array;
   };
   // option for webAuthn
-
 }
 
 function getZkLoginSignatureBytes({
@@ -128,7 +130,6 @@ function getZkLoginSignatureBytes({
                   : webAuthn.authenticatorData,
             },
         // option for webAuthn
-
       },
       { maxSize: 2048 },
     )
@@ -141,7 +142,12 @@ export function getZkLoginSignature({
   userSignature,
   webAuthn, // option for webAuthn
 }: ZkLoginSignatureExtended) {
-  const bytes = getZkLoginSignatureBytes({ inputs, maxEpoch, userSignature, webAuthn }); // option for webAuthn
+  const bytes = getZkLoginSignatureBytes({
+    inputs,
+    maxEpoch,
+    userSignature,
+    webAuthn, // option for webAuthn
+  });
   const signatureBytes = new Uint8Array(bytes.length + 1);
   signatureBytes.set([SIGNATURE_SCHEME_TO_FLAG.ZkLogin]);
   signatureBytes.set(bytes, 1);
@@ -149,60 +155,49 @@ export function getZkLoginSignature({
 }
 ```
 
-### Verification Sample
+### Verification Transaction Sample
 ```typescript
-const txHash = sha256(tx);
-const { response } = await navigator.credentials.get({
-	challenge: txHash,
-	pubKeyCredParams: [{ type: "public-key", alg: -7 }], // Secp256r1
-	...
-});
+// https://github.com/zktx-io/zklogin-webauthn-poc/blob/main/src/component/zkLogin/webAuthn/verify.ts
+export const verify = async (
+  tx: Uint8Array,
+  signature: string | Uint8Array,
+): Promise<void> => {
+  const bytes = typeof signature === 'string' ? fromB64(signature) : signature;
+  const txHash = sha256(tx);
+  if (bytes[0] === 5) {
+    const { webAuthn, userSignature } = parseZkLoginSignature(bytes.slice(1));
+    if (webAuthn) {
+      const clientDataHASH = sha256(Uint8Array.from(webAuthn.clientDataJSON));
+      const clientData = JSON.parse(
+        Buffer.from(webAuthn.clientDataJSON).toString(),
+      );
+      const signedData = new Uint8Array(
+        webAuthn.authenticatorData.length + clientDataHASH.length,
+      );
+      signedData.set(webAuthn.authenticatorData);
+      signedData.set(clientDataHASH, webAuthn.authenticatorData.length);
 
-const authenticatorData = new Uint8Array(response.authenticatorData);
-const clientData = JSON.parse(Buffer.from(response.clientDataJSON).toString()));
-const clientDataHASH = sha256(new Uint8Array(response.clientDataJSON));
-const signature = new Uint8Array(response.signature);
+      const { publicKey, signature } = parseSerializedSignature(
+        typeof userSignature === 'string'
+          ? userSignature
+          : toB64(userSignature),
+      );
 
-const zkSignature = getZkLoginSignature({
-  inputs: {...},
-  maxEpoch: 10000,
-  userSignature: signature,
-  webAuthn: {
-    clientData: new Uint8Array(response.clientDataJSON),
-    authenticatorData: new Uint8Array(response.authenticatorData),
-  },
-});
-
-const signatureScheme =
-  SIGNATURE_FLAG_TO_SCHEME[zkSignature[0] as keyof typeof SIGNATURE_FLAG_TO_SCHEME];
-
-if (signatureScheme === 'ZkLogin') {
-  const { userSignature, webAuthn } = parseZkLoginSignature(zkSignature.slice(1);
-  
-  if (webAuthn) {
-    const { authenticatorData, clientData } = webAuthn;
-    const clientDataHASH = sha256(clientData);
-    const signedData = new Uint8Array(authenticatorData.length + clientDataHASH.length);
-    signedData.set(authenticatorData);
-    signedData.set(clientDataHASH, authenticatorData.length);
-  
-    const { challenge } = JSON.parse(Buffer.from(clientData, 'base64').toString()); // challenge is base64url
-    const isValidTx = Buffer.from(challenge, 'base64').equals(Buffer.from(txHash));
-
-    const userSignatureScheme =
-      SIGNATURE_FLAG_TO_SCHEME[userSignature[0] as keyof typeof SIGNATURE_FLAG_TO_SCHEME];
-    const isValidSig =
-      userSignatureScheme === 'Secp256r1' && secp256r1.verify(userSignature.slice(1), sha256(signedData), publicKey);
-  
-    if (isValidSig && isValidTx) {
-      console.log("Verification success.");
-    } else {
-      console.log("Verification failed.");
+      if (publicKey && signature) {
+        console.log(
+          'challange',
+          Buffer.from(clientData.challenge, 'base64').equals(Buffer.from(txHash)),
+        );  
+        console.log(
+          'signature',
+          secp256r1.verify(signature, sha256(signedData), publicKey),
+        );
+      } else {
+        console.log('fail');
+      }
     }
-  } else {
-    //
   }
-}
+};
 ```
 
 ## Backwards Compatibility
@@ -215,7 +210,7 @@ To be developed once the design and problem statement are fully reviewed and acc
 
 ## Reference Implementation
 
-A reference implementation will be provided after initial approval of the SIP.
+[PoC (Sign, Serialize, Verification)](https://github.com/zktx-io/zklogin-webauthn-poc)
 
 ## Security Considerations
 
