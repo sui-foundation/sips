@@ -104,7 +104,7 @@ This is annoying for anyone working with a large amount of StakedSui objects, pr
 
 ## Rationale
 
-#### Instead of the Lst object, why don't we just mint a new Coin?
+### Instead of the Lst object, why don't we just mint a new Coin?
 
 This is possible and I really like this idea. The main benefit of doing this is that it would immediately enable single-validator LSTs for the entire validator set, which would be pretty cool.
 
@@ -114,7 +114,7 @@ The tricky part would be managing a unique Coin type + metadata per StakingPool.
 
 The one caveat to this approach is that there is a warmup period (up to one epoch) before a newly created StakedSui object can be converted into an LST coin. UX-wise, this isn't great. However I don't think this is a dealbreaker, as existing StakedSui objects can be immediately converted into these tokens, and if LST minting is required, that can be done as a separate contract.
 
-#### Why can't the StakedSui principal be stored directly on the Lst object? Why is a dynamic field necessary?
+### Why can't the StakedSui principal be stored directly on the Lst object? Why is a dynamic field necessary?
 
 The first reason is that I really like the Coin approach, which would require a dynamic field to hold the principal anyways.
 
