@@ -62,6 +62,9 @@ This is annoying for anyone working with a large amount of StakedSui objects, pr
     public fun lst_to_sui_amount(pool: &StakingPool, lst_amount: u64): u64;
     public fun sui_to_lst_amount(pool: &StakingPool, sui_amount: u64): u64;
 
+    public fun join_lst(self: &mut Lst, other: Lst);
+    public fun split_lst(self: &mut Lst, amount: u64): Lst;
+
     /// Burn an Lst object to obtain the underlying SUI.
     public(package) fun redeem_lst(pool: &mut StakingPool, lst: Lst, ctx: &TxContext) : Balance<SUI>;
 
