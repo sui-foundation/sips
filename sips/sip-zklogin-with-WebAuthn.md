@@ -13,11 +13,21 @@
 
 ## Abstract
 
-This SIP proposes adding WebAuthn support to zkLogin, allowing the use of WebAuthn authenticators for managing ephemeral keys. This integration aims to leverage the security and convenience of WebAuthn to enhance zkLogin's functionality, making it more accessible and user-friendly.
+This SIP proposes adding WebAuthn support to zkLogin, allowing the use of WebAuthn authenticators for managing ephemeral keys. This integration aims to leverage the security and convenience of WebAuthn to enhance zkLogin’s functionality, making it more accessible and user-friendly.
 
 ## Motivation
 
-zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn's secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Given Sui's flexible architecture supporting various cryptographic methods, adding WebAuthn should be straightforward.
+zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn’s secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Given Sui’s flexible architecture supporting various cryptographic methods, adding WebAuthn should be straightforward.
+
+### Caching the ephemeral private key and ZK proof
+
+For detailed information on caching the ephemeral private key and ZK proof, please refer to the relevant section in [the zkLogin documentation](https://docs.sui.io/guides/developer/cryptography/zklogin-integration#caching-the-ephemeral-private-key-and-zk-proof).
+
+In summary, each ZK proof is tied to an ephemeral key pair, allowing you to reuse the proof to sign multiple transactions until the ephemeral key pair expires. It’s important to treat the ephemeral key pair as a secret, similar to a key pair in a traditional wallet. If both the ephemeral private key and ZK proof are exposed, an attacker could sign transactions on behalf of the user.
+
+### Solution: WebAuthn
+
+WebAuthn offers a robust solution to this issue. By integrating WebAuthn, ephemeral keys can be securely managed and stored within hardware-backed authenticators, significantly enhancing the security of zkLogin. WebAuthn authenticators handle private keys securely, preventing unauthorized access and ensuring that ephemeral keys remain confidential. This integration not only addresses the security concerns of caching ephemeral keys but also simplifies the user experience, making zkLogin more accessible and user-friendly.
 
 ## Specification
 
