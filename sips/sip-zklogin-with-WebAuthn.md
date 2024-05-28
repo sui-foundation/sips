@@ -17,7 +17,7 @@ This SIP proposes adding WebAuthn support to zkLogin, allowing the use of WebAut
 
 ## Motivation
 
-zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn’s secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Given Sui’s flexible architecture supporting various cryptographic methods, adding WebAuthn should be straightforward.
+zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn’s secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Adding WebAuthn should be straightforward due to its widely accepted standards and implementation.
 
 ### Caching the ephemeral private key and ZK proof
 
@@ -34,9 +34,17 @@ WebAuthn offers a robust solution to this issue. By integrating WebAuthn, epheme
 To support WebAuthn in zkLogin, the following two options are proposed:
 
 1. **Add a new schema for WebAuthn signatures in the [Signatures](https://docs.sui.io/concepts/cryptography/transaction-auth/signatures) module:**
-   - Define a new signature type for WebAuthn that accommodates the specific data structures used in WebAuthn authentication, such as `algorithm`, `authenticatorData` and `clientDataJSON`.
+   - Define a new signature type for WebAuthn that accommodates the specific data structures used in WebAuthn authentication, such as `algorithm`, `authenticatorData`, and `clientDataJSON`.
 
-2. Introduce optional attributes in zkLogin to support WebAuthn, such as fields for storing WebAuthn credentials, managing authentication challenges, and handling the response data from WebAuthn authenticators.
+2. **Introduce optional attributes in zkLogin to support WebAuthn:**
+   - Add fields for storing WebAuthn credentials, managing authentication challenges, and handling the response data from WebAuthn authenticators.
+
+### Authentication Flow
+
+- **User Authentication:**
+  - Use OpenID for initial user authentication.
+  - Integrate WebAuthn for managing ephemeral keys.
+  - Ensure secure storage and management of keys within hardware security elements, using devices like fingerprint scanners and NFC.
 
 This approach will allow zkLogin to utilize WebAuthn for ephemeral key management, improving security and user experience.
 
@@ -48,12 +56,13 @@ The integration of WebAuthn with zkLogin is proposed to enhance user experience 
 
 2. **Security Improvement:** WebAuthn uses hardware-backed keys, which are more secure than traditional methods like localStorage for managing ephemeral keys. This significantly reduces the risk of key compromise.
 
-3. **Technical Feasibility:** Sui's architecture is flexible and supports various cryptographic methods, making the addition of WebAuthn straightforward. WebAuthn's implementation in zkLogin can be achieved by adding a new signature schema and optional attributes for managing WebAuthn credentials and responses.
+3. **Technical Feasibility:** WebAuthn's implementation in zkLogin can be achieved by adding a new signature schema and optional attributes for managing WebAuthn credentials and responses.
 
 4. **Alternative Analysis:** While there is an ongoing [proposal](https://github.com/sui-foundation/sips/pull/9) to add WebAuthn as a new signature schema, this SIP specifically focuses on integrating WebAuthn with zkLogin. If the WebAuthn signature schema is implemented first, this proposal can be discarded. However, considering the potential use cases of WebAuthn with zkLogin, prioritizing this integration is a viable and beneficial option.
 
-This rationale outlines the reasons behind the design choices, emphasizing the benefits of improved user experience and security, along with the technical feasibility within Sui's existing infrastructure.
+This rationale outlines the reasons behind the design choices, emphasizing the benefits of improved user experience and security, along with the technical feasibility.
 
+## Implementation
 
 ### SDK
 
@@ -166,8 +175,10 @@ export function getZkLoginSignature({
 ```
 
 ### Verification Transaction Sample
+
 ```typescript
 // https://github.com/zktx-io/zklogin-webauthn-poc/blob/main/src/component/zkLogin/webAuthn/verify.ts
+
 export const verify = async (
   tx: Uint8Array,
   signature: string | Uint8Array,
