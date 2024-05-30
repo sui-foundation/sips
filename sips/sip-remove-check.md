@@ -2,7 +2,7 @@
 | ---:                | :--- |
 | Title               | Allow StakedSui objects to be redeemed in same epoch |
 | Description         | Currently, a StakedSui object cannot be created and redeemed in the same epoch, which is an unncessary restriction. |
-| Author              | ripleys<ripleys@solend.fi> |
+| Author              | ripleys <0xripleys@solend.fi> |
 | Editor              |  |
 | Type                | Standard |
 | Category            | Framework |
