@@ -36,7 +36,7 @@ Currently, if an LST allowed instant unstaking of the entire supply, a malicious
 Why is instant unstaking useful?
 
 - There is no longer a need to provide liquidity on xSui/{Sui, USDC, USDT} pairs on DEXes. Instead, all LSTs share the same Sui liquidity. This is a big benefit for new entrants to the LST space, as they no longer need to source millions of dollars to provide liquidity on their xSui pairs.
-- LSTs that implement instant unstaking cannot depeg due to liquidity conditions. This makes the product much more usable across the defi ecosystem. In lending in particular, LST depegs are a big source of risk.
+- LSTs that implement instant unstaking cannot depeg due to liquidity conditions. This makes the product much more usable across the defi ecosystem. LST depegs are a big source of risk in lending and any leveraged staking product.
 
 
 ## Specification
@@ -55,4 +55,4 @@ No interfaces are changing here.
 
 ## Security Considerations
 
-It's possible that existing LSTs depend on this check in their implementation. Their signoff is likely required to proceed with this SIP.
+This change does not affect security.
