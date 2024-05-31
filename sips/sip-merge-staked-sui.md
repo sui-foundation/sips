@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 31 |
 | ---:                | :--- |
 | Title               | Fungible StakedSui objects |
 | Description         | Allow StakedSui objects to be transformed into a FungibleStake object, which is epoch independent. |
 | Author              | ripleys <0xripleys@solend.fi> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui>  |
 | Type                | Standard |
 | Category            | Framework |
 | Created             | 2024-05-23 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-31 |
+| Status              | Draft |
+| Requires            | NA |
 
 ## Abstract
 
