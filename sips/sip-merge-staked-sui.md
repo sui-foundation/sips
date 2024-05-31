@@ -114,6 +114,10 @@ The first reason is that I really like the Coin approach, which would require a 
 
 The second reason is that splitting FungibleStake objects now becomes potentially expoitable. Eg say you have an FungibleStake object with value 1.2e10, and principal of 1e10. If you want to split the FungibleStake object into 3 equal parts, where should the extra MIST of principal go? All answers feel unsatisfactory to me.
 
+### Misc
+- `redeem_fungible_stake` could return an StakedSui object instead. I need to double check the math here to make sure it's safe. I think just returning a StakedSui object that's activated in the current epoch is fine (ie all principal, no rewards).
+- If we want these interfaces to be compatible with any future unbonding period implementation, we could return a LockedSui object instead of the Sui in `redeem_fungible_stake`. Or, just return the StakedSui object like I mentioned above.
+
 ## Backwards Compatibility
 
 No issues with backwards compatibility. This SIP only adds features, and does not change existing ones.
