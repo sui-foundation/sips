@@ -17,7 +17,9 @@ This SIP proposes adding WebAuthn support to zkLogin, allowing the use of WebAut
 
 ## Motivation
 
-zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn’s secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Adding WebAuthn should be straightforward due to its widely accepted standards and implementation.
+WebAuthn is an advanced authentication technology designed to solve modern password management issues, and it is expected to significantly enhance the zkLogin user experience. zkLogin already offers significant advantages, such as ease of use, speed, and freedom from mnemonic management. However, by integrating WebAuthn to manage ephemeral keys, zkLogin can unlock even greater potential. WebAuthn’s secure key management and user familiarity with web2-like flows can reduce the entry barriers for blockchain users. Adding WebAuthn should be straightforward due to its widely accepted standards and implementation.
+
+Currently, Sui does not support WebAuthn signatures, and zkLogin manages ephemeral KeyPairs by caching them in non-secure areas, which can pose security risks. To address these issues, a proof of concept showcasing the exceptional user experience that WebAuthn integration will bring is available. This integration will provide robust security for managing ephemeral KeyPairs, elevating the zkLogin user experience to new heights. As a result, user convenience and security will be significantly enhanced, leading to broader adoption and improved user satisfaction with zkLogin.
 
 ### Caching the ephemeral private key and ZK proof
 
