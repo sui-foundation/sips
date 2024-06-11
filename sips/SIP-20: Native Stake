@@ -59,23 +59,14 @@ public entry fun request_add_native_stake(
     validator_address: address,
     ctx: &mut TxContext,
 ) {
-    let native_staked_sui = request_add_native_stake_non_entry(wrapper, stake, validator_address, ctx);
+    let staked_sui = request_add_stake_non_entry(wrapper, stake,validator_address, ctx);
+    let native_staked_sui = NativeStakedSui {
+        id: object::new(ctx),
+        staked_sui,
+    };
     transfer::transfer(native_staked_sui, ctx.sender());
 }
 
-/// The non-entry version of `request_add_native_stake`, which returns the native staked SUI instead of transferring it to the sender.
-public fun request_add_native_stake_non_entry(
-    wrapper: &mut SuiSystemState,
-    stake: Coin<SUI>,
-    validator_address: address,
-    ctx: &mut TxContext,
-): NativeStakedSui {
-    let staked_sui = request_add_stake_non_entry(wrapper, stake,validator_address, ctx);
-    NativeStakedSui {
-        id: object::new(ctx),
-        staked_sui,
-    }
-}
 
 /// Withdraw native stake from a validator's staking pool.
 public entry fun request_withdraw_native_stake(
@@ -83,20 +74,15 @@ public entry fun request_withdraw_native_stake(
     native_staked_sui: NativeStakedSui,
     ctx: &mut TxContext,
 ) {
-    let withdrawn_stake = request_withdraw_native_stake_non_entry(wrapper, native_staked_sui, ctx);
-    transfer::public_transfer(withdrawn_stake.into_coin(ctx), ctx.sender());
-}
-
-/// Non-entry version of `request_withdraw_native_stake` that returns the withdrawn SUI instead of transferring it to the sender.
-public fun request_withdraw_native_stake_non_entry(
-    wrapper: &mut SuiSystemState,
-    native_staked_sui: NativeStakedSui,
-    ctx: &mut TxContext,
-) : Balance<SUI> {
     let NativeStakedSui { id, staked_sui } = native_staked_sui;
     object::delete(id);
     let self = load_system_state_mut(wrapper);
-    self.request_withdraw_stake(staked_sui, ctx)
+    let withdrawn_stake = self.request_withdraw_stake(staked_sui, ctx);
+    transfer::public_transfer(withdrawn_stake.into_coin(ctx), ctx.sender());
+}
+
+public fun staked_sui_borrow(native_staked_sui: &NativeStakedSui) {
+    &native_staked_sui.staked_sui
 }
 ```
 
