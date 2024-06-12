@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 33 |
 | ---:                | :--- |
 | Title               | Allow StakedSui objects to be redeemed in same epoch |
 | Description         | Currently, a StakedSui object cannot be created and redeemed in the same epoch, which is an unncessary restriction. |
 | Author              | ripleys <0xripleys@solend.fi> |
-| Editor              |  |
+| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui> |
 | Type                | Standard |
 | Category            | Framework |
 | Created             | 29-05-2024 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-33 |
+| Status              | Draft|
+| Requires            |NA|
 
 ## Abstract
 
