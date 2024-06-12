@@ -1,6 +1,6 @@
 | SIP-Number          | 33 |
 | ---:                | :--- |
-| Title               | Allow StakedSui objects to be redeemed in same epoch |
+| Title               | Allow inactive StakedSui objects to be redeemed immediately |
 | Description         | Currently, a StakedSui object cannot be created and redeemed in the same epoch, which is an unncessary restriction. |
 | Author              | ripleys <0xripleys@solend.fi> |
 | Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui> |
