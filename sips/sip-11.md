@@ -8,7 +8,7 @@
 |     Category | Application                                                                                                            |
 |      Created | 2023-09-19                                                                                                             |
 | Comments-URI | https://github.com/sui-foundation/sips/pull/11                                                                         |
-|       Status | Stagnant                                                                                                               |
+|       Status | Withdrawn                                                                                                              |
 |     Requires |                                                                                                                        |
 
 ## Abstract
