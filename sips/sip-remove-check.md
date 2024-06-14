@@ -53,6 +53,10 @@ This change is fairly minor, and there's no other way to implement the suggestio
 
 No interfaces are changing here.
 
+## Reference Implementation
+
+https://github.com/MystenLabs/sui/pull/18265
+
 ## Security Considerations
 
 This change does not affect security.
