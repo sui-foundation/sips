@@ -8,7 +8,7 @@
 | Category            | Core |
 | Created             | 2023-08-03 |
 | Comments-URI        | https://sips.sui.io/comments-10 |
-| Status              | Stagnant |
+| Status              | Withdrawn |
 | Requires            | |
 
 
