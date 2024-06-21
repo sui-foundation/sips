@@ -30,7 +30,8 @@ todo: fill out the form below. example well known config: https://accounts.googl
 | Well known configuration  |           |                 |
 | JWK endpoint              |           |                 |
 | Issuer                    |           |                 |
-| Authorization link          |           |                 |
+| Authorization link        |           |                 |
+| Allowed Client IDs        |           |                 | 
 
 ## JWK rotation details
 
@@ -44,6 +45,10 @@ todo: fill out the form below. example well known config: https://accounts.googl
 
 (todo) include the infra that you had implemented or used to ensure the certificate signing key is well managed and secure. 
 
+## Claims 
+
+(todo) discuss whether the `sub` field unique per application and how is this ensured? Is there any other custom claims supported by the payload in addition to `sub`, `aud`, `nonce`? If so, what are they and is there a maximum length and type check enforced? (i.e. it is not possible to pass in a JSON format with nested claims inside). 
+
 ## Rationale
 
 (todo) discuss the whys for rotation schedule and signing key storage options, any other alternatives considered and how you come to such a decision . 
@@ -51,6 +56,8 @@ todo: fill out the form below. example well known config: https://accounts.googl
 ## Backwards Compatibility
 
 ZkLogin wallets are domain separated by the OpenID issuer and its client ID. There is no backward compatibility issue with existing issuers. 
+
+Once the SIP is finalized with the configurations defined above (issuer string, client ID etc), they will not change again. Otherwise, the wallet created based on this configuration will result in lost of fund. 
 
 ## Test Cases
 
@@ -65,6 +72,8 @@ N/A. To be implemented by the Mysten Labs team.
 ## Security Considerations
 
 (todo) discuss what measures you have taken to secure the certificate signing key. discuss whether applications can create client ID against your issuer. 
+
+(todo) Discuss worst case scenarios. If the JWK endpoint is unavailable, all zkLogin wallets associated with the provider will be locked out of their wallet since JWT cannot be generated. If the signing key is compromised, all wallets associated with this provider will result in loss of funds since anyone can forfeit the JWT and ZK proof as a result. 
 
 ## Copyright
 
