@@ -13,17 +13,63 @@
 
 ## Abstract
 
-An increasing number of applications on Sui demand users to manage an encryption key on the client side. To address this need, we propose this standard and specification for deriving encryption keys from the master private key in the wallet. 
+Many applications on Sui demand users to manage encryption keys on the client side. To address this need, we propose this standard and specification for deriving BLS12381 encryption keys from the master private key in the wallet. 
 
 The integration of encryption keys into wallets will expedite the adoption of numerous practical blockchain applications that rely on off-chain encryption and decryption. 
 
 ## Motivation
 
-The standard is motivated by few potential applications such as encrypted NFT that requires the user to manage an encryption key in client side wallets. There are already many designs for applications that require encryption and decryption of on-chain data. 
+The standard is motivated by few potential applications such as encrypted NFT that requires the user to manage a BLS 12381 encryption key in client side wallet. There are already many designs for applications that require encryption and decryption of on-chain data. 
+
+The existing key derivation standard such as [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki) is no longer applicable since the derived keys are greater than the curve order and no longer valid. 
 
 ## Specification
 
-We leverage the master private key already stored in the wallet (either in Chrome Extension or mobile device) by defining a new derivation path. 
+We leverage the master private key already stored in the wallet (either in Chrome Extension or mobile device) and define a new derivation pfunction and a new derivation path to derive BLS12381 encryption key. 
+
+1. From Seed to Master SK
+```
+master_sk = hkdf_mod_r(seed)
+```
+mnemonics -> seed: BIP39
+seed -> bls master: BLS(https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-bls-signature-05#name-keygen)
+not: seed -> master is bip 32
+
+2. From parent SK to child SK
+```
+function parent_sk_to_child_sk(parent_sk, index): 
+
+ikm -> bls_sk -> child_ikm
+
+ikm -> bls_sk 
+ikm, domain -> child_ikm
+```
+index: 1 < index <= 255
+
+Helper functions
+
+```
+function IKM_to_sk(IKM, salt):
+    PRK = HKDF-Extract(salt, IKM)
+    OKM = HKDF-Expand(PRK, "" , L)
+    bytes_split(OKM, K)
+```
+
+```
+function hkdf_mod_r(IKM): 
+    salt = "BLS-ENC-KEYGEN-SALT-"
+    SK = 0
+    while SK == 0:
+        PRK = HKDF-Extract(salt, IKM || I2OSP(0, 1))
+        OKM = HKDF-Expand(PRK, key_info || I2OSP(L, 2), L)
+        SK = OS2IP(OKM) mod r
+        salt = H(salt)
+    return SK
+```
+
+### Derivation Path
+
+Now we define derivation path that we can derive from a master SK to a child SK. At each level of the derivation path, we use `parent_sk_to_child_sk(parent_sk, index)` to compute each intermediate parent SK. [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) is used for the HD derivation path. For example, for path `m/94'/784'/0'/0'0`, we derive the child sk from the master sk as `parent_sk_to_child_sk(parent_sk_to_child_sk(parent_sk_to_child_sk(parent_sk_to_child_sk(parent_sk_to_child_sk(master_sk, 94), 784), 0), 0), 0)`.
 
 We extend the specification for key derivation path to include a new unique derivation path in addition to all the signing keys for different signature schemes. This is domain separated for BLS12381 scheme and for encryption use only. 
 
