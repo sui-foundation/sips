@@ -116,7 +116,7 @@ A new `passkey` signature scheme is introduced that allows clients to construct 
 
 `authenticatorData` is a byte array that encodes [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) structure returned by the authenticator attestation response as is (byte array of 37 bytes or more). Its contents are not relevant here but it's required for signature verification.
 
-`clientDataJson` is a byte array that is a JSON-compatible UTF-8 encoded serialization of the client data which is passed to the authenticator by the client during the authentication request (see [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)). It contains (among other fields) the `challenge` field which is the `base64url` URL encoded `blake2b_hash(intent || tx_data)` that was passed in by the client to the authenticator. This field needs to be parsed in order to verify that the signature has been produced over 32-byte digest encoded as `blake2b_hash(intent || tx_data)`.
+`clientDataJson` is a byte array that is a JSON-compatible UTF-8 encoded serialization of the client data which is passed to the authenticator by the client during the authentication request (see [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)). It contains (among other fields) the `challenge` field which is the `base64url` URL encoded `intent || blake2b_hash(tx_data)` that was passed in by the client to the authenticator. This field needs to be parsed in order to verify that the signature has been produced over 35-byte digest encoded as `intent || blake2b_hash(tx_data)` where `blake2b_hash(tx_data)` is also known as the transaction digest.
 
 `signature` is a byte array that encodes `flag || sig_bytes || pk_bytes`. The `flag` indicates the flag (currently it is required to be `secp256r1`'s signature scheme `0x02`). Both the signature and public key should be converted from DER format in passkey authenticator response to the compact format and with the requirements specified below:
 
@@ -130,7 +130,7 @@ The signature verification is performed by the Sui validators using the followin
 
 1. Check the `flag` byte as `0x06`, then deserialize it as `PasskeyAuthenticator`.
 2. Validate the `clientDataJSON` to be well formed. That is, it can be deserialized with struct [`CollectedClientData`](https://github.com/1Password/passkey-rs/blob/main/passkey-types/src/webauthn/attestation.rs#L581) with required fields such as `type`, `origin`, `crossOrigin`, `challenge` and allows for arbitrary additional fields. The `type` field must be `webauthn.get`, and the `challenge` must be decoded successfully with `base64url` into a 35-byte digest. If not, reject the signature.
-3. Verify that the `challenge` field equals to the digest `blake2b_hash(intent || tx_data)` derived from the transaction. If not, reject the signature.
+3. Verify that the `challenge` field equals to the digest `intent || blake2b_hash(tx_data)` derived from the transaction. If not, reject the signature.
 4. Verify the sender of the transaction is derived correctly as `blake2b_hash(flag_passkey || pk_passkey)`. If not, reject the signature.
 5. If the `flag` in `user_signature` is not `secp256r1`, reject the signature. 
 6. Verify the signature and public key with the secp256r1 ECDSA algorithm using the constructed message as `authenticatorData || sha256(clientDataJSON)`. If verification fails, reject the signature.
@@ -141,7 +141,7 @@ The public key is returned to frontend upon credential creation (`navigator.cred
 
 ### Transaction signing using Passkey
 
-To sign a transaction using passkey, the client needs to make an [`assertion`](https://www.w3.org/TR/webauthn-2/#authenticatorgetassertion) request to the authenticator where the [`challenge`](https://www.w3.org/TR/webauthn-2/#dom-publickeycredentialrequestoptions-challenge) is set to the 35-byte digest `blake2b_hash(intent || tx_data)`.
+To sign a transaction using passkey, the client needs to make an [`assertion`](https://www.w3.org/TR/webauthn-2/#authenticatorgetassertion) request to the authenticator where the [`challenge`](https://www.w3.org/TR/webauthn-2/#dom-publickeycredentialrequestoptions-challenge) is set to the 35-byte digest `intent || blake2b_hash(tx_data)`.
 
 The signature is required to be encoded as described above using the passkey assertion response when submitting to Sui for transaction execution. 
 
@@ -149,11 +149,11 @@ The signature is required to be encoded as described above using the passkey ass
 
 1. Why select `Secp256r1` for passkey creation? While passkey supports multiple different signature schemes, including `ed25519`, only the `secp256r1` scheme has wide support across different authenticators with other schemes having limited support on some security keys. In addition, `secp256r1` supports recovering public key from signature. This is an important feature to allow addresses to be re-derived on a new device or as part of the wallet recovery flow (discussed in details in next section).
 
-2. Why can't the `Secp256r1` signature scheme be reused but another `passkey` scheme is necessary? The `secp256r1` scheme on Sui requires that the signature is produced over `blake2b_hash(intent || tx_data)` instead of `authenticatorData || sha256(clientDataJSON)` where `clientDataJSON` contains the challenge as `blake2b_hash(intent || tx_data)`. This is incompatible with the signatures produced by passkey authenticators since the verification requires additional data in the signature payload. Therefore, a new signature scheme needs to be introduced that can verify signatures produced by passkey authenticators.
+2. Why can't the `Secp256r1` signature scheme be reused but another `passkey` scheme is necessary? The `secp256r1` scheme on Sui requires that the signature is produced over `blake2b_hash(intent || tx_data)` instead of `authenticatorData || sha256(clientDataJSON)` where `clientDataJSON` contains the challenge as `intent || blake2b_hash(tx_data)`. This is incompatible with the signatures produced by passkey authenticators since the verification requires additional data in the signature payload. Therefore, a new signature scheme needs to be introduced that can verify signatures produced by passkey authenticators.
 
 3. Why do we need `authenticatorData` and `clientDataJson` as part of the signature? This is because the signature is produced over `authenticatorData || sha256(clientDataJSON)`, `authenticatorData` and `clientDataJSON` also need to be included in the signature payload. Furthermore, it is not possible to send only `sha256(clientDataJSON)` because `clientDataJSON` needs to be parsed in order to verify that it contains the correct `challenge`.
 
-4. Why the challenge is set to `blake2b_hash(intent || tx_data)`? This is to make sure the signature is committed over the correct transaction and its intent. 
+4. Why the challenge is set to `intent || blake2b_hash(tx_data)`? This is to make sure the signature is committed over the correct transaction and its intent. 
 
 5. Why is it required to pass the entire `clientDataJSON` payload if only 4 fields (`type`, `challenge`, `origin`, and `crossOrigin`) are mandatory? This is because the JSON encodings are not canonical, and even though the `clientDataJSON` encoding algorithm is more strictly defined, it is still possible for the client to send in a different encoding. Furthermore, the WebAuthn specification [notes](https://www.w3.org/TR/webauthn-2/#dictionary-client-data) that "it's critical when parsing to be tolerant of unknown keys and of any reordering of the keys". So in order to avoid any potential compatibility issues in the future, it is better to send the `clientDataJSON` as is.
 
