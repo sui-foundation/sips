@@ -27,31 +27,39 @@ todo: fill out the form below. example well known config: https://accounts.googl
 
 |             Item          | Endpoint  | Example Content | 
 |-------------------------- |-----------|-----------------|
-| Well known configuration  |           |                 |
-| JWK endpoint              |           |                 |
-| Issuer                    |           |                 |
-| Authorization link        |           |                 |
-| Allowed Client IDs        |           |                 | 
+| Well known configuration  |https://accounts.fantv.world/.well-known/openid-configuration |                 |
+| JWK endpoint              |https://fantv-apis.fantiger.com/v1/web3/jwks.json |                 |
+| Issuer                    |https://accounts.fantv.world |                 |
+| Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth|                 |
+| Allowed Client IDs        |r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world|                 | 
 
 ## JWK rotation details
 
-(todo) include discussion on JWK rotation frequency and policy here. 
+ It's configurable - currently it's on monthly basis ( We can configure this based upon security measures and operational overhead in future) 
 
 ## JWK endpoint availability
 
-(todo) include discussion on what measures had been taken to ensure the JWK availability, i.e. status page to track liveness. 
+Current end point is always available, its deployed on highly scalable servers , running on multiple geo-location based servers and we have implemented alerting systems for continuous monitoring.
 
 ## Signing key storage details
 
-(todo) include the infra that you had implemented or used to ensure the certificate signing key is well managed and secure. 
+We are using AWS HSM model to store the private key.
 
 ## Claims 
 
-(todo) discuss whether the `sub` field unique per application and how is this ensured? Is there any other custom claims supported by the payload in addition to `sub`, `aud`, `nonce`? If so, what are they and is there a maximum length and type check enforced? (i.e. it is not possible to pass in a JSON format with nested claims inside). 
+Is there any other custom claims supported by the payload in addition to `sub`, `aud`, `nonce`? If so, what are they and is there a maximum length and type check enforced? (i.e. it is not possible to pass in a JSON format with nested claims inside). 
+
+Yes, sub field is unique. The user ID is derived from the object ID of a single MongoDB instance to ensure uniqueness.
+Aud & nonce both fields are supported, type is string, nonce doesn't have a fixed length and aud is an URL identifier
 
 ## Rationale
 
-(todo) discuss the whys for rotation schedule and signing key storage options, any other alternatives considered and how you come to such a decision . 
+JWT signing key rotation is an important security practice. Here are the key reasons why it's mandatory:
+
+Mitigation of Key Compromise Risks, Compliance with Security Policies and Standards, Expiration and Revocation Management
+
+AWS HSM module is the best industry solution for storing keys securely and for signing JW payloads securely. Rotation is to maintain safety and the frequency is subjective of operational overheads.
+
 
 ## Backwards Compatibility
 
@@ -61,9 +69,8 @@ Once the SIP is finalized with the configurations defined above (issuer string, 
 
 ## Test Cases
 
-(todo) provide an example JWT token and parsed JWT token payload (using jwt.io)
+eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik81cnl4Ri16TUNMbVM2aFFoY1RDM3BBQWhRNFlZUEVIb2lRdDFxeF84Nm8ifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmZhbnR2LndvcmxkIiwiYXpwIjoicjI0YnNreHlhZnd3dWE2OGV0MndtdXFleW9hLmFwcHMuZmFudHYud29ybGQiLCJhdWQiOiJyMjRic2t4eWFmd3d1YTY4ZXQyd211cWV5b2EuYXBwcy5mYW50di53b3JsZCIsInN1YiI6IjYyOGRmNDU0YjA4MmE5NzAyOWNkYjNhZSIsIm5vbmNlIjoibG1scmxCakQ5ckFzdVFoZDdZUUFYTUlnQk1nIiwiaWF0IjoxNzIxNzM5NjAyLCJleHAiOjE3MjE4MjYwMDIsImp0aSI6Imx5eWZhenZtLWNmNDl3Zmd6YzkifQ.INczb6QnaOBuyLzXQWJA6Wt6caoLG-0rgm55GSBmux1SpH8bL8KSuUPArax1cAlPQjnAS7S4mn2PLBC584yTmfGpKesKJ1bYjqH4mnomt3ZTWnddofLMkB-ZxBl4TmOiTsWiFrObfNyQbHEOUKKsxoaTcyZHYPQ-F4MIEsQx_KJwYgBRD5lEY2vJbtbM_jzA1mxktFBIFWdF3JhTJ8hSRNlEMeVMWky3_boMUFCatf8sffIX62QTbZUMvNpMj519yN-IXpqR-hVWgwFNreIqKF_rQLNx2K2JQfBXEvDE8VoHjdbVT5MpRMMiPckrVp-fuQ77AiGapXOQcG_Y32Dbvw
 
-(todo) provide a long-live video clip of a complete log in with phone number flow for testing and/or screenshots. 
 
 ## Reference Implementation
 
@@ -71,9 +78,24 @@ N/A. To be implemented by the Mysten Labs team.
 
 ## Security Considerations
 
-(todo) discuss what measures you have taken to secure the certificate signing key. discuss whether applications can create client ID against your issuer. 
 
-(todo) Discuss worst case scenarios. If the JWK endpoint is unavailable, all zkLogin wallets associated with the provider will be locked out of their wallet since JWT cannot be generated. If the signing key is compromised, all wallets associated with this provider will result in loss of funds since anyone can forfeit the JWT and ZK proof as a result. 
+Security Measures for Certificate Signing Key
+
+Q: What measures have you taken to secure the certificate signing key?
+
+A: Usage of HSMs to securely store and manage our signing keys, implement strict access controls with multi-factor authentication, conduct regular security audits and monitoring, and follow a key rotation policy to periodically replace the keys.
+
+Q: Can applications create client IDs against your issuer?
+
+A: For now, this is for our use case only, we can open it to other applications or the Sui universe in the future if needed.
+
+
+Q: What are the worst-case scenarios if the JWK endpoint is unavailable or the signing key is compromised?
+
+A: JWK Endpoint Unavailability:
+Impact: All zkLogin wallets will be locked out.
+Plan: We have a redundant infrastructure and a rapid incident response team to restore service.
+
 
 ## Copyright
 
