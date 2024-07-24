@@ -30,7 +30,7 @@ todo: fill out the form below. example well known config: https://accounts.googl
 | Well known configuration  |https://accounts.fantv.world/.well-known/openid-configuration |                 |
 | JWK endpoint              |https://fantv-apis.fantiger.com/v1/web3/jwks.json |                 |
 | Issuer                    |https://accounts.fantv.world |                 |
-| Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth|                 |
+| Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth?clientId=r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world&redirectUri=https://fantv-apis.fantiger.com/v1/oauth2/redirect&responseType=authorization_code&scope=openid&userId=6443505c5de5935daf15635c&sessionId=293572390582343345ndbsbfhergkj32438|                 |
 | Allowed Client IDs        |r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world|                 | 
 
 ## JWK rotation details
