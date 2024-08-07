@@ -1,14 +1,14 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 37 |
 | ---:                | :--- |
 | Title               | Expose ProgrammableTransaction data in TxContext |
-| Description         | Accessing MoveCalls (packages, modules, function names, type arguments and arguments) of the executed PTB on-chain |
+| Description         | Allows data from Move calls (packages, modules, function names, type arguments and arguments) to be access from the executed PTB on-chain |
 | Author              | Thouny <thouny@tuta.io, @thounyy> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z> |
 | Type                | Standard |
 | Category            | Framework |
 | Created             | 2024-07-30 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Comments-URI        | https://sips.sui.io/comments-37 |
+| Status              | Draft |
 
 ## Abstract
 
