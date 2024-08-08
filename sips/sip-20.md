@@ -8,7 +8,7 @@
 | Category            | Interface |
 | Created             | 2024-04-24 |
 | Comments-URI        | https://sips.sui.io/comments-20 |
-| Status              | Draft |
+| Status              | Withdrawn |
 | Requires            | NA |
 
 
