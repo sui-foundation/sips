@@ -2,7 +2,7 @@
 | ```:                | :``` |
 | Title               | Introduction of Verifiable Delay Functions (VDFs) to Sui Framework |
 | Description         | Add verifiable delay functions (VDFs) to the Sui framework. |
-| Author              | Jonas Lindstrøm (@jonas-lj) |
+| Author              | Jonas Lindstrøm (jonas@mystenlabs.com) |
 | Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
 | Type                | Standard |
 | Category            | Framework |
