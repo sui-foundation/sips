@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 29 |
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Public Key On-Chain Discoverability |
 | Description         | This standardizes an on-chain data structure for an user's BLS encryption public key to be discoverable on-chain. |
-| Author              | Joy Wang (@joyqvq, joy@mystenlabs.com)|
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Author              | Joy Wang <joy@mystenlabs.com, @joyqvq>|
+| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z> |
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-06-24 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-29 |
+| Status              | Draft |
+| Requires            | |
 
 ## Abstract
 
