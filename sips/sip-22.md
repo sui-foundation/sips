@@ -8,7 +8,7 @@
 |     Category | Framework                                                |
 |      Created | 2024-04-20                                               |
 | Comments-URI | https://sips.sui.io/comments-22                          |
-|       Status | Draft                                                    |
+|       Status | Stagnant                                                 |
 |     Requires | -                                                        |
 
 ## Abstract
