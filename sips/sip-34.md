@@ -13,11 +13,11 @@
 
 ## Abstract
 
-Currently no providers enabled on Sui support login with a phone number. Phone number log in is a dominant credential option in many sectors and having such a provider for zkLogin is crucial for mass adoption of zkLogin. Here we propose to add FanTV as a OpenID provider on Sui that enables login with phone number. This will onboard FanTV users to Sui seamlessly and also allows users for other Sui applications with simply a phone number. 
+Currently no providers enabled on Sui support logging in with a phone number. Phone number login is a dominant credential option in many sectors and having such a provider for zkLogin is crucial for mass adoption of zkLogin. Here we propose to add FanTV as a OpenID provider on Sui that enables login with phone number. This will onboard FanTV users to Sui seamlessly and also allows users for other Sui applications with simply a phone number.
 
 ## Motivation
 
-Phone number log in is a dominant credential option in many markets. Having such a provider for zkLogin is crucial for mass adoption for Sui. This allows anyone with a phone number to create a wallet on Sui and interact with dApps. 
+Phone number login is a dominant credential option in many markets. Having such a provider for zkLogin is crucial for mass adoption for Sui. This allows anyone with a phone number to create a wallet on Sui and interact with dApps. 
 
 ## Specification
 
@@ -45,7 +45,7 @@ We are using AWS HSM model to store the private key.
 
 ## Claims 
 
-Is there any other custom claims supported by the payload in addition to `sub`, `aud`, `nonce`? If so, what are they and is there a maximum length and type check enforced? (i.e. it is not possible to pass in a JSON format with nested claims inside). 
+Are there any other custom claims supported by the payload in addition to `sub`, `aud`, `nonce`? If so, what are they and is there a maximum length and type check enforced? (i.e. it is not possible to pass in a JSON format with nested claims inside). 
 
 `sub` field is unique, since the user ID is derived from the object ID of a single MongoDB instance to ensure uniqueness. `aud` and `nonce` both fields are supported, and only string is allowed. `nonce` doesn't have a fixed length and aud is an URL identifier. 
 
@@ -59,9 +59,9 @@ AWS HSM module is the best industry solution for storing keys securely and for s
 
 ## Backwards Compatibility
 
-ZkLogin wallets are domain separated by the OpenID issuer and its client ID. There is no backward compatibility issue with existing issuers. 
+zkLogin wallets are domain separated by the OpenID issuer and its client ID. There are no backward compatibility issues with existing issuers. 
 
-Once the SIP is finalized with the configurations defined above (issuer string, client ID etc), they will not change again. Otherwise, the wallet created based on this configuration will result in lost of fund. 
+Once the SIP is finalized with the configurations defined above (issuer string, client ID etc), they will not change again. Otherwise, the wallet created based on this configuration will result in the loss of funds. 
 
 ## Test Cases
 
@@ -71,7 +71,7 @@ TODO: Provide a long-live video clip of a complete login flow for testing and/or
 
 ## Reference Implementation
 
-N/A. To be implemented by the Mysten Labs team. 
+N/A. To be implemented by the Mysten Labs team.
 
 ## Security Considerations
 
