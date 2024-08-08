@@ -2,7 +2,7 @@
 | ```:                | :``` |
 | Title               | Introduction of Verifiable Delay Functions (VDFs) to Sui Framework |
 | Description         | Add verifiable delay functions (VDFs) to the Sui framework. |
-| Author              | Jonas Lindstrøm (jonas-lj) |
+| Author              | Jonas Lindstrøm (@jonas-lj) |
 | Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
 | Type                | Standard |
 | Category            | Framework |
@@ -77,7 +77,7 @@ The implementation of VDFs in the Sui framework will proceed in phases:
    - Conduct a comprehensive analysis of existing VDF schemes and select the most suitable one(s) for integration into Sui.
    
 2. **Development Phase:**
-   - Develop and integrate the VDF evaluation and verification module, and smart contract support into the Sui framework.
+   - Develop and integrate the VDF evaluation and verification modules, and smart contract support into the Sui framework.
    
 3. **Testing Phase:**
    - Rigorously test the VDF implementation under various scenarios to ensure security, efficiency, and reliability.
