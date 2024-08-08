@@ -1,14 +1,14 @@
-|   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor>  |
+|   SIP-Number | 22                                                       |
 | -----------: | :------------------------------------------------------- |
 |        Title | Coin Metadata V2                                         |
 |  Description | New management and authorization system for CoinMetadata |
 |       Author | @damirka                                                 |
-|       Editor | <Leave this blank; it will be assigned by a SIP Editor>  |
+|       Editor | Will Riches <will@sui.io, @wriches>                      |
 |         Type | Standard                                                 |
 |     Category | Framework                                                |
 |      Created | 2024-04-20                                               |
-| Comments-URI | <Leave this blank; it will be assigned by a SIP Editor>  |
-|       Status | <Leave this blank; it will be assigned by a SIP Editor>  |
+| Comments-URI | https://sips.sui.io/comments-22                          |
+|       Status | Draft                                                    |
 |     Requires | -                                                        |
 
 ## Abstract
@@ -125,10 +125,6 @@ To prevent the misuse of the `TreasuryCap` for the supply-based currencies, the 
 TBD
 
 ## Rationale
-
-<!--
-It should be used to explain how the SIP's design was arrived at, and what the pros and cons of this approach are.
--->
 
 TBD
 
