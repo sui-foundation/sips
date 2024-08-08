@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 27 |
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Key Management for Non Private Key Wallet |
 | Description         | Specify the key derivation logic for an encryption key server |
 | Author              | Joy Wang (@joyqvq, joy@mystenlabs.com)|
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z>
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-05-09 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-27 |
+| Status              | Draft |
+| Requires            | |
 
 ## Abstract
 
