@@ -19,7 +19,7 @@ There is currently no way to view the actual source code of an on-chain package 
 
 ## Specification
 ### REST API
-![SIP process diagram](../assets/verification-api/restapi.png)
+![SIP process diagram](../assets/sip-3/restapi.png)
 
 API Server
 1. Explorer calls the verification API.
@@ -71,7 +71,7 @@ After that, it saves the result.
 
 
 ### WEBSOCKET
-![SIP process diagram](../assets/verification-api/websocket.png)
+![SIP process diagram](../assets/sip-3/websocket.png)
 - #### Upload Source Code and Request Verification
     - #### **Request Event**
       For uploading of the package source code, you should send a request to the websocket endpoint. The event includes fields below.

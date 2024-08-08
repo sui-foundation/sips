@@ -21,7 +21,7 @@ Encapsulate the new non-transferable `NativeStakedSui` object, along with corres
 Since the adoption of SIP-6 proposal, the `StakedSui` object gained the `store` ability and became transferable. 
 Currently, there are two types of staking methods on Sui: native stake and LST stake. 
 While the transferable `StakedSui` brings convenience to LST, it also introduces risks to native stake users. The staking certificates `StakedSui`, originally only usable by staking users, may be stolen by hackers, leading to the loss of users' previously staked assets."
-![hacker_attack](../assets/sip-tmp/hacker_attack.jpeg)
+![hacker_attack](../assets/sip-20/hacker_attack.jpeg)
 Moreover, such [attacks](https://twitter.com/pikapikasui/status/1783025361275765136) have occurred multiple times.
 
 To safeguard users' staked assets from hackers, this SIP introduces a new non-transferable `NativeStakedSui` object to encapsulate `StakedSui`, which can be utilized in native stake scenarios, enhancing user security.
