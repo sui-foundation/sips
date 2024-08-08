@@ -1,15 +1,15 @@
-|   SIP-Number | N/A |
+|   SIP-Number | 34 |
 | -----------: | :--------------------------------------------------- |
 |        Title | Add FanTV as a zkLogin OpenID provider |
-|  Description | Add FanTV as a whitelisted OpenID provider enabled for zkLogin on Sui to provide logging with phone numbers to create Sui wallet. |
-|       Author |  Jaswant Kumar <@jaswant25, jaswant.kumar@fantv.in>, Joy Wang <joy@mystenlabs.com> |
-|       Editor | N/A |
+|  Description | Add FanTV as a whitelisted OpenID provider for zkLogin on Sui to enable logging in with phone numbers to create Sui wallets. |
+|       Author | Jaswant Kumar <@jaswant25, jaswant.kumar@fantv.in>, Joy Wang <joy@mystenlabs.com, @joyqvq> |
+|       Editor | Will Riches <will@sui.io, @wriches> |
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-06-07 |
-| Comments-URI | N/A |
-|       Status | N/A |
-|     Requires | N/A |
+| Comments-URI | https://sips.sui.io/comments-34 |
+|       Status | Draft |
+|     Requires | |
 
 ## Abstract
 
