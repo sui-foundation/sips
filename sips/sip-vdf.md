@@ -89,7 +89,7 @@ The implementation of VDFs in the Sui framework will proceed in phases:
 
 ## Security Considerations
 ```
-Introducing VDFs into the Sui framework necessitates a thorough evaluation of the security implications. The selected VDF scheme must be resistant to potential attacks, and the implementation should be carefully audited. Additionally, the gas cost model for VDFs must be carefully calibrated to prevent denial-of-service (DoS) attacks.
+Introducing VDFs into the Sui framework necessitates a thorough evaluation of the security implications. The selected VDF scheme must be resistant to potential attacks, and the protocol and its implementation should be carefully audited. Additionally, the gas cost model for VDFs must be carefully calibrated to prevent denial-of-service (DoS) attacks.
 
 ```
 
