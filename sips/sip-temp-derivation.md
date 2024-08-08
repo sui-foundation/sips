@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 28 |
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Key Storage in Wallet |
 | Description         | Specify the key derivation path for the BLS-12381 Encryption Key for wallet master private key. |
-| Author              | Joy Wang (@joyqvq, joy@mystenlabs.com)|
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Author              | Joy Wang <joy@mystenlabs.com, @joyqvq> |
+| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z> |
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-05-09 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+| Comments-URI        | https://sips.sui.io/comments-28 |
+| Status              | Draft |
+| Requires            | - |
 
 ## Abstract
 
