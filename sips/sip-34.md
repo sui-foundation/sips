@@ -28,7 +28,14 @@ FanTV is fully compatible with the current [OpenID specification](https://openid
 | Well known configuration  |https://accounts.fantv.world/.well-known/openid-configuration | `{             "issuer": "https://accounts.fantv.world",             "authorization_endpoint": "https://fantv-apis.fantiger.com/v1/oauth2/auth",             "token_endpoint": "https://fantv-apis.fantiger.com/v1/oauth2/token",             "jwks_uri": "https://fantv-apis.fantiger.com/v1/web3/jwks.json",             "response_types_supported": [                 "authorization_code",                 "id_token"             ],             "subject_types_supported": [                 "public"             ],             "id_token_signing_alg_values_supported": [                 "RS256"             ],             "scopes_supported": [                 "openid"             ],             "token_endpoint_auth_methods_supported": [                 "client_secret_post",                 "client_secret_basic"             ],             "claims_supported": [                 "aud",                 "exp",                 "iat",                 "iss",                 "sub"             ],             "code_challenge_methods_supported": [                 "plain",                 "S256"             ]         }` |
 | JWK endpoint              |https://fantv-apis.fantiger.com/v1/web3/jwks.json | `{"keys":[{"kty":"RSA","kid":"O5ryxF-zMCLmS6hQhcTC3pAAhQ4YYPEHoiQt1qx_86o","use":"sig","alg":"RS256","e":"AQAB","n":"mBi1td_GT0MubU5Lfeg4P4XsMUzpzcxuI9Yb1xDOpWFekEZF0TwTLJ6v4a28hiAU_ateCxlFQSkHrhbpdFkEWuDQnPUAnlAr5I7-W8ccKkWuuPwZz0wHcgFSxH5fstFaGuOACewBSmP3BlScQqRYhrj1QB_7j1_G7g17Q-QIBGrvp8gtb2K-saumUlF67ySZrSM_FV1_XalI0Z31oXKMECUfnbje-fLiIvSuXKK-sfO-MSrEEkB8dbzP6ez-xYGYIFisyiqeGlCeO4-ZDkvDrBnDGLxpgLcsWbgcUUvnmyrSQjTxqub17GkuPPwXpof0b8OHhPAC12TfUTRRP1CUfQ"}]}`|
 | Issuer                    |https://accounts.fantv.world |                 |
-| Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth?clientId=r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world&redirectUri=https://fantv-apis.fantiger.com/v1/oauth2/redirect&responseType=authorization_code&scope=openid&userId=6443505c5de5935daf15635c&sessionId=293572390582343345ndbsbfhergkj32438|                 |
+| Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth?clientId=r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world&redirectUri=https://fantv-apis.fantiger.com/v1/oauth2/redirect&responseType=authorization_code&scope=openid&userId=6443505c5de5935daf15635c&nonce=f4wytgbi34jgkefhjwer112121|                 |
+| Token end point | https://fantv-apis.fantiger.com/v1/oauth2/token | Post Request Params {
+   "clientId":"r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world", 
+   "clientSecret":"secret123456",
+   "grant_type":"authorization_code",
+   "redirect_uri":"https://fantv-apis.fantiger.com/v1/oauth2/redirect",  
+   "authCode":"1758a96d2f7ce2bb8d8326b21cff1a8f8bf1b61a39ade2e9923e2f8a75703fa1"
+}
 | Allowed Client IDs        |r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world|                 | 
 
 ## JWK rotation details
@@ -65,9 +72,9 @@ Once the SIP is finalized with the configurations defined above (issuer string, 
 
 ## Test Cases
 
-eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik81cnl4Ri16TUNMbVM2aFFoY1RDM3BBQWhRNFlZUEVIb2lRdDFxeF84Nm8ifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmZhbnR2LndvcmxkIiwiYXpwIjoicjI0YnNreHlhZnd3dWE2OGV0MndtdXFleW9hLmFwcHMuZmFudHYud29ybGQiLCJhdWQiOiJyMjRic2t4eWFmd3d1YTY4ZXQyd211cWV5b2EuYXBwcy5mYW50di53b3JsZCIsInN1YiI6IjYyOGRmNDU0YjA4MmE5NzAyOWNkYjNhZSIsIm5vbmNlIjoibG1scmxCakQ5ckFzdVFoZDdZUUFYTUlnQk1nIiwiaWF0IjoxNzIxNzM5NjAyLCJleHAiOjE3MjE4MjYwMDIsImp0aSI6Imx5eWZhenZtLWNmNDl3Zmd6YzkifQ.INczb6QnaOBuyLzXQWJA6Wt6caoLG-0rgm55GSBmux1SpH8bL8KSuUPArax1cAlPQjnAS7S4mn2PLBC584yTmfGpKesKJ1bYjqH4mnomt3ZTWnddofLMkB-ZxBl4TmOiTsWiFrObfNyQbHEOUKKsxoaTcyZHYPQ-F4MIEsQx_KJwYgBRD5lEY2vJbtbM_jzA1mxktFBIFWdF3JhTJ8hSRNlEMeVMWky3_boMUFCatf8sffIX62QTbZUMvNpMj519yN-IXpqR-hVWgwFNreIqKF_rQLNx2K2JQfBXEvDE8VoHjdbVT5MpRMMiPckrVp-fuQ77AiGapXOQcG_Y32Dbvw
+eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik81cnl4Ri16TUNMbVM2aFFoY1RDM3BBQWhRNFlZUEVIb2lRdDFxeF84Nm8ifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmZhbnR2LndvcmxkIiwiYXpwIjoicjI0YnNreHlhZnd3dWE2OGV0MndtdXFleW9hLmFwcHMuZmFudHYud29ybGQiLCJhdWQiOiJyMjRic2t4eWFmd3d1YTY4ZXQyd211cWV5b2EuYXBwcy5mYW50di53b3JsZCIsInN1YiI6IjY0NDM1MDVjNWRlNTkzNWRhZjE1NjM1YyIsIm5vbmNlIjoiZjR3eXRnYmkzNGpna2VmaGp3ZXIxMTIxMjEiLCJpYXQiOjE3MjMxOTI5MDAsImV4cCI6MTcyMzE5NjUwMCwianRpIjoibHptZ2s3dGgtY2VpdDRvNW1kbyJ9.DbC5_2tRWhEcaj8GaWEu7aRe9iH3sKHRVwPPSDSfpU83lRcqCkbPh9Glzcv-lAie0xenhU_jeFP9qeBZ0wKTnaJonhbrzYDDrGwjBEOqPqh5XE5BGM6qBqLSZJmmvJ7KWqwb7IHhXOGCAJFwdpMoZ7mWxIw9xqcZbDhi8w4dDMVr3lMsDTIhy8x_QnzDqf1gfx9ZgDlWY3CelKK67J2mtiW0IfaEPGq5ITUQxE8sMfDfgqmsdGiIJFHG9xdtVjJWMI--oBmfwD97byyu3Ss_YyBxjizzP6cAE2G3tb7ERpPlRX84qdd0uQUOCalQxBfaIiAnea6GEzAHIJWFrd1AtA
 
-TODO: Provide a long-live video clip of a complete login flow for testing and/or screenshots. 
+https://drive.google.com/file/d/1q_xgDcSzgotrr9OgZ_iF6f8dI71COwST/view
 
 ## Reference Implementation
 
