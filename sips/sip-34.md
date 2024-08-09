@@ -29,13 +29,7 @@ FanTV is fully compatible with the current [OpenID specification](https://openid
 | JWK endpoint              |https://fantv-apis.fantiger.com/v1/web3/jwks.json | `{"keys":[{"kty":"RSA","kid":"O5ryxF-zMCLmS6hQhcTC3pAAhQ4YYPEHoiQt1qx_86o","use":"sig","alg":"RS256","e":"AQAB","n":"mBi1td_GT0MubU5Lfeg4P4XsMUzpzcxuI9Yb1xDOpWFekEZF0TwTLJ6v4a28hiAU_ateCxlFQSkHrhbpdFkEWuDQnPUAnlAr5I7-W8ccKkWuuPwZz0wHcgFSxH5fstFaGuOACewBSmP3BlScQqRYhrj1QB_7j1_G7g17Q-QIBGrvp8gtb2K-saumUlF67ySZrSM_FV1_XalI0Z31oXKMECUfnbje-fLiIvSuXKK-sfO-MSrEEkB8dbzP6ez-xYGYIFisyiqeGlCeO4-ZDkvDrBnDGLxpgLcsWbgcUUvnmyrSQjTxqub17GkuPPwXpof0b8OHhPAC12TfUTRRP1CUfQ"}]}`|
 | Issuer                    |https://accounts.fantv.world |                 |
 | Authorization link        |https://fantv-apis.fantiger.com/v1/oauth2/auth?clientId=r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world&redirectUri=https://fantv-apis.fantiger.com/v1/oauth2/redirect&responseType=authorization_code&scope=openid&userId=6443505c5de5935daf15635c&nonce=f4wytgbi34jgkefhjwer112121|                 |
-| Token end point | https://fantv-apis.fantiger.com/v1/oauth2/token | Post Request Params {
-   "clientId":"r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world", 
-   "clientSecret":"secret123456",
-   "grant_type":"authorization_code",
-   "redirect_uri":"https://fantv-apis.fantiger.com/v1/oauth2/redirect",  
-   "authCode":"1758a96d2f7ce2bb8d8326b21cff1a8f8bf1b61a39ade2e9923e2f8a75703fa1"
-}
+| Token end point | https://fantv-apis.fantiger.com/v1/oauth2/token | Post params: `{"clientId":"r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world","clientSecret":"secret123456","grant_type":"authorization_code","redirect_uri":"https://fantv-apis.fantiger.com/v1/oauth2/redirect","authCode":"1758a96d2f7ce2bb8d8326b21cff1a8f8bf1b61a39ade2e9923e2f8a75703fa1"}`
 | Allowed Client IDs        |r24bskxyafwwua68et2wmuqeyoa.apps.fantv.world|                 | 
 
 ## JWK rotation details
