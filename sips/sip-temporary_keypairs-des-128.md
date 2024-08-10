@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor>                                        |
+| SIP-Number          | 21                                        |
 | ---:                |:-----------------------------------------------------------------------------------------------|
-| Title               | Keypairs in files should be aes-128 encode                                                     |
+| Title               | Store keypairs with aes-128 encryption                                                         |
 | Description         | Currently Sui store keypair in file only using base64 which should using aes-128 encode better |
 | Author              | oday0311@hotmail.com                                                                           |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor>                                        |
+| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z>                                                 |
 | Type                | Standard                                                                                       |
 | Category            | Core                                                                                           |
 | Created             | 2024-05-03                                                                                     |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor>                                        |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor>                                        |
-| Requires            | <Optional; SIP number(s), comma separated>                                                     |
+| Comments-URI        | https://sips.sui.io/comments-21                                                                |
+| Status              | Draft                                                                                          |
+| Requires            | -                                                                                              |
 
 ## Abstract
 
