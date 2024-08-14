@@ -29,7 +29,7 @@ As background:
 Note that a validator with 0 voting power has no influence. Thus, a natural precondition for admitting a new validator is requiring enough stake to have nonzero voting power after joining. Specifically, we propose to allow any validator candidate whose stake corresponds to some minimum voting power threshold **V** enter the set. In detail:
 
 * Say the total amount staked in Sui is **T**, and a validator candidate has amassed **S** delegated stake
-* If **S / (S + T) > V / 1000**, the candidate validator is allowed to enter the validator set. Intuitively, this says that if the candidate will have at least **V** voting power after joining the validator set, they can enter.
+* If **S / (S + T) > V / 10000**, the candidate validator is allowed to enter the validator set. Intuitively, this says that if the candidate will have at least **V** voting power after joining the validator set, they can enter.
 
 ## Implementation
 
