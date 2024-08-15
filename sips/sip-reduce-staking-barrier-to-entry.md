@@ -1,14 +1,14 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor>       |
+| SIP-Number          | 39       |
 | ------------------: | :--------------------------------------------------------     |
 | Title               | Lowering the validator set barrier to entry                   |
 | Description         | Use a min voting power threshold instead of min SUI threshold |
 | Author              | Sam Blackshear <@sblackshear>                                 |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor>       |
+| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui>       |
 | Type                | Standard                                                      |
 | Category            | Framework                                                     |
 | Created             | 2024-08-11                                                    |
 | Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Status              | Draft |
 | Requires            | |
 
 ## Abstract
