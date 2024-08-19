@@ -1,7 +1,8 @@
 | SIP-Number          | 21                                        |
 | ---:                |:-----------------------------------------------------------------------------------------------|
-| Title               | Store keypairs with aes-128 encryption                                                         |
-| Description         | Currently Sui store keypair in file only using base64 which should using aes-128 encode better |
+| Title               | Encrypt keypairs with aes-128 before storing them on disk.                                     |
+| Description         | Currently Sui stores keypair in a file only using base64 which is not safe. It should be using |
+|                       aes-128 encryptiption for better security.                                                     |
 | Author              | oday0311@hotmail.com                                                                           |
 | Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z>                                                 |
 | Type                | Standard                                                                                       |
