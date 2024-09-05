@@ -22,7 +22,7 @@ zkLogin does not support any providers using phone number-based logins.  Many po
 
 ## Specification
 
-Karrier One is hosting an openid provider built upon https://github.com/openiddict/openiddict-core which implements https://openid.net/specs/openid-connect-core-1_0.html and supports the code & implicit flows. TODO openiddict does support more flows if we want.
+Karrier One is hosting an openid provider built upon https://github.com/openiddict/openiddict-core which implements https://openid.net/specs/openid-connect-core-1_0.html and supports the code & implicit flows. 
 
 
 |             Item          | Endpoint  | Example Content | 
@@ -30,8 +30,10 @@ Karrier One is hosting an openid provider built upon https://github.com/openiddi
 | Well known configuration  |    https://accounts.karrier.one/.well-known/openid-configuration       |                 |
 | JWK endpoint              |    https://accounts.karrier.one/.well-known/jwks       |                 |
 | Issuer                    |    https://accounts.karrier.one/   |                 |
-| Authorization link          |   https://accounts.karrier.one/connect/authorize        |                 |
-| Allowed Client IDs |    |     | 
+| Authorization link        |    https://accounts.karrier.one/connect/authorize        |                 |
+| Allowed Client IDs        |    karrier.one        |     | 
+
+Additional Client IDs can be supported as the ecosystem grows.
 
 #### JWK rotation details
 
