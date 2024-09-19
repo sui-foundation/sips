@@ -84,7 +84,7 @@ Once this SIP is finalized with the configurations defined above (issuer string,
 Provide an example JWT token and parsed JWT token payload (using jwt.io) with nonce hTPpgF7XAKbW37rEUS6pEVZqmoI
 
 ### JWT
-    eyJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0yMDQ4LTE3MjU1NTIwNjgiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJkZXZAYXJkZW4uY2MiLCJlbWFpbCI6ImRldkBhcmRlbi5jYyIsImF1ZCI6IjAyZDg0MWJhLWU3OGUtNDc2Mi04MWMxLWY4YmQ5MTNkNmY4MiIsInNjb3BlIjoib3BlbmlkIiwibm9uY2UiOiJoVFBwZ0Y3WEFLYlczN3JFVVM2cEVWWnFtb0kiLCJleHAiOjE3MjU1NTYwNDgsImlhdCI6MTcyNTU1MjQ0OCwiaXNzIjoiaHR0cHM6Ly9vaWRjLmFyZGVuLmNjIn0.HKf5ejMp0nxBSrAS2losqjSPHju-MbB9PdAzG81fdgE6mGT3RDpkQkPjdx0RgSOfdKt3cEXV82Y-ZwslzKn7R4pMsuX3G06AKDSdJdRjGz4Dx0nryYzbPQCCasS_u5X9KkVSS0qxd7jKX2q5krfnxQZtGj6HVNbysF43xSNXXNLHrAm5G_PG4aY9C-v-engGxIu6Y7OJSMZY4bDW5E43i1lBxES_3uozYEJ8JieMSApTsgywDql2dGM_4H9mJE_Ijwa4UlE0xHq9MLwbs0rRuLt_p5fFplOfWeYbm6n3hR0kKYI8YkOs1AK8iFzuhbmopByID-Dxslg1oyEm9UV8bg
+    eyJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0yMDQ4LTE3MjU1Njc5MDYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJicnlhbnRjQGFyZGVuLmNjIiwiZW1haWwiOiJicnlhbnRjQGFyZGVuLmNjIiwiYXVkIjoiMDJkODQxYmEtZTc4ZS00NzYyLTgxYzEtZjhiZDkxM2Q2ZjgyIiwic2NvcGUiOiJvcGVuaWQiLCJub25jZSI6ImhUUHBnRjdYQUtiVzM3ckVVUzZwRVZacW1vSSIsImV4cCI6MTcyNjc1OTk2MiwiaWF0IjoxNzI2NzU2MzYyLCJpc3MiOiJodHRwczovL29pZGMuYXJkZW4uY2MifQ.43CMG0S6K081vrL7tvQrkl42CFp4ICH9aYFkoG0yaZANquoo3EWsjVczKpGn26qYKo49CSUzaL2QTgU6qFahQCSwO5Xm0VDDkYwQ-CQbbe6yqNcxP71hulUkLvLX1I__P8NXmSWHa7m9Rg4XO-UWfV3K_UDQYyk67I0cCnLo5u3UbERTw7g0Mdyps-WRFcoSq1FEwLr_BnontQxhiG13EUY398FMeyatQBYwUi2Io712tuvNjmDzy1juCzQO1J_adWK_3URHsLJyuz6P4HsM_s_3OXgeSyW-dE-WSNhF_nw8kArwcdUnAE_WZkDjPuTG7dyHRwkNsf3AmcPbHgnk5A&state=af0ifjsldkj
 
 ### Parsed JWT
 
@@ -92,20 +92,20 @@ Provide an example JWT token and parsed JWT token payload (using jwt.io) with no
 
     {
       "alg": "RS256",
-      "kid": "rsa-2048-1725552068",
+      "kid": "rsa-2048-1725567906",
       "typ": "JWT"
     }
 
 #### Payload Data
 
     {
-      "sub": "dev@arden.cc",
-      "email": "dev@arden.cc",
+      "sub": "bryantc@arden.cc",
+      "email": "bryantc@arden.cc",
       "aud": "02d841ba-e78e-4762-81c1-f8bd913d6f82",
       "scope": "openid",
       "nonce": "hTPpgF7XAKbW37rEUS6pEVZqmoI",
-      "exp": 1725556048,
-      "iat": 1725552448,
+      "exp": 1726759962,
+      "iat": 1726756362,
       "iss": "https://oidc.arden.cc"
     }
 
