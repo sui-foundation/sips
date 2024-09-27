@@ -35,7 +35,7 @@ EXAMPLE
 | Well known configuration  |    https://api.arden.cc/auth/.well-known/openid-configuration       |                 |
 | JWK endpoint              |    https://api.arden.cc/auth/jwks       |                 |
 | Issuer                    |    https://oidc.arden.cc    |                 |
-| Authorization link          |   https://api.arden.cc/auth/authorize        |                 |
+| Authorization link          |   https://oidc.arden.cc/login        |                 |
 | Allowed Client IDs |    |   02d841ba-e78e-4762-81c1-f8bd913d6f82   | 
 
 ## JWK rotation details
