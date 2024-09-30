@@ -84,7 +84,7 @@ Once this SIP is finalized with the configurations defined above (issuer string,
 Provide an example JWT token and parsed JWT token payload (using jwt.io) with nonce hTPpgF7XAKbW37rEUS6pEVZqmoI
 
 ### JWT
-    eyJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0yMDQ4LTE3MjU1Njc5MDYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJicnlhbnRjQGFyZGVuLmNjIiwiZW1haWwiOiJicnlhbnRjQGFyZGVuLmNjIiwiYXVkIjoiMDJkODQxYmEtZTc4ZS00NzYyLTgxYzEtZjhiZDkxM2Q2ZjgyIiwic2NvcGUiOiJvcGVuaWQiLCJub25jZSI6ImhUUHBnRjdYQUtiVzM3ckVVUzZwRVZacW1vSSIsImV4cCI6MTcyNjc1OTk2MiwiaWF0IjoxNzI2NzU2MzYyLCJpc3MiOiJodHRwczovL29pZGMuYXJkZW4uY2MifQ.43CMG0S6K081vrL7tvQrkl42CFp4ICH9aYFkoG0yaZANquoo3EWsjVczKpGn26qYKo49CSUzaL2QTgU6qFahQCSwO5Xm0VDDkYwQ-CQbbe6yqNcxP71hulUkLvLX1I__P8NXmSWHa7m9Rg4XO-UWfV3K_UDQYyk67I0cCnLo5u3UbERTw7g0Mdyps-WRFcoSq1FEwLr_BnontQxhiG13EUY398FMeyatQBYwUi2Io712tuvNjmDzy1juCzQO1J_adWK_3URHsLJyuz6P4HsM_s_3OXgeSyW-dE-WSNhF_nw8kArwcdUnAE_WZkDjPuTG7dyHRwkNsf3AmcPbHgnk5A&state=af0ifjsldkj
+    eyJhbGciOiJSUzI1NiIsImtpZCI6InJzYS0yMDQ4LTE3Mjc1ODI0MTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJkYW5pZWxAYXJkZW4uY2MiLCJlbWFpbCI6ImRhbmllbEBhcmRlbi5jYyIsImF1ZCI6IjAyZDg0MWJhLWU3OGUtNDc2Mi04MWMxLWY4YmQ5MTNkNmY4MiIsInNjb3BlIjoib3BlbmlkIiwibm9uY2UiOiJoVFBwZ0Y3WEFLYlczN3JFVVM2cEVWWnFtb0kiLCJleHAiOjE3Mjc3MDgwMDQsImlhdCI6MTcyNzcwNDQwNCwiaXNzIjoiaHR0cHM6Ly9vaWRjLmFyZGVuLmNjIn0.J9cppcjvf60iCQBHM3nq-R11zkK0sH9GPlza6k2hDQ1mtSeuvAJaldqlh9p1uGCAeKpRPDQyXtcDJDbiJ59OZrE7ImV8fmV4cYEDNt5ek1VM4mN0FGpAqV_dfvzSWeE76uxIJAGEznWnXhIrrvZgK4zQQilzVJQubtaj4cGAy9lRFK_r10AvSwRwj-hBqItHoAlmEk94W__Bhz4FH49DN3f_kvsZM-x5DU2l2B6o-evzb9p-4risybZ0j83BvefmO9MSqr1e_Sbu5x5jiEiIbgrOE_G_FQGBQDgwwc9AMbpOmrhLnvb2gJrchTc2AMD7VyjGABO0BKDJQX3P-jsInw
 
 ### Parsed JWT
 
@@ -92,20 +92,20 @@ Provide an example JWT token and parsed JWT token payload (using jwt.io) with no
 
     {
       "alg": "RS256",
-      "kid": "rsa-2048-1725567906",
+      "kid": "rsa-2048-1727582411",
       "typ": "JWT"
     }
 
 #### Payload Data
 
     {
-      "sub": "bryantc@arden.cc",
-      "email": "bryantc@arden.cc",
+      "sub": "daniel@arden.cc",
+      "email": "daniel@arden.cc",
       "aud": "02d841ba-e78e-4762-81c1-f8bd913d6f82",
       "scope": "openid",
       "nonce": "hTPpgF7XAKbW37rEUS6pEVZqmoI",
-      "exp": 1726759962,
-      "iat": 1726756362,
+      "exp": 1727708004,
+      "iat": 1727704404,
       "iss": "https://oidc.arden.cc"
     }
 
