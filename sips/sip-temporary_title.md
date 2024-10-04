@@ -1,16 +1,15 @@
 Arden OIDC SIP
 
-|   SIP-Number | N/A |
+|   SIP-Number | 43 |
 | -----------: | :--------------------------------------------------- |
 |        Title | Add Arden as a zkLogin OpenID provider |
 |  Description | Add Arden as a whitelisted OpenID provider enabled for zkLogin on Sui. |
 |       Author |  Arden  |
-|       Editor | N/A |
+|       Editor |  Amogh Gupta <amogh@sui.io, @amogh-sui>  |
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-09-05 |
-| Comments-URI | N/A |
-|       Status | N/A |
+|       Status | Fast Track |
 |     Requires | N/A |
 
 
