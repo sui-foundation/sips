@@ -69,7 +69,8 @@ The lowest voting power of any Sui validator today is 26, so phase 1 will not af
 With the total amount staked as of 8/11/24, 1 voting power "costs" ~800K SUI. Under the new proposal, entering the validator set would now require ~2.4M SUI, a substantially lower total than the current 30M minimum. Over time, perhaps the low stake and very low stake thresholds can be phased out altogether in favor of making the admission criteria as permissive as possible (1 voting power).
 
 ## Reference Implementation
-WIP
+
+https://github.com/MystenLabs/sui/pull/19836
 
 ## Copyright
 
