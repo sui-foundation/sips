@@ -9,7 +9,7 @@ Arden OIDC SIP
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-09-05 |
-|       Status | Fast Track |
+|       Status | Last Call |
 |     Requires | N/A |
 
 
