@@ -1,14 +1,14 @@
-| SIP-Number          |  |
+| SIP-Number          | 42 |
 | ---:                | :--- |
 | Title               | Add Karrier One as a zkLogin OpenID provider |
 | Description         | Add Karrier One as a whitelisted OpenID provider enabled for zkLogin on Sui. |
 | Author              | Andrew Buchanan <abuchanan@karrier.one> |
-| Editor              |  |
+| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui>  |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-08-06 |
 | Comments-URI        | |
-| Status              | |
+| Status              |Fast Track|
 | Requires            | |
 
 
