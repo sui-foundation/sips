@@ -238,17 +238,17 @@ Actions may be performed due to incentives, but should span across any incentive
 
 The integration of action primitive to existing or future business modules should be as seamless as possible. By isolating eligibility checking to other standalone entities, the sole overhead remains as constructing an action object with attributes deemed necessary for outside parties to interoperate with. Ideally, wherever an event is emitted, an accompanying action object can be initialized with minimal efforts.
 
-![](../assets/sip-action-primitive/a88232ec77b1beeb2355605c4040bc6f9e8455e9.svg)
+![](../assets/sip-11/a88232ec77b1beeb2355605c4040bc6f9e8455e9.svg)
 
 ### Extensibility and Composability
 
 `Attester` modules can be developed by any party with custom validation logics based on attributed provided in the action, as along as the `Witness` type bound to these attestations is whitelisted in related reward pools. Each action object may be attested by multiple attester modules to be eligible for rewards in respective reward pools.
 
-![](../assets/sip-action-primitive/e0124dc82ddc5512f710f9df1be0cd08bf10711a.svg)
+![](../assets/sip-1/e0124dc82ddc5512f710f9df1be0cd08bf10711a.svg)
 
 Meanwhile, attestations are composable with one another to reflect logical constraints applied to them.
 
-![](../assets/sip-action-primitive/3abf633c880ffad1a9e2fbe4c1bee468d6f05c7e.svg)
+![](../assets/sip-11/3abf633c880ffad1a9e2fbe4c1bee468d6f05c7e.svg)
 
 ## Backwards Compatibility
 
