@@ -107,6 +107,3 @@ JWK endpoint is unavailable.  All zkLogin wallets are locked out until the JWK e
 
 Signing key is compromised.  Wallets could have funds drained.  Mitigations include encrypting the signing keys, limiting access to the signing keys to required processes and staff.  Logging access.  At the user/application level, require users with significant assets (eg more $1000) to use a standard/private wallet.
 
-## Copyright
-
-```
