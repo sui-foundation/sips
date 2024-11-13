@@ -9,6 +9,7 @@ Arden OIDC SIP
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-09-05 |
+| Comments-URI | https://sips.sui.io/comments-43 |
 |       Status | Final |
 |     Requires | N/A |
 
