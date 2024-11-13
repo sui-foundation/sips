@@ -7,9 +7,9 @@
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-08-06 |
-| Comments-URI        | |
+| Comments-URI        | https://sips.sui.io/comments-42 |
 | Status              | Final |
-| Requires            | |
+| Requires            | NA |
 
 
 ## Abstract
@@ -109,8 +109,4 @@ Signing key is compromised.  Wallets could have funds drained.  Mitigations incl
 
 ## Copyright
 
-```
-REMOVE THIS BLOCK
-
-This section is optional but recommended.
 ```
