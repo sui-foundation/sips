@@ -1,28 +1,25 @@
-| SIP-Number          |  |
+| SIP-Number          | 45 |
 | ---:                | :--- |
 | Title               | Prioritized Transaction Submission |
 | Description         | Enable effective prioritized transaction submission. |
 | Author              | Shio Coder <shio.coder@gmail.com> |
-| Editor              |  |
+| Editor              | Will Riches <will@sui.io, @wriches> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-11-26 |
-| Comments-URI        |  |
-| Status              |  |
+| Comments-URI        | https://sips.sui.io/comments-45 |
+| Status              | Fast Track |
 | Requires            | N/A |
-
 
 ## Abstract
 
 Enable effective prioritized transaction submission based on gas price.
-
 
 ## Motivation
 
 Currently, there is no deterministic gas ordering for the transactions, even when these transactions are submitted within an extremely short time window (less than 100ms). This is due to the fact that different transactions are randomly submitted by different validators, and the validator that is supposed to submit the transaction can have latency jitters. We propose a mechanism to mitigate the random factor and enable prioritized transaction submission.
 
 ## Specification
-
 
 We propose the following changes:
 - Increase the maximum allowed value of gas price from `99,999` to `1,000,000,000,000` (1T).
@@ -36,7 +33,6 @@ We acknowledge that in order to adapt to the forthcoming Mysticeti Fast Path, fu
 
 K is a constant chosen to limit amplification. A smaller value of K will increase amplification to the Sui network. In this case, 5 is chosen as the initial value of K.
 
-
 ## Rationale
 
 Transaction ordering on Sui depends on many factors that may or may not be within the control of the user.
@@ -49,7 +45,8 @@ As of today, there is little one can do about the case, other than submitting ma
 
 We believe one way to resolve this is to enable the user to send a tx with a even higher gas price (that comes with a significant real cost) should they choose to do so, while if the price paid is high enough, more validators will submit the transaction immediately, referencing its computed submission position from transaction’s digest. The higher gas price the user pays, the more validators will submit the transaction immediately. We have chosen the function of N so that a user has no incentive to send multiple transactions.
 
-We have studied transactions in the past 30 days (as of 11/7/2024), a distribution of gas price as well as the projected effects from our proposal are shown as follows:
+We have studied transactions in the past 30 days (as of 2024-11-07), a distribution of gas price as well as the projected effects from our proposal are shown as follows:
+
 | Gas Price Bucket | Number of Txs | %      | max(N) | Amp%   | Cum Amp% |
 | ---------------: | :------------ | ------ | ------ | ------ | -------- |
 | [0, 5000)        | 249058741     | 99.783 | 1      | 99.783 | 99.783   |
@@ -69,11 +66,10 @@ We have studied transactions in the past 30 days (as of 11/7/2024), a distributi
 
 From the data above, we predict that consensus bandwidth will be increased by no more than 12% should the proposal get implemented. In return, non-deterministic factors will become minimum, which makes actors able to compete by trying to outbid each other, where the participants will have to pay a much higher gas fee than before, in exchange for the certainty of reliably winning, should one outbid everyone else.
 
-
 ## Backwards Compatibility
-The SIP introduces no incompatible changes.
 
+The SIP introduces no incompatible changes.
 
 ## Security Considerations
 
-None
+None.
