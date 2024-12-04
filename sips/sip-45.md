@@ -1,3 +1,4 @@
+
 | SIP-Number          | 45 |
 | ---:                | :--- |
 | Title               | Prioritized Transaction Submission |
@@ -22,16 +23,18 @@ Currently, there is no deterministic gas ordering for the transactions, even whe
 ## Specification
 
 We propose the following changes:
-- Increase the maximum allowed value of gas price from `99,999` to `1,000,000,000,000` (1T).
-- Allow immediate transaction broadcast based on gas price.
-  - Once a validator receives a transaction with a higher gas price, it is submitted immediately to consensus regardless of tx digest, with the least possible delay, if the validator is in the range of [0, N) of submission position.
-  - N is a function of gas price, defined as:
 
-	  N = `1`  if gas_price < K\*RGP, else `gas_price / RGP + 1`
+- Increase the maximum allowed value of gas price from $99,999$ to $1,000,000,000,000$ (1T).
+- Allow immediate transaction broadcast based on gas price.
+  - Once a validator receives a transaction with a higher gas price, it is submitted immediately to consensus regardless of tx digest, with the least possible delay, if the validator is in the range of $[0, N)$ of submission position.
+  - $N$ is a function of gas price, defined as:
+
+    - if $`gas\_price < K \times RGP`$ then $N = 1$
+    - else $`N = gas\_price / RGP + 1`$
 
 We acknowledge that in order to adapt to the forthcoming Mysticeti Fast Path, further changes are needed.  
 
-K is a constant chosen to limit amplification. A smaller value of K will increase amplification to the Sui network. In this case, 5 is chosen as the initial value of K.
+$K$ is a constant chosen to limit amplification. A smaller value of $K$ will increase amplification to the Sui network. In this case, $5$ is chosen as the initial value of $K$.
 
 ## Rationale
 
@@ -47,19 +50,19 @@ We believe one way to resolve this is to enable the user to send a tx with a eve
 
 We have studied transactions in the past 30 days (as of 2024-11-07), a distribution of gas price as well as the projected effects from our proposal are shown as follows:
 
-| Gas Price Bucket | Number of Txs | %      | max(N) | Amp%   | Cum Amp% |
+| Gas Price Bucket | Number of Txs | %      | $max(N)$ | `Amp%`   | `Cum Amp%` |
 | ---------------: | :------------ | ------ | ------ | ------ | -------- |
-| [0, 5000)        | 249058741     | 99.783 | 1      | 99.783 | 99.783   |
-| [5000, 10000)    | 37872         | 0.015  | 14     | 0.212  | 99.996   |
-| [10000, 20000)   | 303449        | 0.122  | 27     | 3.283  | 103.278  |
-| [20000, 30000)   | 58921         | 0.024  | 40     | 0.944  | 104.222  |
-| [30000, 40000)   | 5370          | 0.002  | 54     | 0.116  | 104.339  |
-| [40000, 50000)   | 4128          | 0.002  | 67     | 0.111  | 104.449  |
-| [50000, 60000)   | 9958          | 0.004  | 80     | 0.319  | 104.769  |
-| [60000, 70000)   | 2818          | 0.001  | 94     | 0.106  | 104.875  |
-| [70000, 80000)   | 3953          | 0.002  | 107    | 0.169  | 105.044  |
-| [80000, 90000)   | 1729          | 0.001  | 120    | 0.083  | 105.127  |
-| [90000, 100000)  | 112992        | 0.045  | 134    | 6.066  | 111.193  |
+| $[0, 5000)$        | 249058741     | 99.783 | 1      | 99.783 | 99.783   |
+| $[5000, 10000)$    | 37872         | 0.015  | 14     | 0.212  | 99.996   |
+| $[10000, 20000)$   | 303449        | 0.122  | 27     | 3.283  | 103.278  |
+| $[20000, 30000)$   | 58921         | 0.024  | 40     | 0.944  | 104.222  |
+| $[30000, 40000)$   | 5370          | 0.002  | 54     | 0.116  | 104.339  |
+| $[40000, 50000)$   | 4128          | 0.002  | 67     | 0.111  | 104.449  |
+| $[50000, 60000)$   | 9958          | 0.004  | 80     | 0.319  | 104.769  |
+| $[60000, 70000)$   | 2818          | 0.001  | 94     | 0.106  | 104.875  |
+| $[70000, 80000)$   | 3953          | 0.002  | 107    | 0.169  | 105.044  |
+| $[80000, 90000)$   | 1729          | 0.001  | 120    | 0.083  | 105.127  |
+| $[90000, 100000)$  | 112992        | 0.045  | 134    | 6.066  | 111.193  |
 
 - `Amp%` represents the percentage of amplification from that bucket.
 - `Cum Amp%` represents the cumulative % of amplification from that bucket and all preceding buckets.
