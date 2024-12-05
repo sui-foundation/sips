@@ -1,11 +1,11 @@
-| SIP-Number          | 1 |
-| ---:                | :--- |
-| Title               | SIP Guidelines |
-| Description         | A set of guidelines and requirements for the submission and lifecycle of SIPs |
-| Author              | Will Riches \<will@sui.io\> |
-| Type                | Process |
-| Created             | 2023-05-03 |
-| Status              | Living |
+|  SIP-Number | 1 |
+|        ---: | :--- |
+|       Title | SIP Guidelines |
+| Description | A set of guidelines and requirements for the submission and lifecycle of SIPs. |
+|      Author | Will Riches \<will@sui.io\> |
+|        Type | Process |
+|     Created | 2023-05-03 |
+|      Status | Living |
 
 ## What is SIP?
 

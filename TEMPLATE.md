@@ -1,15 +1,15 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
-| ---:                | :--- |
-| Title               | <Must be short; maximum 64 characters> |
-| Description         | <Must be one sentence that briefly describes the SIP; maximum 160 characters> |
-| Author              | <A list of the authors' real names or aliases, plus their GitHub usernames and/or or email addresses (in escaped angle brackets)> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Type                | <Standard, Process, Informational> |
-| Category            | <Optional, only needed for Type=Standard; Core, Networking, Interface, Framework, Application> |
-| Created             | <Date created, in ISO 8601 format (YYYY-MM-DD)> |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | <Optional; SIP number(s), comma separated> |
+|   SIP-Number | <Leave this blank; it will be assigned by a SIP Editor> |
+|         ---: | :--- |
+|        Title | <Must be short; maximum 64 characters> |
+|  Description | <Must be one sentence that briefly describes the SIP; maximum 160 characters> |
+|       Author | <A list of the authors' real names or aliases, plus their GitHub usernames and/or email addresses (in escaped angle brackets)> |
+|       Editor | <Leave this blank; it will be assigned by a SIP Editor> |
+|         Type | <Standard, Process, Informational> |
+|     Category | <Optional, only needed for Type=Standard; Core, Networking, Interface, Framework, Application> |
+|      Created | <Date created, in ISO 8601 format (YYYY-MM-DD)> |
+| Comments-URI | <Leave this blank; it will be assigned by a SIP Editor> |
+|       Status | <Leave this blank; it will be assigned by a SIP Editor> |
+|     Requires | <Optional; SIP number(s), comma separated> |
 
 ```
 REMOVE THIS BLOCK BEFORE SUBMITTING SIP

@@ -1,6 +1,6 @@
 |   SIP-Number | 34 |
-| -----------: | :--------------------------------------------------- |
-|        Title | Add FanTV as a zkLogin OpenID provider |
+|         ---: | :--- |
+|        Title | Add FanTV as a zkLogin OpenID Provider |
 |  Description | Add FanTV as a whitelisted OpenID provider for zkLogin on Sui to enable logging in with phone numbers to create Sui wallets. |
 |       Author | Jaswant Kumar \<@jaswant25, jaswant.kumar@fantv.in\>, Joy Wang \<joy@mystenlabs.com, @joyqvq\> |
 |       Editor | Will Riches \<will@sui.io, @wriches\> |

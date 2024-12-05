@@ -1,11 +1,9 @@
-Arden OIDC SIP
-
 |   SIP-Number | 43 |
-| -----------: | :--------------------------------------------------- |
+|         ---: | :--- |
 |        Title | Add Arden as a zkLogin OpenID provider |
 |  Description | Add Arden as a whitelisted OpenID provider enabled for zkLogin on Sui. |
-|       Author |  Arden  |
-|       Editor |  Amogh Gupta \<amogh@sui.io, @amogh-sui\>  |
+|       Author | Arden |
+|       Editor | Amogh Gupta \<amogh@sui.io, @amogh-sui\> |
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-09-05 |
@@ -21,13 +19,9 @@ Currently, zkLogin does not support login with just an email address. This is ar
 ## Motivation
 In order to successfully onboard tens of thousands of users to the Sui blockchain with the lowest amount of friction, Arden’s loyalty platform requires that customers are able to sign up / login by solely using their email.
 
-
 ## Specification
 
 Arden OIDC is fully compatible with the current [OpenID specification](https://openid.net/specs/openid-connect-core-1_0.html) with the following configurations:
-
-
-
 
 EXAMPLE 
 |             Item          | Endpoint  | Example Content | 
@@ -64,20 +58,11 @@ Access Control: Granular IAM policies allow us to strictly limit and audit acces
 Versioning: Secret Manager's versioning capabilities complement our rotation strategy, maintaining a clear history of key changes.
 Integration: Seamless integration with other Google Cloud services, including our Cloud Functions for automated rotation, streamlines our operations.
 
-
 ## Backwards Compatibility
 
 ZkLogin wallets are domain separated by the OpenID issuer and its client ID. There is no backward compatibility issue with existing issuers. 
 
 Once this SIP is finalized with the configurations defined above (issuer string, client ID etc), they will not change again. Otherwise, the wallet created based on this configuration will result in loss of funds. 
-
-
-
-
-
-
-
-
 
 ## Test Cases
 
@@ -111,8 +96,6 @@ Provide an example JWT token and parsed JWT token payload (using jwt.io) with no
 
 
 [Video of complete login flow](https://youtu.be/QMF7C_2by3U)
-
-
 
 ## Reference Implementation
 

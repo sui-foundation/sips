@@ -1,15 +1,15 @@
-|   SIP-Number | 19                                                   |
-| -----------: | :--------------------------------------------------- |
-|        Title | Soft Bundle API                                      |
+|   SIP-Number | 19 |
+|         ---: | :--- |
+|        Title | Soft Bundle API |
 |  Description | Add the Soft Bundle API to the Sui Authority Server. |
-|       Author | Shio Coder \<shio.coder@gmail.com\>                    |
-|       Editor | Will Riches \<will@sui.io, @wriches\>                  |
-|         Type | Standard                                             |
-|     Category | Core                                                 |
-|      Created | 2024-04-05                                           |
-| Comments-URI | https://sips.sui.io/comments-19                      |
-|       Status | Final                                                |
-|     Requires | N/A                                                  |
+|       Author | Shio Coder \<shio.coder@gmail.com\> |
+|       Editor | Will Riches \<will@sui.io, @wriches\> |
+|         Type | Standard |
+|     Category | Core |
+|      Created | 2024-04-05 |
+| Comments-URI | https://sips.sui.io/comments-19 |
+|       Status | Final |
+|     Requires | N/A |
 
 ## Abstract
 

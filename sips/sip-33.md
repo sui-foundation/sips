@@ -1,15 +1,15 @@
-| SIP-Number          | 33 |
-| ---:                | :--- |
-| Title               | Allow inactive StakedSui objects to be redeemed immediately |
-| Description         | Currently, a StakedSui object cannot be created and redeemed in the same epoch, which is an unncessary restriction. |
-| Author              | ripleys \<0xripleys@solend.fi\> |
-| Editor              | Amogh Gupta \<amogh@sui.io, @amogh-sui\> |
-| Type                | Standard |
-| Category            | Framework |
-| Created             | 29-05-2024 |
-| Comments-URI        | https://sips.sui.io/comments-33 |
-| Status              | Final |
-| Requires            | N/A |
+|   SIP-Number | 33 |
+|         ---: | :--- |
+|        Title | Allow Inactive StakedSui Objects To Be Redeemed Immediately |
+|  Description | Currently, a StakedSui object cannot be created and redeemed in the same epoch, which is an unncessary restriction. |
+|       Author | ripleys \<0xripleys@solend.fi\> |
+|       Editor | Amogh Gupta \<amogh@sui.io, @amogh-sui\> |
+|         Type | Standard |
+|     Category | Framework |
+|      Created | 29-05-2024 |
+| Comments-URI | https://sips.sui.io/comments-33 |
+|       Status | Final |
+|     Requires | N/A |
 
 ## Abstract
 

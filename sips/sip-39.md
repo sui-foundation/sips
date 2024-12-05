@@ -1,15 +1,15 @@
-| SIP-Number          | 39                                                            |
-| ------------------: | :--------------------------------------------------------     |
-| Title               | Lowering the validator set barrier to entry                   |
-| Description         | Use a min voting power threshold instead of min SUI threshold |
-| Author              | Sam Blackshear \<@sblackshear\>                                 |
-| Editor              | Amogh Gupta \<amogh@sui.io, @amogh-sui\>                        |
-| Type                | Standard                                                      |
-| Category            | Framework                                                     |
-| Created             | 2024-08-11                                                    |
-| Comments-URI        | https://sips.sui.io/comments-39                               |
-| Status              | Final                                                         |
-| Requires            |                                                               |
+|   SIP-Number | 39 |
+|         ---: | :--- |
+|        Title | Lowering the Validator Set Barrier to Entry |
+|  Description | Use a min voting power threshold instead of min SUI threshold. |
+|       Author | Sam Blackshear \<@sblackshear\> |
+|       Editor | Amogh Gupta \<amogh@sui.io, @amogh-sui\> |
+|         Type | Standard |
+|     Category | Framework |
+|      Created | 2024-08-11 |
+| Comments-URI | https://sips.sui.io/comments-39 |
+|       Status | Final |
+|     Requires | |
 
 ## Abstract
 Lower the barrier to entry for validators by requiring a minimum amount of *voting power* instead of a minimum amount of SUI.
