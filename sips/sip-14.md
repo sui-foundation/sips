@@ -2,8 +2,8 @@
 | -----------: | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
 |        Title | New struct MatchedOrderMetadata in deepbook                                                                                                          |
 |  Description | Implementing new struct MatchedOrderMetadata to the sui-framework package deepbook, to return matched order metadata from new place order functions  |
-|       Author | Sarthak <@Rajwanshi1>                                                                                                                                |
-|       Editor | Amogh Gupta <amogh@sui.io, @amogh-sui>                                                                                                     |
+|       Author | Sarthak \<@Rajwanshi1\>                                                                                                                                |
+|       Editor | Amogh Gupta \<amogh@sui.io, @amogh-sui\>                                                                                                     |
 |         Type | Standard                                                                                                                                             |
 |     Category | Framework                                                                                                                                            |
 |      Created | 2023-12-02                                                                                                                                           |

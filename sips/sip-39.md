@@ -2,8 +2,8 @@
 | ------------------: | :--------------------------------------------------------     |
 | Title               | Lowering the validator set barrier to entry                   |
 | Description         | Use a min voting power threshold instead of min SUI threshold |
-| Author              | Sam Blackshear <@sblackshear>                                 |
-| Editor              | Amogh Gupta <amogh@sui.io, @amogh-sui>                        |
+| Author              | Sam Blackshear \<@sblackshear\>                                 |
+| Editor              | Amogh Gupta \<amogh@sui.io, @amogh-sui\>                        |
 | Type                | Standard                                                      |
 | Category            | Framework                                                     |
 | Created             | 2024-08-11                                                    |

@@ -2,7 +2,7 @@
 | ---:                | :--- |
 | Title               | <Must be short; maximum 64 characters> |
 | Description         | <Must be one sentence that briefly describes the SIP; maximum 160 characters> |
-| Author              | <A list of the authors' real names or aliases, plus either their GitHub usernames (in parentheses) or email addresses (in angle brackets)> |
+| Author              | <A list of the authors' real names or aliases, plus their GitHub usernames and/or or email addresses (in escaped angle brackets)> |
 | Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
 | Type                | <Standard, Process, Informational> |
 | Category            | <Optional, only needed for Type=Standard; Core, Networking, Interface, Framework, Application> |

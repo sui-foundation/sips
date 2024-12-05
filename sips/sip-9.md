@@ -2,8 +2,8 @@
 | ---:                | :--- |
 | Title               | Passkey signature scheme support |
 | Description         | This SIP proposes the addition of passkey signature scheme to enable transaction signing using passkey authenticators. |
-| Author              | Krešimir Klas <kklas@kunalabs.io, @kklas>, Kostas Chalkias <kostas@mystenlabs.com, @kchalkias>, Joy Wang <joy@mystenlabs.com>, Ben Riva <benriva@mystenlabs.com>, Brandon Williams <brandon@mystenlabs.com>|
-| Editor              | Will Riches <will@sui.io, @wriches> |
+| Author              | Krešimir Klas \<kklas@kunalabs.io, @kklas\>, Kostas Chalkias \<kostas@mystenlabs.com, @kchalkias\>, Joy Wang \<joy@mystenlabs.com\>, Ben Riva \<benriva@mystenlabs.com\>, Brandon Williams \<brandon@mystenlabs.com\>|
+| Editor              | Will Riches \<will@sui.io, @wriches\> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2023-08-01 |

@@ -2,8 +2,8 @@
 | -----------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |        Title | `StakedSui` Improvements                                                                                                                                         |
 |  Description | Improvements to the `StakedSui` object, including giving it the `store` ability and secondary functions into the staking flow that return the `StakedSui` object |
-|       Author | Kevin <github@aftermath.finance, @admin-aftermath>, Aftermath Finance <[aftermath.finance](https://aftermath.finance/)>                                          |
-|       Editor | Will Riches <will@sui.io, @wriches>                                                                                                                              |
+|       Author | Kevin \<github@aftermath.finance, @admin-aftermath\>, Aftermath Finance \<[aftermath.finance](https://aftermath.finance/)\>                                          |
+|       Editor | Will Riches \<will@sui.io, @wriches\>                                                                                                                              |
 |         Type | Standard                                                                                                                                                         |
 |     Category | Framework                                                                                                                                                        |
 |      Created | 2023-06-07                                                                                                                                                       |

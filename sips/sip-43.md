@@ -5,7 +5,7 @@ Arden OIDC SIP
 |        Title | Add Arden as a zkLogin OpenID provider |
 |  Description | Add Arden as a whitelisted OpenID provider enabled for zkLogin on Sui. |
 |       Author |  Arden  |
-|       Editor |  Amogh Gupta <amogh@sui.io, @amogh-sui>  |
+|       Editor |  Amogh Gupta \<amogh@sui.io, @amogh-sui\>  |
 |         Type | Standard |
 |     Category | Core |
 |      Created | 2024-09-05 |
