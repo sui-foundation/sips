@@ -11,10 +11,9 @@
 |       Status | Final |
 |     Requires | N/A |
 
-
 ## Abstract
-Currently, zkLogin does not support login with just an email address. This is arguably the most common form of login and necessary for Arden’s Quest Commerce loyalty platform. Furthermore, many customers don’t want to connect a social account (or for our demographic, may not have a social account) to sign up / login.
 
+Currently, zkLogin does not support login with just an email address. This is arguably the most common form of login and necessary for Arden’s Quest Commerce loyalty platform. Furthermore, many customers don’t want to connect a social account (or for our demographic, may not have a social account) to sign up / login.
 
 ## Motivation
 In order to successfully onboard tens of thousands of users to the Sui blockchain with the lowest amount of friction, Arden’s loyalty platform requires that customers are able to sign up / login by solely using their email.
@@ -23,14 +22,13 @@ In order to successfully onboard tens of thousands of users to the Sui blockchai
 
 Arden OIDC is fully compatible with the current [OpenID specification](https://openid.net/specs/openid-connect-core-1_0.html) with the following configurations:
 
-EXAMPLE 
-|             Item          | Endpoint  | Example Content | 
-|-------------------------- |-----------|-----------------|
-| Well known configuration  |    https://api.arden.cc/auth/.well-known/openid-configuration       |                 |
-| JWK endpoint              |    https://api.arden.cc/auth/jwks       |                 |
-| Issuer                    |    https://oidc.arden.cc    |                 |
-| Authorization link          |   https://oidc.arden.cc/login        |                 |
-| Allowed Client IDs |    |   02d841ba-e78e-4762-81c1-f8bd913d6f82   | 
+| Item                     | Endpoint                                                   | Example Content                      | 
+| ------------------------ | ---------------------------------------------------------- | ------------------------------------ |
+| Well known configuration | https://api.arden.cc/auth/.well-known/openid-configuration |                                      |
+| JWK endpoint             | https://api.arden.cc/auth/jwks                             |                                      |
+| Issuer                   | https://oidc.arden.cc                                      |                                      |
+| Authorization link       | https://oidc.arden.cc/login                                |                                      |
+| Allowed Client IDs       |                                                            | 02d841ba-e78e-4762-81c1-f8bd913d6f82 | 
 
 ## JWK rotation details
 
@@ -94,8 +92,6 @@ Provide an example JWT token and parsed JWT token payload (using jwt.io) with no
       "iss": "https://oidc.arden.cc"
     }
 
-
-[Video of complete login flow](https://youtu.be/QMF7C_2by3U)
 
 ## Reference Implementation
 

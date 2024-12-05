@@ -23,14 +23,13 @@ zkLogin does not support any providers using phone number-based logins.  Many po
 
 Karrier One is hosting an openid provider built upon https://github.com/openiddict/openiddict-core which implements https://openid.net/specs/openid-connect-core-1_0.html and supports the code & implicit flows. 
 
-
-|             Item          | Endpoint  | Example Content | 
-|-------------------------- |-----------|-----------------|
-| Well known configuration  |    https://accounts.karrier.one/.well-known/openid-configuration       |                 |
-| JWK endpoint              |    https://accounts.karrier.one/.well-known/jwks       |                 |
-| Issuer                    |    https://accounts.karrier.one/   |                 |
-| Authorization link        |    https://accounts.karrier.one/connect/authorize        |                 |
-| Allowed Client IDs        |    karrier.one        |     | 
+| Item                     | Endpoint                                                      | Example Content | 
+| ------------------------ | ------------------------------------------------------------- | --------------- |
+| Well known configuration | https://accounts.karrier.one/.well-known/openid-configuration |                 |
+| JWK endpoint             | https://accounts.karrier.one/.well-known/jwks                 |                 |
+| Issuer                   | https://accounts.karrier.one/                                 |                 |
+| Authorization link       | https://accounts.karrier.one/connect/authorize                |                 |
+| Allowed Client IDs       | karrier.one                                                   |                 | 
 
 Additional Client IDs can be supported as the ecosystem grows.
 
@@ -61,8 +60,11 @@ Once this SIP is finalized with the configurations defined above (issuer string,
 
 ## Test Cases
 
+```
 eyJhbGciOiJSUzI1NiIsImtpZCI6IjYyNzA1RUEwMjMwMDAyNTFENUUwRDZCQkQyMkQzODFDMEVFQzlBOTgiLCJ4NXQiOiJZbkJlb0NNQUFsSFY0TmE3MGkwNEhBN3NtcGciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmthcnJpZXIub25lLyIsImV4cCI6MTcyMzc4Nzc4MSwiaWF0IjoxNzIzNzg2NTgxLCJhdWQiOiJkYXNoYm9hcmQtZGV2Iiwic3ViIjoiZDExZjAwNmUtNzczOS00NTEwLWE5NTgtMzYwM2VhZDNmNzQwIiwiZW1haWwiOiJkZW1vLW9wZXJhdG9yQGthcnJpZXIub25lIiwibmFtZSI6ImRlbW8tb3BlcmF0b3JAa2Fycmllci5vbmUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJkZW1vLW9wZXJhdG9yQGthcnJpZXIub25lIiwiZmFtaWx5X25hbWUiOiJPcGVyYXRvciIsImdpdmVuX25hbWUiOiJEZW1vIFJhZGlvIiwiaWRlbnRpZmllciI6ImVtYWlsIiwib2lfYXVfaWQiOiIyMWJmMDZiMi0zNDYwLTRjMzMtYWE3Yi1hODBhYzJmYjdhNjkiLCJhenAiOiJkYXNoYm9hcmQtZGV2Iiwibm9uY2UiOiJoVFBwZ0Y3WEFLYlczN3JFVVM2cEVWWnFtb0kiLCJvaV90a25faWQiOiI3YTZlNDMyZC03NzgwLTQ1YTMtODdlNS1jZTEwZDI2YmU5Y2EifQ.ezpSDhImPSjojX6w_RKlHX55k6Sh9CJS9oHCtc1ddXtH42T1BN0Zp08DrqlCT0_vpsk6H_m6My7F4JDBnDE2r0qquRs_7eRyE7q5bhEDJRGgiRQI3dq-FOBHpVPxGB-U5gZwvDyJxW2tl-rYJynxsdZBwg4MpVHG4nQy_Vi8f0QYpvYBst7ddzPO8SE2AR-QQ2TnUt6dDvVYSJ9FtV83s-__0EEJN0zg-C6EtdTtrPkMo2stK-Zc9ciTuK1QSx6qBo9IwCloBmVz66m6tSDVCHzftappj5LrSCh2x5-fc-RLZm2l-OksKcxPHIx3vGbnz7o1QyqoW4y2UCN6e6hPlg
+```
 
+```
 {
   "alg": "RS256",
   "kid": "62705EA023000251D5E0D6BBD22D381C0EEC9A98",
@@ -86,10 +88,7 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IjYyNzA1RUEwMjMwMDAyNTFENUUwRDZCQkQyMkQzODFDMEVFQzlB
   "nonce": "hTPpgF7XAKbW37rEUS6pEVZqmoI",
   "oi_tkn_id": "7a6e432d-7780-45a3-87e5-ce10d26be9ca"
 }
-
-Basic Third-Party Login
-https://www.loom.com/share/1c4aafe9d3cf4b1d8b37f87bb1619711?sid=2174c44c-dc34-4d4d-8fee-5b2487e6b9ba
-
+```
 
 ## Reference Implementation
 
@@ -97,7 +96,7 @@ N/A. To be implemented by the Mysten Labs team.
 
 ## Security Considerations
 
-Client ID's are not shared between applications.  The same user will be issued a new client ID for each application.  This guarantees separate applications will have unique zk wallet addresses even if the same salt value was chosen.
+Client IDs are not shared between applications.  The same user will be issued a new client ID for each application.  This guarantees separate applications will have unique zk wallet addresses even if the same salt value was chosen.
 
 The Certificate signing key is in a private s3 bucket with DSSE-KMS encryption and an additional layer of AES 256 is applied to the signing keys.  Using AWS IAM policies the bucket is restricted to the OpenId vm's.  
 
@@ -105,4 +104,3 @@ Worst case scenarios:
 JWK endpoint is unavailable.  All zkLogin wallets are locked out until the JWK endpoint is restored.  Mitigation is to deploy a high availability infrastructure.
 
 Signing key is compromised.  Wallets could have funds drained.  Mitigations include encrypting the signing keys, limiting access to the signing keys to required processes and staff.  Logging access.  At the user/application level, require users with significant assets (eg more $1000) to use a standard/private wallet.
-

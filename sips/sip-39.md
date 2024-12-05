@@ -12,6 +12,7 @@
 |     Requires | |
 
 ## Abstract
+
 Lower the barrier to entry for validators by requiring a minimum amount of *voting power* instead of a minimum amount of SUI.
 
 ## Motivation

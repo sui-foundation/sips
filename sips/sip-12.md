@@ -15,7 +15,6 @@
 
 This SIP introduces a Sui Move framework function which computes the [Poseidon hash function](https://www.poseidon-hash.info/). 
 
-
 ## Motivation
 
 **On-chain verification of zklogin signatures**. The Poseidon hash functions is used in zklogin, so adding Poseidon to the SUI framework is necessary for allowing on-chain verification of zklogin signatures.
