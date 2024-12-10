@@ -1,7 +1,7 @@
 |   SIP-Number | TBD |
 |         ---: | :--- |
 |        Title | Custom Transfer Handler Support for Sui Wallet |
-|  Description | Standardize custom transfer behavior for complex assets |
+|  Description | Standardize custom transfer behavior to support business logic |
 |       Author | Tushar Sengar |
 |       Editor | TBD |
 |         Type | Standard |
