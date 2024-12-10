@@ -13,7 +13,7 @@
 
 ## Abstract
 
-Introduce a standardized custom transfer handler interface in the Sui wallet to support assets with complex transfer logic, such as NFTs that require additional state updates or validation during transfers.
+Introduce a standardized custom transfer handler interface in the Sui wallet to support assets with custom business logic, such as NFTs that require additional state updates or validation during transfers.
 
 ## Motivation
 
