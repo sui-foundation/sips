@@ -3,8 +3,8 @@
 | ---:                | :--- |
 | Title               | Prioritized Transaction Submission |
 | Description         | Enable effective prioritized transaction submission. |
-| Author              | Shio Coder <shio.coder@gmail.com> |
-| Editor              | Will Riches <will@sui.io, @wriches> |
+| Author              | Shio Coder \<shio.coder@gmail.com\> |
+| Editor              | Will Riches \<will@sui.io, @wriches\>
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-11-26 |
