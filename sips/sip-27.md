@@ -2,8 +2,8 @@
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Key Management for Non Private Key Wallet |
 | Description         | Specify the key derivation logic for an encryption key server |
-| Author              | Joy Wang (@joyqvq, joy@mystenlabs.com)|
-| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z>
+| Author              | Joy Wang \<@joyqvq, joy@mystenlabs.com\>|
+| Editor              | Alex Tsiliris \<alex.tsiliris@sui.io, @Eis-D-Z\>
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-05-09 |
