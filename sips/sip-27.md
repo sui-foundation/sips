@@ -8,7 +8,7 @@
 | Category            | Wallet |
 | Created             | 2024-05-09 |
 | Comments-URI        | https://sips.sui.io/comments-27 |
-| Status              | Draft |
+| Status              | Withdrawn |
 | Requires            | |
 
 ## Abstract
