@@ -1,14 +1,14 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 36 |
 | Title               | Passkey Session based signature scheme support |
 | Description         | This SIP proposes the addition of passkey session based signature scheme to enable transaction signing using passkey authenticators, but without human interaction for every transaction. |
-| Author              | Joy Wang <joy@mystenlabs.com> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Author              | Joy Wang \<joy@mystenlabs.com\> |
+| Editor              | Will Riches \<will@sui.io, @wriches\> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-07-24 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | N/A (Related to SIP-9) |
+| Comments-URI        | https://sips.sui.io/comments-36 |
+| Status              | Fast Track |
+| Requires            | |
 
 ## Abstract
 
