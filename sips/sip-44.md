@@ -1,14 +1,14 @@
-| SIP-Number          | |
+| SIP-Number          | 44 |
 | ---:                | :--- |
 | Title               | Multi-Address Object Usage in Transactions |
 | Description         | Enable transactions to use objects owned by multiple addresses with appropriate signatures |
-| Author              | Cyril Morlet <fetch@sceat.xyz> |
-| Editor              | |
+| Author              | Cyril Morlet \<fetch@sceat.xyz\> |
+| Editor              | Will Riches \<will@sui.io, @wriches\>  |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-11-22 |
-| Comments-URI        | |
-| Status              | |
+| Comments-URI        | https://sips.sui.io/comments-44 |
+| Status              | Draft |
 
 ## Abstract
 
@@ -35,6 +35,7 @@ I propose extending the transaction system to:
 4. (optional) Enable multiple addresses to contribute gas objects to the same transaction
 
 The execution flow would be:
+
 1. Transaction creation includes list of all participating addresses
 2. Each required signer adds their signature
 3. Validation ensures all object owners have signed
