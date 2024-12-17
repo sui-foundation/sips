@@ -2,8 +2,8 @@
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Public Key On-Chain Discoverability |
 | Description         | This standardizes an on-chain data structure for an user's BLS encryption public key to be discoverable on-chain. |
-| Author              | Joy Wang <joy@mystenlabs.com, @joyqvq>|
-| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z> |
+| Author              | Joy Wang \<joy@mystenlabs.com, @joyqvq\>|
+| Editor              | Alex Tsiliris \<alex.tsiliris@sui.io, @Eis-D-Z\> |
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-06-24 |
