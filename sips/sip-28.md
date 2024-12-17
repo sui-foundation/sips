@@ -2,8 +2,8 @@
 | ---:                | :--- |
 | Title               | BLS-12381 Encryption Key Storage in Wallet |
 | Description         | Specify the key derivation path for the BLS-12381 Encryption Key for wallet master private key. |
-| Author              | Joy Wang <joy@mystenlabs.com, @joyqvq> |
-| Editor              | Alex Tsiliris <alex.tsiliris@sui.io, @Eis-D-Z> |
+| Author              | Joy Wang \<joy@mystenlabs.com, @joyqvq\> |
+| Editor              | Alex Tsiliris \<alex.tsiliris@sui.io, @Eis-D-Z\> |
 | Type                | Standard |
 | Category            | Wallet |
 | Created             | 2024-05-09 |
