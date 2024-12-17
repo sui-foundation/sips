@@ -1,15 +1,16 @@
-| SIP-Number          | <Leave this blank; it will be assigned by a SIP Editor> |
+| SIP-Number          | 47 |
 | ---:                | :--- |
-| Title               | Update to Sip-9 |
-| Description         | Update to Sip-9 for the signing digest format |
-| Author              | Joy Wang <joy@mystenlabs.com>, Brandon Williams <brandon@mystenlabs.com> |
-| Editor              | <Leave this blank; it will be assigned by a SIP Editor> |
+| Title               | Passkey Signature Scheme Support v2 |
+| Description         | An updated version of SIP-9, with a change to the signing digest format. |
+| Author              | Joy Wang \<joy@mystenlabs.com\>, Brandon Williams \<brandon@mystenlabs.com\> |
+| Editor              | Will Riches \<will@sui.io, @wriches\> |
 | Type                | Standard |
 | Category            | Core |
 | Created             | 2024-12-17 |
-| Comments-URI        | <Leave this blank; it will be assigned by a SIP Editor> |
-| Status              | <Leave this blank; it will be assigned by a SIP Editor> |
-| Requires            | SIP-9 |
+| Comments-URI        | https://sips.sui.io/comments-47 |
+| Status              | Fast Track |
+| Requires            | 9 |
+
 ## Abstract
 
 This SIP proposes the addition of a passkey signature scheme to make it possible to sign transactions using passkeys. While the `secp256r1` signature scheme, which is widely used by all passkey authenticators including Yubikeys, Android phones, iPhones, and MacBooks, is available on Sui, the WebAuthn standard doesn't allow for arbitrary message signing and the signed payload includes additional data which makes it incompatible with the `secp256r1` signature scheme on Sui. Therefore, in order to be able to verify transaction signatures produced by the passkey authenticators, a new signature scheme needs to be introduced that can verify signatures of this format.
