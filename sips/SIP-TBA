@@ -1,0 +1,77 @@
+| SIP-Number          | TBA                                                                         |
+| ---:                | :---                                                                       |
+| Title               | Add more tx_context                                                        |
+| Description         | Add tx_context to get transaction signers of the transaction |
+| Author              | Eason Chen <EasonC13>                                                      |
+| Editor              |                                         |
+| Type                | Standard                                                                   |
+| Category            | Framework                                                                  |
+| Created             | 2025-06-06                                                                 |
+| Comments-URI        |                                            |
+| Status              |                                                                   |
+| Requires            |                                                                         |
+
+## **Abstract**
+
+We propose extending the Move `tx_context` module to support advanced multi-signature transaction logic by adding the following functions:
+
+* `tx_context::is_signed_by(ctx, address): bool`
+* `tx_context::signers(ctx): vector<address>`
+
+While `tx_context::sender(ctx)` returns the transaction sender, there is currently no way to determine who signed the transaction. These additions would allow contracts to verify authorization based on the presence of specific signers, not just the sender.
+
+## **Motivation**
+
+At GiveRep, we build systems where transactions are co-signed by multiple parties, including the user and the protocol account. For example, a reward-claim transaction might be initiated and sponsored by the user but must be co-signed by the protocol account to be valid.
+
+This pattern currently looks like:
+
+```ts
+const result = await suiClient.executeTransactionBlock({
+  transactionBlock: transactionBytes,
+  signature: [giverepSignature, userSignature],
+  options: {
+    showEvents: true,
+  },
+});
+```
+
+In Move, we want to enforce constraints like:
+
+```move
+assert!(tx_context::is_signed_by(ctx, @giverep), EMissingApproval);
+assert!(tx_context::is_signed_by(ctx, user_addr), EInvalidUser);
+```
+
+Or dynamically inspect all signers:
+
+```move
+let signers = tx_context::signers(ctx);
+// Apply logic based on who signed, how many signers, or their roles
+```
+
+### Practical Applications
+
+* Reward claims that require approval from both user and protocol
+* DAO-controlled operations that require quorum of signer votes
+* Guardian-based wallet recovery (e.g., 2-of-3 signer restoration)
+* Delegated actions with verifiable cosigner participation
+
+## **Specification**
+
+* `tx_context::is_signed_by(ctx, address): bool` — Returns `true` if `address` signed the transaction, `false` otherwise.
+* `tx_context::signers(ctx): vector<address>` — Returns all addresses that signed the transaction.
+
+## **Rationale**
+
+While the sender field gives limited authority verification, many real-world use cases depend on signature-based authorization. This proposal enhances Move's expressiveness by enabling secure and transparent multi-party workflows.
+
+The logic for checking signer participation can remain simple and gas-efficient, as the signer list is known at transaction execution time.
+
+## **Backwards Compatibility**
+
+These functions are purely additive. They do not modify existing behavior and will not affect current contracts.
+
+## **Copyright**
+
+[CC0 1.0](../LICENSE.md)
