@@ -1,7 +1,7 @@
 | SIP-Number          | TBA                                                                         |
 | ---:                | :---                                                                       |
-| Title               | Add more tx_context                                                        |
-| Description         | Add tx_context to get transaction signers of the transaction |
+| Title               | Add tx_context to get transaction signers in move                                                        |
+| Description         | Add tx_context to get transaction signers in move |
 | Author              | Eason Chen <EasonC13>                                                      |
 | Editor              |                                         |
 | Type                | Standard                                                                   |
