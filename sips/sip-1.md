@@ -127,10 +127,8 @@ The current register of SIP Editors is as follows:
 
 | Name            | GitHub username | Email address        | Affiliation    |
 | :---            | :---            | :---                 | :---           |
-| Will Riches     | wriches         | will@sui.io          | Sui Foundation |
 | Henry Duong     | hyd628          | henry@sui.io         | Sui Foundation |
 | Amogh Gupta     | amogh-sui       | amogh@sui.io         | Sui Foundation |
-| Alex Tsiliris   | Eis-D-Z         | alex.tsiliris@sui.io | Sui Foundation |
 
 ## SIP comments
 
