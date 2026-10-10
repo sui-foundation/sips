@@ -36,7 +36,7 @@ The magic is nine `0xfa` bytes at offset 6. An address with the magic at that of
 
 The master id is 48 bits, assigned by the registry at registration. Id 0 is reserved and never allocated. Move and Rust carry it as a `u64`.
 
-The variant decides what the payload bytes mean. Variant 0 is the only one defined and gives the payload no on-chain meaning: the resolver never reads it, so an invoice tag only has to be distinct. The protocol config `forwarding_address_max_variant` (0 at protocol version 139) is the highest variant the resolver accepts. A deposit to an address with a higher variant fails the transaction instead of being treated as an ordinary recipient, so nobody can fund an address whose meaning a later version will define.
+The variant decides what the payload bytes mean. Variant 0 is the only one defined and gives the payload no on-chain meaning: the resolver never reads it, so an invoice tag only has to be distinct. The protocol config `forwarding_address_max_variant` (0 at protocol version 140) is the highest variant the resolver accepts. A deposit to an address with a higher variant fails the transaction instead of being treated as an ordinary recipient, so nobody can fund an address whose meaning a later version will define.
 
 The payload is 16 bytes whose meaning the variant defines. Under variant 0 the issuer chooses them freely, typically an invoice or customer id. Later variants can give them structure, such as a coin-type allow list, a minimum amount or an expiry.
 
@@ -50,7 +50,7 @@ How execution treats a recipient address:
 | Magic, variant <= max, id paused       | Transaction fails                                 | Transaction fails                               |
 | Magic, variant > max                   | Transaction fails                                 | Transaction fails                               |
 
-A master that is itself a forwarding address resolves again, up to `forwarding_address_max_hops` hops (3 at 139). A longer chain fails the transaction.
+A master that is itself a forwarding address resolves again, up to `forwarding_address_max_hops` hops (3 at 140). A longer chain fails the transaction.
 
 ### Registry
 
@@ -74,7 +74,7 @@ public fun master_id(cap: &MasterCap): u64;
 
 Ids come from the `u64` counter mapped through a permutation of the 48-bit id space (xor-shifts by 24 and two odd multiplications mod 2^48). Distinct counters give distinct ids, counter 0 is the only preimage of id 0, and allocation aborts with `EMasterIdsExhausted` after the last 48-bit id. Ids look mixed but are public and the permutation is invertible; nothing depends on an id being unguessable.
 
-Registration charges a flat fee through a native, `forwarding_address_register_cost_base`, on top of normal gas and the dynamic field storage cost. At 139 the fee is 1,000,000 gas units, about 1 SUI at a gas price of 1,000 MIST. The fee is paid as gas, so it goes to validators like any other gas. Records are never deleted, so the storage deposit is never rebated in practice.
+Registration charges a flat fee through a native, `forwarding_address_register_cost_base`, on top of normal gas and the dynamic field storage cost. At 140 the fee is 1,000,000 gas units, about 1 SUI at a gas price of 1,000 MIST. The fee is paid as gas, so it goes to validators like any other gas. Records are never deleted, so the storage deposit is never rebated in practice.
 
 ### Resolution at the end of execution
 
@@ -152,10 +152,10 @@ Resolution failures (unregistered id, paused id, unsupported variant, chain long
 
 ### Protocol configuration and rollout
 
-| Setting                                       | Kind | Value at 139 (devnet)                 |
+| Setting                                       | Kind | Value at 140 (devnet)                 |
 | --------------------------------------------- | ---- | ------------------------------------- |
 | `create_forwarding_address_registry`          | flag | on since 132 (devnet only)            |
-| `enable_forwarding_addresses`                 | flag | on (devnet only)                      |
+| `enable_forwarding_addresses`                 | flag | on since 139 (devnet only)            |
 | `forwarding_address_max_variant`              | u64  | 0                                     |
 | `forwarding_address_max_hops`                 | u64  | 3                                     |
 | `forwarding_deposit_event_streams`            | flag | on (devnet only), requires `enable_authenticated_event_streams` |
@@ -164,6 +164,8 @@ Resolution failures (unregistered id, paused id, unsupported variant, chain long
 | `forwarding_address_register_cost_base`       | gas  | 1,000,000 gas units                   |
 
 While `enable_forwarding_addresses` is off, the adapter leaves every recipient unchanged, the transfer check does not run, and transaction checks reject any transaction that takes the registry as an input, so nobody can register early. Deposits to forwarding-shaped addresses are ordinary deposits.
+
+On devnet the flag has been on since 139, while the Move API and the cost params are in 140: 139 froze with release v1.82.0 before they landed. A node at 139 with the flag on and no cost params would fail a deposit to a forwarding address; that is accepted on devnet, which is reset every release, and cannot occur on testnet or mainnet, where the flag is off at 139.
 
 Once the flag is on, every transaction must have an assigned registry version. That requires the chain to reach a version that creates the registry before one that enables resolution, so the two flags live in different protocol versions and ship in different releases. On testnet and mainnet the same ordering applies: create the registry in one release, enable resolution in a later one.
 
