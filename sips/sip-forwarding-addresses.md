@@ -97,7 +97,7 @@ A coin sent to a forwarding address and a `Balance<T>` sent to it are indistingu
 
 Forwarding costs a small amount of extra gas for each forwarding address a transaction pays, including each hop of a chain, to cover reading the registry and emitting the event. The payer is charged even if the id turns out to be unregistered.
 
-Forwarding works with gasless payments. A payment that qualifies as a gasless transaction stays gasless when the recipient is a forwarding address: the forwarding work fits within the gasless computation limit, and the payer pays nothing for it. The gasless minimum transfer amount applies to what the master receives in the transaction, after forwarding, rather than to each forwarding address separately.
+Forwarding works with gasless payments. A payment that qualifies as a gasless transaction stays gasless when the recipient is a forwarding address: the forwarding work fits within the gasless computation limit, and the payer pays nothing for it. The gasless rule that a payer's remaining balance must be zero or at least the per-token minimum is about the payer, not the recipient, so forwarding does not change it.
 
 When a transaction fails because of a forwarding address, the whole transaction fails and nothing is credited, as with any execution failure. The payer keeps their funds and can retry. On devnet these failures currently appear as the generic `FeatureNotYetSupported` status; dedicated error statuses will be added before testnet.
 
@@ -159,7 +159,7 @@ Transaction simulation and dry run forward deposits the same way execution does,
 
 Forwarding addresses are live on devnet. On testnet and mainnet they ship in two steps: one release creates the registry, and a later release turns on forwarding. Until forwarding is on, an address with the magic is an ordinary address.
 
-An emergency brake, under which every payment to a forwarding address fails, is planned before testnet. It is separate from the feature switch because switching the feature off would turn forwarding addresses back into ordinary addresses, and funds sent to them would be stranded.
+An emergency brake, a protocol flag under which every payment to a forwarding address fails while registration and management keep working, exists and is off everywhere. It is separate from the feature switch because switching the feature off would turn forwarding addresses back into ordinary addresses, and funds sent to them would be stranded.
 
 ## Rationale
 
@@ -206,9 +206,10 @@ The dedicated error statuses for forwarding failures are an on-wire change. They
 - Forwarded deposits recorded in the master's authenticated event stream: https://github.com/MystenLabs/sui/pull/28261.
 - Chains of forwarding addresses: https://github.com/MystenLabs/sui/pull/28246 (draft). That PR also reroutes objects to the master; it predates this design and will be reworked so that coins are melted and other objects fail.
 - Melting coins sent to a forwarding address: not yet implemented. Until it lands, a coin sent to a forwarding address fails the transaction like any other object.
-- `register_with_forwarding_master`, rotation to a forwarding address, and requiring the new master to send `finalize_rotation`: not yet implemented. Today `register` is the only way to register, `propose_rotation` rejects a forwarding address, and anyone can finalize.
+- Requiring the new master to send `finalize_rotation`: https://github.com/MystenLabs/sui/pull/28236.
+- `register_with_forwarding_master` and rotation to a forwarding address: not yet implemented. Today `register` is the only way to register and `propose_rotation` rejects a forwarding address.
 - Per-hop events keyed into each hop's master's stream: not yet implemented.
-- Counting forwarding events toward the total event size limit: not yet implemented. They already count toward the limit on the number of events.
+- Forwarding events counted toward the per-event and total event size limits, and the emergency brake flag: https://github.com/MystenLabs/sui/pull/28236.
 
 Implementation details that do not affect how the feature is used, such as how and when execution resolves forwarding addresses, the gas charged for each step, how master ids are derived, how the registry version is pinned per transaction, how deposits are recorded in the master's stream, and the protocol configuration and rollout order, are described in the [design doc](https://github.com/MystenLabs/sui/blob/xun/forwarding-address-resolution/crates/sui-framework/design_docs/forwarding_addresses.md) (`crates/sui-framework/design_docs/forwarding_addresses.md`, added in #28236).
 
