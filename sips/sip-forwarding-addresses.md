@@ -1,8 +1,8 @@
 |   SIP-Number | |
 |         ---: | :--- |
 |        Title | Forwarding Addresses |
-|  Description | Keyless addresses that route balance deposits and object transfers to a registered master address while recording which address was paid. |
-|       Author | Xun Li \<lxfind@gmail.com, @lxfind\> |
+|  Description | Keyless addresses that route balance deposits to a registered master address while recording which address was paid. |
+|       Author | Xun Li \<xun@mystenlabs.com, @lxfind\> |
 |       Editor | |
 |         Type | Standard |
 |     Category | Core, Framework |
@@ -13,13 +13,30 @@
 
 ## Abstract
 
-A forwarding address is a 32-byte Sui address that carries no key. Its bytes encode a master id assigned by an on-chain registry, a fixed magic marker, a format variant and 16 payload bytes chosen by the issuer. When funds or objects are sent to it, execution resolves it through the registry and delivers them to the registered master address, emitting an event that records the forwarding address they came through. The forwarding address itself never holds anything. Resolution runs in the execution layer after Move execution finishes, so it covers address-balance deposits and object transfers alike. Registration costs a flat gas fee, and each master id has a pause switch and a time-delayed master rotation so that a leaked key is survivable.
+A forwarding address is a 32-byte Sui address that carries no key. Its bytes encode a master id assigned by an on-chain registry, a fixed magic marker, a format variant and 16 payload bytes chosen by the issuer. When funds are sent to it, Sui delivers them to the registered master address and emits an event that records the forwarding address they came through. The forwarding address itself never holds anything. Both address-balance deposits and coin objects are forwarded; any other object sent to a forwarding address fails the transaction. Registration costs a flat gas fee, and each master id has a pause switch and a time-delayed master rotation so that a leaked key is survivable.
 
 ## Motivation
 
 A payment app, exchange or merchant wants to hand out a distinct deposit address per customer or invoice, so it can tell who paid without asking the payer to attach a memo. It does not want to hold one key per address, and it does not want to sweep funds from thousands of addresses into one account.
 
-On Sui today the options are a key per address with periodic sweeps, or a custom Move contract that wraps every deposit. Both put work on the recipient that the chain could do once for everyone. Forwarding addresses give an issuer an unbounded supply of deposit addresses that all pay a single account, with the invoice tag preserved in an event. Any wallet or protocol that can send a `Balance<T>` or transfer an object to an address can pay a forwarding address with no changes.
+On Sui today the options are a key per address with periodic sweeps, or a custom Move contract that wraps every deposit. Both put work on the recipient that the chain could do once for everyone. Forwarding addresses give an issuer an unbounded supply of deposit addresses that all pay a single account, with a tag distinguishing each user or payment preserved in an event. Any wallet or protocol that can send a `Balance<T>` or transfer a coin object to an address can pay a forwarding address with no changes.
+
+### Example
+
+1. A merchant registers once and receives a master id. Its account address becomes the master.
+2. For each invoice, the merchant's backend derives a forwarding address from the master id and a 16-byte invoice number, and shows it to the customer. Deriving an address is a local computation; nothing is written on chain.
+3. The customer pays from any wallet, by sending USDC to that address as an address balance or as a coin.
+4. The USDC lands in the merchant's address balance. A `ForwardingDeposit<USDC>` event names the forwarding address and the amount, so the merchant's app reads the invoice number from it and marks the invoice paid. The app can verify the event with a light client instead of trusting a fullnode.
+
+### Chains
+
+The master of a master id can itself be a forwarding address. Funds then pass through two or more forwarding addresses before reaching an account, and each one records the deposit. This serves businesses whose funds are held by someone else:
+
+- **A merchant using a custodian or payment processor.** The custodian has its own master id and gives each client merchant a forwarding address under it, with the merchant's account number as the payload. The merchant registers its own master id with that forwarding address as its master, and issues invoice addresses under its own id. A customer pays an invoice address; the funds reach the custodian's account; the custodian sees which merchant was paid, and the merchant sees which invoice was paid. The merchant keeps its own invoice numbering and its own `MasterCap`, and the custodian never has to learn the merchant's invoice scheme.
+- **Changing custodians.** The merchant rotates its master id from one custodian's forwarding address to another's. Every invoice and customer address it has already handed out keeps working and now pays the new custodian.
+- **Sub-accounts.** An exchange or wallet provider can give each institutional client a master id whose master is a forwarding address of the provider's own id, so per-client and per-customer attribution both survive while all funds land in one account.
+
+Chains are limited to 3 hops.
 
 ## Specification
 
@@ -32,95 +49,81 @@ All integers are little-endian.
  0..6           6..15     15          16..32
 ```
 
-The magic is nine `0xfa` bytes at offset 6. An address with the magic at that offset is a forwarding address; an address without it is ordinary. There is no other signal.
+The magic is nine `0xfa` bytes at offset 6. An address with the magic at that offset is a forwarding address; an address without it is ordinary. There is no other signal, so a wallet or contract can tell a forwarding address from its bytes alone; `sui::forwarding_address::is_forwarding_address(addr)` does the same check in Move.
 
-The master id is 48 bits, assigned by the registry at registration. Id 0 is reserved and never allocated. Move and Rust carry it as a `u64`.
+The master id is 48 bits, assigned by the registry at registration. Move and Rust carry it as a `u64`.
 
-The variant decides what the payload bytes mean. Variant 0 is the only one defined and gives the payload no on-chain meaning: the resolver never reads it, so an invoice tag only has to be distinct. The protocol config `forwarding_address_max_variant` (0 at protocol version 141) is the highest variant the resolver accepts. A deposit to an address with a higher variant fails the transaction instead of being treated as an ordinary recipient, so nobody can fund an address whose meaning a later version will define.
+The variant decides what the payload bytes mean. Variant 0 is the only one defined and gives the payload no on-chain meaning: under variant 0 the issuer chooses the 16 bytes freely, typically an invoice or customer id. Later variants can give them structure, such as a coin-type allow list, a minimum amount or an expiry. Sending to an address whose variant is not yet supported fails the transaction instead of being treated as an ordinary recipient, so nobody can fund an address whose meaning a later version will define.
 
-The payload is 16 bytes whose meaning the variant defines. Under variant 0 the issuer chooses them freely, typically an invoice or customer id. Later variants can give them structure, such as a coin-type allow list, a minimum amount or an expiry.
-
-How execution treats a recipient address:
-
-| Recipient                              | Balance deposit                                   | Object transfer                                 |
-| -------------------------------------- | ------------------------------------------------- | ----------------------------------------------- |
-| No magic                               | Credited as today                                 | As today                                        |
-| Magic, variant <= max, id registered   | Credited to the master, `ForwardingDeposit` event | Owned by the master, `ForwardingTransfer` event |
-| Magic, variant <= max, id unregistered | Transaction fails                                 | Transaction fails                               |
-| Magic, variant <= max, id paused       | Transaction fails                                 | Transaction fails                               |
-| Magic, variant > max                   | Transaction fails                                 | Transaction fails                               |
-
-A master that is itself a forwarding address resolves again, up to `forwarding_address_max_hops` hops (3 at 141). A longer chain fails the transaction.
-
-### Registry
-
-`sui::forwarding_address::ForwardingAddressRegistry` is a shared system object at address `0xfa`, created by an end-of-epoch transaction when the protocol flag `create_forwarding_address_registry` turns on. Its struct is `{ id: UID }` and all state hangs off the `UID` as dynamic fields:
-
-- `master_id: u64 -> MasterRecord { master: address, paused: bool, pending: Option<PendingRotation>, rotation_delay_epochs: u64 }`
-- `MasterIdCounter {} -> u64`, the next counter value, starting at 1
-
-`PendingRotation` is `{ new_master: address, effective_epoch: u64 }`.
-
-The registry is an implicitly read system object. Consensus assigns every transaction a registry version, execution reads master records at that version, and the read appears in effects as a read-only consensus object. A transaction does not declare the registry as an input to deposit to a forwarding address; it declares it only to call the lifecycle functions below, which take it as a mutable shared input.
-
-### Registration
+### Registering a master
 
 ```move
 public fun register(registry: &mut ForwardingAddressRegistry, rotation_delay_epochs: u64, ctx: &mut TxContext): MasterCap;
+public fun register_with_forwarding_master(registry: &mut ForwardingAddressRegistry, master: address, rotation_delay_epochs: u64, ctx: &mut TxContext): MasterCap;
 public fun master_id(cap: &MasterCap): u64;
 ```
 
-`register` allocates a master id, stores `MasterRecord { master: ctx.sender(), paused: false, pending: none, rotation_delay_epochs }`, emits `MasterRegistered { master_id, master, cap_id, rotation_delay_epochs }` and returns a `MasterCap { id: UID, master_id: u64 }` with `key` and `store`. `rotation_delay_epochs` must be in `1..=30`.
+`register` records the transaction sender as the master of a new master id, emits `MasterRegistered { master_id, master, cap_id, rotation_delay_epochs }` and returns a `MasterCap` that controls the id (see [Managing a master](#managing-a-master)). `rotation_delay_epochs`, between 1 and 30, is how long a change of master must wait.
 
-Ids come from the `u64` counter mapped through a permutation of the 48-bit id space (xor-shifts by 24 and two odd multiplications mod 2^48). Distinct counters give distinct ids, counter 0 is the only preimage of id 0, and allocation aborts with `EMasterIdsExhausted` after the last 48-bit id. Ids look mixed but are public and the permutation is invertible; nothing depends on an id being unguessable.
+`register_with_forwarding_master` creates an id whose master is a forwarding address, which builds a [chain](#chains). The sender cannot be a forwarding address, so `register` cannot do this. `master` must be a forwarding address with a supported variant, and its master id must not be the id being created; otherwise registration aborts. It does not have to be registered yet, and its id may belong to someone else. There is no way to register an ordinary address other than the sender as a master: an ordinary master must agree to be one, and it agrees by sending the transaction.
 
-Registration charges a flat fee through a native, `forwarding_address_register_cost_base`, on top of normal gas and the dynamic field storage cost. At 141 the fee is 1,000,000 gas units, about 1 SUI at a gas price of 1,000 MIST. The fee is paid as gas, so it goes to validators like any other gas. Records are never deleted, so the storage deposit is never rebated in practice.
+Master ids are assigned by the registry, not chosen. They look random, but they are not secret or unguessable: anyone can predict the next one. They are mixed only so that ids are not handed out as 1, 2, 3 and so on, which would give early registrants recognisable low numbers and invite people to race for memorable ones.
 
-### Resolution at the end of execution
+Registration charges a flat fee of 1,000,000 gas units, about 1 SUI at a gas price of 1,000 MIST, on top of normal gas and storage. The fee is paid as gas, so it goes to validators like any other gas. A registration is permanent: master ids are never reused and records are never deleted.
 
-Resolution is not Move code. `balance::send_funds` credits whatever address it is given and `TransferObjects` sets whatever owner it is given. Once Move execution has finished and the written objects and funds credits are known, the adapter walks both and reroutes every recipient that carries the magic:
+Anyone can look up who a forwarding address pays. The registry is the shared object at `0xfa`, and each master id has a dynamic field holding its `MasterRecord`: the current master, whether the id is paused, and any pending rotation.
 
-1. Charge `forwarding_address_resolve_cost_base` for the recipient, once per address per transaction. If its variant exceeds `forwarding_address_max_variant`, fail.
-2. Charge `forwarding_address_resolve_lookup_cost_base`, then read the master record at the transaction's assigned registry version. No record, or a paused record: fail.
-3. If the master carries the magic, repeat from step 1 for it, up to `forwarding_address_max_hops` hops. Beyond that, fail.
-4. Rewrite the recipient to the end of the chain: the object's owner, or the credit's target address and accumulator object id.
+### Sending to a forwarding address
 
-Charging happens before each read, so an unregistered id pays for its lookup. All charges go through the transaction's gas charger after Move execution, the same way the deny-list check charges its reads.
+Paying a forwarding address looks the same as paying any other address. The payer does not need to know about the registry or declare it as an input to the transaction; Sui reads it on the payer's behalf.
 
-A record written earlier in the same transaction is not visible to resolution, because the read is bound to the registry version consensus assigned before execution. Registering and depositing to the new id in one programmable transaction fails, and the registration rolls back with it.
+What happens depends on what is sent and on the state of the master id:
 
-An object whose new owner is a forwarding address (`AddressOwner` or `ConsensusAddressOwner`, from `TransferObjects`, `transfer::public_transfer` or a coin transfer) ends the transaction owned by the master. A party object that grants a forwarding address permissions fails the transaction, since the address can never act.
+| Recipient                            | Balance deposit                                   | `Coin<T>` object                                                         | Any other object  |
+| ------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------ | ----------------- |
+| Ordinary address (no magic)          | Credited as today                                 | Transferred as today                                                     | Transferred as today |
+| Forwarding address, id registered and not paused | Credited to the master, `ForwardingDeposit` event | Coin melted, its value credited to the master, `ForwardingDeposit` event | Transaction fails |
+| Forwarding address, id unregistered  | Transaction fails                                 | Transaction fails                                                        | Transaction fails |
+| Forwarding address, id paused        | Transaction fails                                 | Transaction fails                                                        | Transaction fails |
+| Forwarding address, unsupported variant | Transaction fails                              | Transaction fails                                                        | Transaction fails |
 
-`coin::send_funds(Gas, forwarding_address)` fails the transaction. The gas budget refund and gas charge location follow the gas coin's recipient and are set outside the resolver, and the master would net the coin's value plus the refund minus gas used, an amount known only after gas is charged, so no `ForwardingDeposit` could state what was paid. Payers split the amount off the gas coin instead.
+A coin sent to a forwarding address and a `Balance<T>` sent to it are indistinguishable to the master: both arrive as an address-balance credit with the same event. Nothing other than funds can be forwarded.
 
-After gas charging, a post-execution invariant check asserts that no written object is owned by a forwarding address and no accumulator write targets one.
+- **Coins are melted.** A `Coin<T>` sent to a forwarding address, by `TransferObjects`, `transfer::public_transfer` or any other transfer, is destroyed and its value is credited to the master's address balance, exactly as if the payer had turned it into a `Balance<T>` and sent that. The master never receives coin objects through a forwarding address.
+- **Other objects fail.** Any other object sent to a forwarding address fails the whole transaction, including objects that wrap or hold coins and party objects that would give a forwarding address permissions. Nobody can sign for a forwarding address, so an object left there would be lost.
+- **The gas coin cannot be sent.** Sending the gas coin itself to a forwarding address, with `coin::send_funds` or `TransferObjects`, fails the transaction. The amount the master would receive depends on the gas the transaction ends up using, so no event could state what was paid. Split the amount off the gas coin and send that instead.
+- **Register first, then pay.** A deposit is resolved against the registry as it was before the transaction began. Registering a master id and paying one of its forwarding addresses in the same transaction fails, and the registration is rolled back with it. A registration, pause or rotation does apply to every transaction ordered after it, including later transactions in the same checkpoint.
+- **Chains.** If a master is itself a forwarding address, the funds are forwarded again, up to 3 hops. A longer chain, a cycle, or any id along the chain being unregistered or paused fails the transaction.
 
-### Events
+Forwarding costs a small amount of extra gas for each forwarding address a transaction pays, including each hop of a chain, to cover reading the registry and emitting the event. The payer is charged even if the id turns out to be unregistered.
 
-The adapter emits these on Move's behalf. Each is charged like `event::emit` and counted against `max_num_event_emit`.
+Forwarding works with gasless payments. A payment that qualifies as a gasless transaction stays gasless when the recipient is a forwarding address: the forwarding work fits within the gasless computation limit, and the payer pays nothing for it. The gasless minimum transfer amount applies to what the master receives in the transaction, after forwarding, rather than to each forwarding address separately.
+
+When a transaction fails because of a forwarding address, the whole transaction fails and nothing is credited, as with any execution failure. The payer keeps their funds and can retry. On devnet these failures currently appear as the generic `FeatureNotYetSupported` status; dedicated error statuses will be added before testnet.
+
+Move unit tests that use `test_scenario` see the same forwarding behavior when a simulated transaction ends.
+
+### Receiving payments
 
 ```move
 public struct ForwardingDeposit<phantom T> has copy, drop { forwarding_address: address, master: address, amount: u64 }
-public struct ForwardingTransfer has copy, drop { forwarding_address: address, master: address, object_id: ID }
 ```
 
-Funds get one `ForwardingDeposit<T>` per forwarding address passed through and per coin type, with `amount` the sum of everything that passed through that address in the transaction. Splitting a payment into many credits therefore cannot exhaust the event limit, and an intermediate master in a chain sees what flowed through it. Objects get one `ForwardingTransfer` per hop.
+Each transaction emits one `ForwardingDeposit<T>` per forwarding address and coin type it paid, with `amount` the total sent to that address in the transaction, whether as balances, as coins, or both. A payment therefore produces one event no matter how the payer built the transaction.
 
-The event carries the whole forwarding address, so the variant and payload survive losslessly. A reader slices bytes 16..32 for the payload; variant 0 defines no parse to depend on.
+In a chain, each hop gets its own event, naming the forwarding address paid at that hop and the master it forwarded to. A payment to merchant invoice address `A`, whose master is the custodian's forwarding address `F`, whose master is the custodian's account `C`, emits `A → F` and then `F → C`. The events of one transaction, read in order, give the path the funds took.
 
-### Tracking deposits: the master's authenticated event stream
+Forwarding events count toward the per-transaction limits on the number and total size of events, like events emitted from Move. A transaction that pays more forwarding addresses than the limits allow fails.
 
-A payment app has to match every deposit to an invoice and must not depend on a fullnode telling the truth about which events happened. Sui already has authenticated event streams for this: `event::emit_authenticated<T>` emits an event and also records it in the `EventStreamHead` accumulator of a stream, a Merkle Mountain Range over the stream's events that is updated by the settlement transaction of every consensus commit and therefore committed in checkpoints. A light client reads the stream over gRPC `ListEvents` and verifies each event against the stream head using checkpoint proofs, with no trust in the serving node.
+The event carries the whole forwarding address, so the variant and payload survive losslessly. A reader takes bytes 16..32 as the payload; variant 0 gives them no structure to parse.
 
-Move code can only write to the stream of its own package, since `emit_authenticated` takes the event type's package as the stream id. The adapter is not bound by that. With `forwarding_deposit_event_streams` on, the adapter records every `ForwardingDeposit<T>` it emits in the stream keyed by the master address: the same accumulator entry `emit_authenticated` would record, pointing at the event's index right after the transaction's Move events, charged at `event_emit_auth_stream_cost` per event. Each master therefore owns one stream that lists every deposit forwarded to it, across all of its forwarding addresses, in checkpoint order. Because the gas coin cannot be sent to a forwarding address, forwarded deposits are the only way funds reach a master through the feature, so the stream is a complete record of them.
+A payment app has to match every deposit to an invoice and should not have to trust a fullnode about which events happened. Every `ForwardingDeposit<T>` is therefore also recorded in an authenticated event stream keyed by the event's `master`: one stream per master address, listing every deposit forwarded to it across all of its forwarding addresses. In a chain, each hop's event goes to the stream of that hop's master, so in the example above `A → F` is in `F`'s stream and `F → C` is in `C`'s. Reading a stream needs no key, so the owner of a forwarding address that other ids forward to reads that forwarding address's stream to see who paid into it. A light client can read the stream and verify each event against a commitment in the checkpoints, with no trust in the node that served it. This uses the authenticated event streams Sui already has; the only difference is that the stream is keyed by the master address rather than by a Move package, and only Sui itself can write to it.
 
-A payment app subscribes with the Rust light client, `AuthenticatedEventsClient::stream_events(master)`, and for each verified `ForwardingDeposit<T>` reads the coin type from `T`, the amount, and the invoice or customer id from bytes 16..32 of `forwarding_address`. It needs no indexer and no per-address subscription; new forwarding addresses show up in the master's stream the first time they are paid. Ordinary event queries (gRPC `ListEvents` filtered by event type and sender, or GraphQL) keep working for apps that already trust their node, and an indexer can still key a table by `(master, payload)`.
+A payment app subscribes with the Rust light client, `AuthenticatedEventsClient::stream_events(master)`, and for each verified `ForwardingDeposit<T>` reads the coin type from `T`, the amount, and the invoice or customer id from the payload. It needs no indexer and no per-address subscription; a new forwarding address shows up in the master's stream the first time it is paid. Apps that already trust their node can keep using ordinary event queries (gRPC `ListEvents` or GraphQL), and an indexer can key a table by forwarding address.
 
-Lifecycle events (`MasterRegistered`, `Paused`, `RotationFinalized` and the rest) are plain Move events on the `sui` package's stream, since `sui::forwarding_address` emits them itself. Whether `ForwardingTransfer` events for objects should also go into the master's stream is open.
+The registry also emits ordinary Move events for lifecycle changes: `MasterRegistered { master_id, master, cap_id, rotation_delay_epochs }`, `Paused { master_id }`, `Unpaused { master_id }`, `RotationProposed { master_id, new_master, effective_epoch }`, `RotationCancelled { master_id }`, `RotationFinalized { master_id, master }` and `RotationDelayIncreased { master_id, rotation_delay_epochs }`.
 
-Lifecycle events emitted by the Move module: `MasterRegistered { master_id, master, cap_id, rotation_delay_epochs }`, `Paused { master_id }`, `Unpaused { master_id }`, `RotationProposed { master_id, new_master, effective_epoch }`, `RotationCancelled { master_id }`, `RotationFinalized { master_id, master }`, `RotationDelayIncreased { master_id, rotation_delay_epochs }`.
-
-### Lifecycle: pause and rotation
+### Managing a master
 
 Two keys control an id. The master receives the funds and is expected to be hot. The `MasterCap` is expected to be cold and is the only key that can redirect funds or resume deposits.
 
@@ -134,66 +137,41 @@ public fun cancel_rotation(registry: &mut ForwardingAddressRegistry, cap: &Maste
 public fun cancel_rotation_by_master(registry: &mut ForwardingAddressRegistry, master_id: u64, ctx: &TxContext);
 public fun finalize_rotation(registry: &mut ForwardingAddressRegistry, master_id: u64, ctx: &TxContext);
 public fun increase_rotation_delay(registry: &mut ForwardingAddressRegistry, cap: &MasterCap, rotation_delay_epochs: u64);
-
-public fun is_forwarding_address(addr: address): bool;
 ```
 
-Pause is immediate and either key can do it: the cap through `pause`, the current master through `pause_by_master`. While paused, deposits and transfers to the id fail at the end of execution like deposits to an unregistered id. Pausing an already paused id is a no-op. Only the cap can `unpause`.
+Pause is immediate and either key can do it: the cap through `pause`, the current master through `pause_by_master`. While paused, deposits to the id, including coins, fail like deposits to an unregistered id. Pausing an already paused id does nothing. Only the cap can `unpause`.
 
-Rotation is two-step. The cap proposes `new_master`, which must not carry the magic (`EForwardingAddressMaster`). The proposal records `effective_epoch = current_epoch + rotation_delay_epochs`. Anyone may call `finalize_rotation` once the current epoch reaches `effective_epoch`; before that it aborts with `ERotationNotDue`. Deposits keep crediting the old master while a rotation is pending. Either the cap or the current master can cancel a pending rotation. A new proposal replaces a pending one.
+Rotation is two-step. The cap proposes `new_master`, which can be an ordinary address or a forwarding address that `register_with_forwarding_master` would accept. The change can take effect `rotation_delay_epochs` epochs later; before that, finalizing aborts. If `new_master` is an ordinary address, `finalize_rotation` must be sent by `new_master`, which is how it agrees to become the master. If it is a forwarding address, anyone may finalize. Deposits keep crediting the old master while a rotation is pending. Either the cap or the current master can cancel a pending rotation, and a new proposal replaces a pending one. A proposal whose new master never finalizes stays pending until it is cancelled or replaced.
 
-`rotation_delay_epochs` is chosen at registration in `1..=30` and can later only be increased, through `increase_rotation_delay`. Paused and pending are independent flags, so an id can be paused with a rotation pending.
+An id whose master is a forwarding address can only be managed with the cap. Nobody can sign as a forwarding address, so `pause_by_master` and `cancel_rotation_by_master` cannot be called for such an id. If the cap is stolen, no second key can stop the thief's rotation. Owners of such ids should keep the cap especially safe and choose a long rotation delay.
 
-Move abort codes: 3 `EMasterIdsExhausted`, 4 `EInvalidRotationDelay`, 5 `ENotMaster`, 6 `EForwardingAddressMaster`, 7 `ENoPendingRotation`, 8 `ERotationNotDue`.
-
-### Failure behavior
-
-Resolution failures (unregistered id, paused id, unsupported variant, chain longer than `forwarding_address_max_hops`, party object granting permissions to a forwarding address, gas coin sent to a forwarding address) are execution errors with no command index. The whole transaction fails and nothing is credited. On devnet they surface as `FeatureNotYetSupported`; dedicated `ExecutionFailureStatus` variants are an on-wire change that the Rust SDK types and gRPC proto must add first, and are required before testnet.
-
-### Protocol configuration and rollout
-
-| Setting                                       | Kind | Value at 141 (devnet)                 |
-| --------------------------------------------- | ---- | ------------------------------------- |
-| `create_forwarding_address_registry`          | flag | on since 132 (devnet only)            |
-| `enable_forwarding_addresses`                 | flag | on since 139 (devnet only)            |
-| `forwarding_address_max_variant`              | u64  | 0                                     |
-| `forwarding_address_max_hops`                 | u64  | 3                                     |
-| `forwarding_deposit_event_streams`            | flag | on (devnet only), requires `enable_authenticated_event_streams` |
-| `forwarding_address_resolve_cost_base`        | gas  | 52                                    |
-| `forwarding_address_resolve_lookup_cost_base` | gas  | 512 * `obj_access_cost_read_per_byte` |
-| `forwarding_address_register_cost_base`       | gas  | 1,000,000 gas units                   |
-
-While `enable_forwarding_addresses` is off, the adapter leaves every recipient unchanged, the transfer check does not run, and transaction checks reject any transaction that takes the registry as an input, so nobody can register early. Deposits to forwarding-shaped addresses are ordinary deposits.
-
-On devnet the flag has been on since 139, while the Move API and the cost params are in 141: 139 and 140 froze with releases v1.82.0 and v1.83.0 before they landed. A node at 139 or 140 with the flag on and no cost params would fail a deposit to a forwarding address; that is accepted on devnet, which is reset every release, and cannot occur on testnet or mainnet, where the flag is off at 139 and 140.
-
-Once the flag is on, every transaction must have an assigned registry version. That requires the chain to reach a version that creates the registry before one that enables resolution, so the two flags live in different protocol versions and ship in different releases. On testnet and mainnet the same ordering applies: create the registry in one release, enable resolution in a later one.
-
-A brake flag, `freeze_forwarding_addresses`, under which resolution fails for every forwarding address regardless of record state, is planned before testnet. It has to be a separate flag because turning `enable_forwarding_addresses` off would make the pattern an ordinary address again and strand funds.
+The rotation delay is chosen at registration and can later only be increased, through `increase_rotation_delay`. An id can be paused and have a rotation pending at the same time.
 
 ### Interaction with other features
 
-Deny list v2 checks the addresses that receive a regulated `Balance<T>` after execution. Resolution happens before the credit, so the master is what gets checked. Denying a master blocks deposits through all of its forwarding addresses; denying a forwarding address does nothing.
+Deny lists for regulated coins apply to the master, not to the forwarding address. Denying a master blocks deposits through all of its forwarding addresses; denying a forwarding address has no effect.
 
-A vault withdrawal from object funds deposited to a forwarding address resolves like any deposit; the accumulator root and the registry are both implicitly read in that transaction.
+Funds withdrawn from an object's balance and sent to a forwarding address are forwarded like any other deposit.
 
-In simulation and dry run the registry shows up in effects as a read-only consensus object, so simulated deposits report it like executed ones.
+Transaction simulation and dry run forward deposits the same way execution does, so a wallet can show the result before the payer signs.
 
-`register` and the lifecycle functions take the registry mutably, which places those transactions in the system-object-writer execution pool. A deposit sequenced after such a transaction in the same commit waits for its registry version.
+### Rollout
 
-### Client behavior
+Forwarding addresses are live on devnet. On testnet and mainnet they ship in two steps: one release creates the registry, and a later release turns on forwarding. Until forwarding is on, an address with the magic is an ordinary address.
 
-To derive an address: take `master_id` from `MasterRegistered` or the `MasterCap`, variant 0, and a 16-byte payload. Before sending to any address, check for the magic; anything sent to an address with the magic reaches its master if the id is registered and not paused, and fails the transaction otherwise. To find who a forwarding address pays, read the registry's dynamic field `master_id -> MasterRecord`. To track what was paid, subscribe to the master's authenticated event stream with `AuthenticatedEventsClient::stream_events(master)` and key each verified `ForwardingDeposit<T>` by its payload; or, trusting a node, query `ForwardingDeposit<T>` events and index them by `(master, payload)`.
+An emergency brake, under which every payment to a forwarding address fails, is planned before testnet. It is separate from the feature switch because switching the feature off would turn forwarding addresses back into ordinary addresses, and funds sent to them would be stranded.
 
 ## Rationale
 
-The address has to be recognisable without a lookup, so that a wallet can warn before sending and execution can decide what to resolve. Nine magic bytes plus the variant byte give ten bytes that must line up for an address to be treated as a resolvable forwarding address, a collision probability of 2^-72 per key-derived address. 48 bits of id give 2^48 registrants and leave 16 bytes of payload for future variants that need structure.
+The address has to be recognisable without a lookup, so that a wallet can warn before sending and execution can decide what to resolve. Nine magic bytes plus the variant byte give ten bytes that must line up for an address to be treated as a forwarding address, a collision probability of 2^-72 per key-derived address. 48 bits of id give 2^48 registrants and leave 16 bytes of payload for future variants that need structure.
 
-Resolution runs outside Move because `TransferObjects` never enters Move, and a chain is a loop over registry reads. Doing the rewrite in the adapter after execution is what makes objects and chains reachable at all, and it means `balance::send_funds` and every existing transfer path work with forwarding addresses unchanged. The same resolver runs inside `test_scenario`, so Move unit tests see the same behavior.
+Forwarding is built into the protocol rather than offered as a Move contract, so that `balance::send_funds`, `TransferObjects` and every existing payment path work with forwarding addresses unchanged, and payers need no new API.
 
-The registry is an implicitly read system object because a payer should not have to know about it, so a deposit cannot declare it as an input. Consensus assigns the registry version to every transaction, in the same way as the accumulator root, so the read is deterministic, recorded in effects and reproduced on replay without adding a scheduling dependency to every transaction.
+Coins are melted rather than transferred to the master so that a payment arrives in one form however it was sent. A payment app reconciling invoices sees an address-balance credit and one `ForwardingDeposit<T>` per forwarding address and coin type, whether the payer used `send_funds`, `TransferObjects` on a coin, or a mix, and does not have to track coin objects at all. Other objects fail because they are not payments: there is no amount to record, and an arbitrary object at the master would have no record of which forwarding address it came through.
 
-Ids are assigned by the registry, so there is no name to race for and no front-running. The counter is mixed only so that ids do not look sequential; nothing relies on them being secret.
+Payers do not declare the registry, because a payer should not have to know that an address is a forwarding address, let alone which object resolves it.
+
+Ids are assigned by the registry, so there is no name to race for and no front-running. They are mixed so that no one gains from registering early; nothing relies on them being secret.
 
 Pause is immediate and either key can do it because pausing only stops deposits and never moves money, so a delay would only help an attacker, and letting the hot key pause means the brake can be hit without fetching the cap. Unpause is cap-only because if the master key could unpause, a stolen master key would undo the owner's pause and keep draining during the rotation delay. A stolen cap can keep an id paused, but a stolen cap already controls rotation; the remedy is a new id.
 
@@ -205,26 +183,34 @@ The registration fee is paid as gas and goes to validators, so there is no treas
 
 Deposits go into the master's authenticated event stream, rather than only into plain events, because the party that must act on a deposit (ship goods, credit an account) is exactly the party that should not have to trust a fullnode, and the master address is the one key under which all of its forwarding addresses naturally group. Keying the stream by master also means a payment app opens one subscription, not one per invoice.
 
+Chains exist so that a business can receive funds into an account it does not hold, such as a custodian's, while keeping its own deposit addresses, its own payload scheme and its own control of where funds go. Without chains, the custodian would have to issue and track every invoice address on the business's behalf, and the business could not change custodians without reissuing every address it had given out. With a chain, the custodian sees one forwarding address per client and the client sees one per invoice, and rotating the client's id moves all of its addresses to a new custodian at once.
+
+Each hop gets its own event, keyed into the stream of that hop's master, because each forwarding address in a chain usually belongs to a different party, and each party needs to see deposits into its own address. In the custodian example, the custodian reads `F`'s stream to see which merchant was paid and `C`'s stream to see totals per merchant, and does not receive events about the merchant's invoice addresses in `C`'s stream. A single event keyed by the final master would put every upstream party's events in the custodian's stream and give the intermediate parties no stream at all.
+
+An ordinary address only becomes a master by sending a transaction: the sender of `register`, or the sender of `finalize_rotation`. Otherwise anyone could register an id with a well-known merchant or exchange as its master and hand out its addresses. Payments through them would reach the merchant, but whoever holds the cap could later rotate the id to themselves, while payers, wallets and indexers would see an id that appears to belong to the merchant. A forwarding address cannot sign, so it cannot agree to anything; pointing an id at it only sends that id's own deposits there, which is no different from paying the forwarding address directly. That is why a forwarding-address master needs no consent.
+
 Anything that would land at a forwarding address without resolution (an unregistered id, an unsupported variant, an over-long chain) fails the transaction, because nobody can sign for the address and funds left there would be lost. The payer keeps their funds and can retry.
 
 ## Backwards Compatibility
 
-There is no on-wire type change. `ForwardingDeposit` and `ForwardingTransfer` are ordinary Move events, `MasterRecord` is an ordinary dynamic field, and the registry read appears in effects as a read-only consensus object, a shape that already exists.
+There is no change to Sui's on-wire types. `ForwardingDeposit` is an ordinary Move event, a melted coin appears in effects as a deleted object plus an address-balance deposit, and the registry read appears in effects as a read-only shared object, all shapes that SDKs and indexers already handle.
 
-Before protocol version 139, an address carrying the magic was an ordinary address. Any funds already held at such an address stay where they are and remain spendable by whoever holds the key; only new deposits and transfers after the flag turns on are rerouted. For a key-derived address the chance of carrying the magic is 2^-72, so with 2^32 addresses in existence the chance that any of them is affected is about 2^-40. Replay of pre-139 transactions keeps treating such addresses as ordinary, because the resolver runs only when the flag is on.
+Before forwarding was enabled, an address carrying the magic was an ordinary address. Any funds already held at such an address stay where they are and remain spendable by whoever holds the key; only deposits and coins sent after forwarding turns on are forwarded, and other objects sent to such an address after that fail. For a key-derived address the chance of carrying the magic is 2^-72, so with 2^32 addresses in existence the chance that any of them is affected is about 2^-40.
 
-The registry object `0xfa` must exist before resolution can be enabled, so rollout to testnet and mainnet takes two protocol versions in two releases.
-
-Dedicated `ExecutionFailureStatus` variants for the new failure modes are an on-wire change and will follow the two-release rule: add the variants under a devnet guard, then enable them after the Rust SDK types and gRPC proto have shipped them.
+The dedicated error statuses for forwarding failures are an on-wire change. They will be added to the Rust SDK types and the gRPC API before any network produces them.
 
 ## Reference Implementation
 
-- Registry as an implicitly read system object, version-pinned per transaction, protocol version 139 with `enable_forwarding_addresses`: https://github.com/MystenLabs/sui/pull/27989 (merged).
-- Address format, registration, end-of-execution resolution of funds credits, `ForwardingDeposit` event, pause and two-step rotation: https://github.com/MystenLabs/sui/pull/28236.
-- Forwarded deposits added to the authenticated event stream keyed by the master, behind `forwarding_deposit_event_streams`: https://github.com/MystenLabs/sui/pull/28261.
-- Object rerouting with the `ForwardingTransfer` event and chaining bounded by `forwarding_address_max_hops`: https://github.com/MystenLabs/sui/pull/28246.
+- Registry as an implicitly read system object: https://github.com/MystenLabs/sui/pull/27989 (merged).
+- Address format, registration, forwarding of balance deposits, `ForwardingDeposit` event, pause and two-step rotation: https://github.com/MystenLabs/sui/pull/28236.
+- Forwarded deposits recorded in the master's authenticated event stream: https://github.com/MystenLabs/sui/pull/28261.
+- Chains of forwarding addresses: https://github.com/MystenLabs/sui/pull/28246 (draft). That PR also reroutes objects to the master; it predates this design and will be reworked so that coins are melted and other objects fail.
+- Melting coins sent to a forwarding address: not yet implemented. Until it lands, a coin sent to a forwarding address fails the transaction like any other object.
+- `register_with_forwarding_master`, rotation to a forwarding address, and requiring the new master to send `finalize_rotation`: not yet implemented. Today `register` is the only way to register, `propose_rotation` rejects a forwarding address, and anyone can finalize.
+- Per-hop events keyed into each hop's master's stream: not yet implemented.
+- Counting forwarding events toward the total event size limit: not yet implemented. They already count toward the limit on the number of events.
 
-Relevant files: `crates/sui-framework/packages/sui-framework/sources/forwarding_address.move` (registry and lifecycle), `crates/sui-types/src/forwarding_address.rs` (address layout and record schema), `sui-execution/latest/sui-move-natives/src/forwarding_address.rs` (resolver), `sui-execution/latest/sui-adapter/src/static_programmable_transactions/execution/forwarding.rs` (adapter pass), and the design doc at `crates/sui-framework/design_docs/forwarding_addresses.md`.
+Implementation details that do not affect how the feature is used, such as how and when execution resolves forwarding addresses, the gas charged for each step, how master ids are derived, how the registry version is pinned per transaction, how deposits are recorded in the master's stream, and the protocol configuration and rollout order, are described in the [design doc](https://github.com/MystenLabs/sui/blob/xun/forwarding-address-resolution/crates/sui-framework/design_docs/forwarding_addresses.md) (`crates/sui-framework/design_docs/forwarding_addresses.md`, added in #28236).
 
 ## Security Considerations
 
@@ -232,28 +218,27 @@ Signature security is unchanged. A forwarding address is never a signer, and ord
 
 A key-derived address collides with the magic with probability 2^-72. Grinding a key whose address carries the magic costs about 2^72 hashes, and grinding one for a specific master id costs 2^120. Because control of a forwarding address is worthless, these numbers only matter for accidental collisions.
 
-Unregistered ids, paused ids, unsupported variants and over-long chains fail the transaction. Objects and unresolved credits to a forwarding address never survive execution. Turning the feature flag off would strand funds, which is why the brake is a separate flag.
+Unregistered ids, paused ids, unsupported variants, cycles and over-long chains fail the transaction, and no object or funds can be left at a forwarding address. Switching the feature off would strand funds, which is why the emergency brake is a separate switch.
 
-Registration costs 1,000,000 gas units plus permanent storage, and the id space is 2^48. Lookups are charged before the read, including for misses, and the adapter-emitted events are charged and counted like Move events, so neither lookups nor events can be spammed for free.
+Registration costs about 1 SUI plus permanent storage, and the id space is 2^48. Forwarding charges gas for every registry read, including reads of unregistered ids, and for every event it emits, so neither can be spammed for free.
 
-Resolution reads a consensus-assigned registry version through the standard implicit-read mechanism. Every validator reads the same record, and replay reproduces the read from effects.
+Every validator resolves a forwarding address against the same registry state, fixed before the transaction executes, so resolution is deterministic and reproduced exactly on replay.
 
-The master's event stream is written by the adapter, not by Move, and only with events the adapter itself emitted, so no third party can inject an entry into another master's stream. The stream head is committed in checkpoints like any accumulator, so a light client that verifies a `ForwardingDeposit` against it gets the same guarantee it gets for any authenticated event.
+Only Sui itself writes to a master's event stream, and only with deposits it forwarded, so no third party can inject an entry into another master's stream. A light client that verifies a `ForwardingDeposit` against the stream gets the same guarantee it gets for any authenticated event.
 
-Two keys control an id, and the lifecycle is built so that losing either one is survivable. A leaked master key is contained by pausing (immediate, either key) and rotating (cap, delayed): pause, propose, wait, finalize, unpause. A leaked cap is caught because its rotation waits out the delay, during which the master cancels it. Losing both is not survivable, and nothing is designed for it.
+Two keys control an id, and the lifecycle is built so that losing either one is survivable. A leaked master key is contained by pausing (immediate, either key) and rotating (cap, delayed): pause, propose, wait, finalize, unpause. A leaked cap is caught because its rotation waits out the delay, during which the master cancels it. Losing both is not survivable, and nothing is designed for it. An id whose master is a forwarding address has only the cap, so for such ids losing the cap is not survivable either.
 
-Deny-list checks apply to the master, so an issuer of a regulated coin who needs to block a recipient denies the master.
+An id in a chain depends on every id after it. If the owner of a downstream id pauses it, rotates it, or makes its chain longer than 3 hops, deposits to the upstream id fail. This cannot be used against someone else's id: only an id's cap holder decides what it points at, and a broken chain only fails deposits to ids whose owners chose to point into it. Anyone can point their own id at someone else's forwarding address, which credits that address's master as if it had been paid directly; issuers should therefore match deposits on the full forwarding address, not on the payload alone.
 
 ## Open Questions
 
-- Rotation delay bounds are `1..=30` epochs. Should `finalize_rotation` also require a transaction from the new master, proving the new key works before the cutover?
+- Rotation delay bounds are `1..=30` epochs. Are they right?
 - Should a registrant be able to shorten the delay behind its own timelock, or is increase-only enough?
 - Registration price: 1,000,000 gas units (about 1 SUI at a 1,000 MIST gas price) is the starting point. It should hurt for spam and not for a legitimate business.
-- Brake semantics: should `freeze_forwarding_addresses` fail every deposit to a forwarding address, or only skip resolution and strand? The current proposal is to fail.
+- Brake semantics: should the emergency brake fail every deposit to a forwarding address, or only skip resolution and strand? The current proposal is to fail.
 - Format: 48-bit id, 9-byte magic, 16-byte payload, collision margin 2^-72 per address. Revisit only before the format leaves devnet.
-- Should `register` accept a master other than the sender, for example a custodian registering on behalf of a cold wallet? Today the master is always `ctx.sender()`, which also rules out a forwarding-shaped master by construction.
-- Should `ForwardingTransfer` (objects) also be recorded in the master's authenticated stream, so a master can verify received objects the same way?
-- Chaining is bounded at 3 hops with one summed `ForwardingDeposit` per address passed through. Is 3 the right bound, and should `propose_rotation` accept a forwarding-shaped `new_master`? Today it rejects one, so no chain can be built on chain.
+- Chains are bounded at 3 hops. Is that enough for custodian and sub-account setups, without letting a registrant make payers pay for long chains?
+- Should an id whose master is a forwarding address get a second key for pause and cancel, for example letting the end of the chain pause it, so that a stolen cap is survivable for chained ids too?
 - Can an object address (a shared or owned object's id) be a master, given nobody can sign for it and its balance is only reachable through object funds withdrawals?
 - Do issuers of regulated coins need to deny a single forwarding address, or is denying the master enough?
 - Should `MasterRecord` be readable from other Move packages (a `master_of(registry, id)` view), or is off-chain lookup enough for now?
