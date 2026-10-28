@@ -1,4 +1,4 @@
-|   SIP-Number | |
+|   SIP-Number | 75 |
 |         ---: | :--- |
 |        Title | Reduce Gas Costs for Onchain Order Books |
 |  Description | Reduce the non-refundable storage fee and the per-byte read charge for package inputs to 1% of their current values. |
@@ -20,7 +20,7 @@ The cost reductions come from two places:
 1. The non-refundable storage fee. The protocol keeps this fee from the storage rebate of every object that a transaction mutates or deletes. It is currently 1% of the rebate. This SIP lowers it to 0.01%.
 2. The per-byte read charge for Move package inputs. The protocol charges this fee on the full size of every non-system package that a transaction calls. It is currently 15 internal gas units per byte. This SIP lowers it to 154 internal gas units per KiB (about 0.15 per byte).
 
-Neither charge reflects a real cost born by validators today. The non-refundable storage fee was intended to pay for storage that is not reclaimed when objects are deleted. However, validators do not store any long-term data other than objects. Within an epoch, they must store transactions, effects, and other data. But since this data has a limited lifetime on the validators (that is, future validators are not burdened with work incurred by past validators), it can be paid for by computate charges.
+Neither charge reflects a real cost borne by validators today. The non-refundable storage fee was intended to pay for storage that is not reclaimed when objects are deleted. However, validators do not store any long-term data other than objects. Within an epoch, they must store transactions, effects, and other data. But since this data has a limited lifetime on the validators (that is, future validators are not burdened with work incurred by past validators), it can be paid for by computation charges.
 
 ## Motivation
 
@@ -36,7 +36,7 @@ That condition does not hold on Sui today. Validators prune transactions, effect
 
 ### The package read charge
 
-Before execution, the protocol charges each input object `obj_access_cost_read_per_byte` (15 internal gas units) per byte of its metered size. Every package that a transaction's `MoveCall` commands name, including packages that appear only in type arguments, counts as an input object. The charge skips system packages (`0x1`, `0x2`, `0x3`, and so on). The protocol charges the package's full size on every transaction, whether or not the validator already holds the package in memory.
+Before execution, the protocol charges each input object `obj_access_cost_read_per_byte` (15 internal gas units) per byte of its metered size. Every package that a transaction's `MoveCall` commands name, including packages that appear only in type arguments, counts as an input object. So do the dependencies of a published package, and the upgraded package and its dependencies in an upgrade. The charge skips system packages (`0x1`, `0x2`, `0x3`, and so on). The protocol charges the package's full size on every transaction, whether or not the validator already holds the package in memory.
 
 Validators do not pay a per-transaction cost that grows with package size. Packages are immutable and validators cache them. While there may be some marginal cost associated with larger packages, it is negligible today. As a result, even a trivial function call (such as `fun identity<T>(f: T): T { f }`) into a large package can be quite expensive. Not only does this charge grossly inflate the cost of many transactions, it also makes it futile to optimize compute gas usage in most cases.
 
@@ -78,7 +78,7 @@ The transaction's logic, meaning the Move execution for cancelling orders, placi
 
 ## Specification
 
-This SIP makes the following protocol configuration changes in a new protocol version.
+This SIP makes the following protocol configuration changes. The non-refundable storage fee changes in protocol version 138 on mainnet and in protocol version 139 on testnet and devnet. The package read charge changes in protocol version 139 on all networks.
 
 ### Non-refundable storage fee
 
@@ -105,6 +105,8 @@ charge = Σ size(o) × obj_access_cost_read_per_byte
 ```
 
 Each input is charged separately, so the package charge is rounded up per package. The charge for non-package inputs does not change. System packages stay exempt.
+
+The parameter applies only under gas model version 15, which protocol version 138 introduced. Earlier gas models charge package inputs at `obj_access_cost_read_per_byte`.
 
 The existing per-byte parameter only accepts integers, so it cannot express about 0.15 internal units per byte. That is why this change adds a separate parameter rather than adjusting the existing one.
 
@@ -145,7 +147,7 @@ Packages and objects have different costs for validators. Objects change and are
 
 ## Backwards Compatibility
 
-Both changes take effect in a new protocol version. Transactions from earlier protocol versions replay with the charges that applied to them.
+Both changes are gated by protocol version (see Specification). Transactions from earlier protocol versions replay with the charges that applied to them.
 
 The changes do not alter any on-wire data structure. `GasCostSummary` keeps the same fields and meanings. Clients that estimate gas through dry runs get the new costs automatically.
 
@@ -161,6 +163,7 @@ Transactions become cheaper, and none become more expensive. Applications that s
 ## Reference Implementation
 
 - Non-refundable storage fee: https://github.com/MystenLabs/sui/pull/28223
+- Non-refundable storage fee on mainnet in protocol version 138: https://github.com/MystenLabs/sui/pull/28233 (main) and https://github.com/MystenLabs/sui/pull/28234 (1.81 release branch)
 - Package read charge: https://github.com/MystenLabs/sui/pull/28224
 
 ## Security Considerations
