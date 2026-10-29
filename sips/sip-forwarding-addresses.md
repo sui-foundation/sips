@@ -204,11 +204,8 @@ The dedicated error statuses for forwarding failures are an on-wire change. They
 - Registry as an implicitly read system object: https://github.com/MystenLabs/sui/pull/27989 (merged).
 - Address format, registration, forwarding of balance deposits, `ForwardingDeposit` event, pause and two-step rotation: https://github.com/MystenLabs/sui/pull/28236.
 - Forwarded deposits recorded in the master's authenticated event stream: https://github.com/MystenLabs/sui/pull/28261.
-- Chains of forwarding addresses: https://github.com/MystenLabs/sui/pull/28246 (draft). That PR also reroutes objects to the master; it predates this design and will be reworked so that coins are melted and other objects fail.
-- Melting coins sent to a forwarding address: not yet implemented. Until it lands, a coin sent to a forwarding address fails the transaction like any other object.
+- Coin melting, chains of forwarding addresses, `register_with_forwarding_master`, rotation to a forwarding address, and per-hop events in each hop master's stream: https://github.com/MystenLabs/sui/pull/28246 (draft, stacked on #28261).
 - Requiring the new master to send `finalize_rotation`: https://github.com/MystenLabs/sui/pull/28236.
-- `register_with_forwarding_master` and rotation to a forwarding address: not yet implemented. Today `register` is the only way to register and `propose_rotation` rejects a forwarding address.
-- Per-hop events keyed into each hop's master's stream: not yet implemented.
 - Forwarding events counted toward the per-event and total event size limits, and the emergency brake flag: https://github.com/MystenLabs/sui/pull/28236.
 
 Implementation details that do not affect how the feature is used, such as how and when execution resolves forwarding addresses, the gas charged for each step, how master ids are derived, how the registry version is pinned per transaction, how deposits are recorded in the master's stream, and the protocol configuration and rollout order, are described in the [design doc](https://github.com/MystenLabs/sui/blob/xun/forwarding-address-resolution/crates/sui-framework/design_docs/forwarding_addresses.md) (`crates/sui-framework/design_docs/forwarding_addresses.md`, added in #28236).
