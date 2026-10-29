@@ -6,7 +6,7 @@
 |       Editor | Amogh Gupta \<amogh@sui.io, @amogh-sui\> |
 |         Type | Standard |
 |     Category | Framework |
-|      Created | 29-05-2024 |
+|      Created | 2024-05-29 |
 | Comments-URI | https://sips.sui.io/comments-33 |
 |       Status | Final |
 |     Requires | N/A |
